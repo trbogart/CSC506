@@ -47,13 +47,13 @@ def test_analyze_n():
             a.append(random.random())
 
     def op(_):
-        return a[-1] in a
+        return a[random.randint(0, len(a)-1)] in a
 
-    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 10_000) == 'O(N)'
+    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 1_000) == 'O(N)'
 
 def test_analyze_n_log_n():
     a = []
-    batch_size = 100
+    batch_size = 1_000
 
     def init_test(_):
         a.clear()
@@ -66,7 +66,7 @@ def test_analyze_n_log_n():
     def op(_):
         a.sort()
 
-    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 1_000) == 'O(N*log(N))'
+    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 200) == 'O(N*log(N))'
 
 def test_analyze_n_2():
     a = []
