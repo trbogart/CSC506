@@ -1,4 +1,4 @@
-from analyzer import Analyzer
+from complexity_analyzer import ComplexityAnalyzer
 
 
 class CollectionInterface:
@@ -58,7 +58,7 @@ class CollectionInterface:
                 self.collection.clear()
             elif cmd == 'ac':
                 self.collection.clear()
-                Analyzer.execute(self.collection)
+                ComplexityAnalyzer().execute(self.collection)
             elif cmd == 'q':
                 return
             else:
