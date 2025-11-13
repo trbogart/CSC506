@@ -33,7 +33,7 @@ class ComplexityAnalyzer:
         tracemalloc.start()
 
         result = self.analyze(
-            lambda: self._get_memory_usage(),
+            lambda _: self._get_memory_usage(),
             op,
             init_test=init_test,
             init_op=init_op,
