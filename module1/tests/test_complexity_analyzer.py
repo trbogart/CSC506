@@ -1,9 +1,9 @@
 from bisect import bisect_left
 
-import pytest
-
 from complexity_analyzer import ComplexityAnalyzer
 import random
+
+# Probabilistic test for ComplexityAnalyzer
 
 def test_analyze_1():
     a = set()
@@ -17,28 +17,27 @@ def test_analyze_1():
     def op(i):
         return i in a
 
-    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 2_000) == 'O(1)'
+    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 5_000) == 'O(1)'
 
-@pytest.mark.skip(reason = 'TODO fix log')
 def test_analyze_log_n():
     a = []
-    batch_size = 20
+    batch_size = 100
 
     def init_test(_):
         a.clear()
 
-    def init_op(batch):
-        for i in range(batch_size):
-            a.append(batch * batch_size + i)
+    def init_op(_):
+        for _ in range(batch_size):
+            a.append(len(a))
 
     def op(_):
-        bisect_left(a, a[0])
+        bisect_left(a, a[random.randint(0, len(a) - 1)])
 
-    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 2_000) == 'O(log(N))'
+    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 10_000) == 'O(log(N))'
 
 def test_analyze_n():
     a = []
-    batch_size = 20
+    batch_size = 100
 
     def init_test(_):
         a.clear()
@@ -50,19 +49,18 @@ def test_analyze_n():
     def op(_):
         return a[-1] in a
 
-    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 2_000) == 'O(N)'
+    assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 10_000) == 'O(N)'
 
-@pytest.mark.skip(reason = 'TODO fix log')
 def test_analyze_n_log_n():
     a = []
-    batch_size = 20
+    batch_size = 100
 
     def init_test(_):
         a.clear()
 
     def init_op(_):
         for _ in range(batch_size):
-            a.append(random.random())
+            a.append(len(a))
         random.shuffle(a)
 
     def op(_):
@@ -72,7 +70,7 @@ def test_analyze_n_log_n():
 
 def test_analyze_n_2():
     a = []
-    batch_size = 20
+    batch_size = 5
 
     def init_test(_):
         a.clear()

@@ -7,30 +7,29 @@ import time
 
 """
 Estimates time or space complexity for an operation. 
-Supports O(1), O(N), and O(N^2).
-TODO: O(log(N)) and O(N*log(N))
+Supports O(1), O(log(N)), O(N), O(N*log(N)), and O(N^2).
 """
 class ComplexityAnalyzer:
     default_num_iterations = 10_000
     default_num_tests = 5
-    default_threshold = 0.05
+    threshold = 0.05
 
-    def analyze_time(self, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests, threshold = default_threshold):
-        return self.analyze(lambda: time.perf_counter_ns(), init_test, init_op, op, num_iterations, num_tests, threshold)
+    def analyze_time(self, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests):
+        return self.analyze(lambda: time.perf_counter_ns(), init_test, init_op, op, num_iterations, num_tests)
 
     @staticmethod
-    def analyze_memory(self, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests, threshold = default_threshold):
+    def analyze_memory(self, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests):
         def get_memory_usage():
             gc.collect()
             current, _ = tracemalloc.get_traced_memory()
             return current
 
         tracemalloc.start()
-        result = self.analyze(lambda: get_memory_usage(), init_test, init_op, op, num_iterations, num_tests, threshold)
+        result = self.analyze(lambda: get_memory_usage(), init_test, init_op, op, num_iterations, num_tests)
         tracemalloc.stop()
         return result
 
-    def analyze(self, metric, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests, threshold = default_threshold):
+    def analyze(self, metric, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests):
         """
         Estimates time complexity for the given operation.
         :param metric: metric to test (function with no arguments that returns a numeric value)
@@ -39,7 +38,6 @@ class ComplexityAnalyzer:
         :param op: operation to test (function with index arguments)
         :param num_iterations number of iterations to test
         :param num_tests number of tests to run
-        :param threshold: threshold % required to accept higher order
         """
         metrics = [0] * num_iterations
 
@@ -63,36 +61,33 @@ class ComplexityAnalyzer:
         # O(N^2)
         error_quadratic = get_error(x, 2)
 
+        # O(N * log(N))
+        x_n_log = np.log(x) * x
+        error_n_log = get_error(x_n_log, 1)
+
         # O(N)
         error_linear = get_error(x, 1)
+
+        # O(log(N))
+        x_log = np.log(x)
+        error_log = get_error(x_log, 1)
 
         # O(1)
         error_constant = get_error(x, 0)
 
-        # TODO fix log
-        # # O(N * log(N))
-        # x_n_log = np.log(x) * x
-        # error_n_log = get_error(x_n_log, 1)
-        # errors_and_complexities.append((error_n_log, 'O(N*log(N))'))
-        #
-        # # O(log(N))
-        # x_log = np.log(x)
-        # error_log = get_error(x_log, 1)
-        # errors_and_complexities.append((error_log, 'O(log(N))'))
-
-        errors_and_complexities = [
-            (error_quadratic, 'O(N^2)'),
-            # (error_n_log, 'O(N*log(N))') # TODO fix log
-            (error_linear, 'O(N)'),
-            # (error_log, 'O(log(N))') # TODO fix log
-            (error_constant, 'O(1)'),
+        levels = [
+            (error_quadratic, 'O(N^2)', self.threshold),
+            (error_n_log, 'O(N*log(N))', self.threshold),
+            (error_linear, 'O(N)', self.threshold),
+            (error_log, 'O(log(N))', self.threshold),
+            (error_constant, 'O(1)', None),
         ]
 
-        # find complexity with highest level where error of next lower level is at least threshold % higher
-        error_threshold = 1 + threshold
+        def get_min_error(remaining_levels):
+            return min(map(lambda level: level[0], remaining_levels))
 
-        for i, (error, name) in enumerate(errors_and_complexities):
-            if i == len(errors_and_complexities) - 1 or error * error_threshold < min(map(lambda ec: ec[0], errors_and_complexities[i+1:])):
+        for i, (error, name, threshold) in enumerate(levels):
+            if threshold is None or error * (1+threshold) < get_min_error(levels[i+1:]):
                 print(name)
                 return name
 
@@ -122,7 +117,7 @@ class ComplexityAnalyzer:
                 def op(_):
                     collection.push(random.random())
 
-                self.analyze_time(init_test, init_op, op)
+                self.analyze_time(init_test, init_op, op, num_iterations = 2000)
             elif cmd == 'tr':
                 def init_test(num_iterations):
                     collection.clear()
@@ -133,22 +128,20 @@ class ComplexityAnalyzer:
                     pass
 
                 def op(_):
-                    collection.push(random.random())
+                    collection.pop()
 
-                self.analyze_time(init_test, init_op, op)
+                self.analyze_time(init_test, init_op, op, num_iterations = 1000)
             elif cmd == 'ts':
-                elements = [random.random() for _ in range(self.num_iterations)]
-
                 def init_test(_):
                     collection.clear()
 
-                def init_op(i):
-                    collection.push(elements[i])
+                def init_op(_):
+                    collection.push(len(collection))
 
-                def op(i):
-                    collection.index(elements[random.randint(0, i-1)])
+                def op(_):
+                    collection.index(random.randint(0, len(collection)-1))
 
-                self.analyze_time(init_test, init_op, op)
+                self.analyze_time(init_test, init_op, op, num_iterations = 100)
             else:
                 print('Invalid command')
 
