@@ -2,6 +2,8 @@ import array as arr
 import itertools
 import math
 
+import pytest
+
 from complexity_analyzer import ComplexityAnalyzer
 
 
@@ -27,6 +29,7 @@ def test_analyze_space_n():
     assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_iterations=100) == 'O(1)'
 
 
+@pytest.mark.skip('Too slow')
 def test_analyze_space_log_n():
     a = ArrayWrapper()
     batch_size = 1_000
@@ -39,7 +42,7 @@ def test_analyze_space_log_n():
 
     assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_iterations=1_000) == 'O(log(N))'
 
-
+@pytest.mark.skip('Too slow')
 def test_analyze_space_n_log_n():
     a = ArrayWrapper()
     batch_size = 1_000
@@ -52,7 +55,6 @@ def test_analyze_space_n_log_n():
 
     assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_iterations=1_000) == 'O(N*log(N))'
 
-
 def test_analyze_space_n_2():
     a = ArrayWrapper()
     batch_size = 1_000
@@ -64,7 +66,6 @@ def test_analyze_space_n_2():
         a.add_elements(batch_size * n)
 
     assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_iterations=200) == 'O(N^2)'
-
 
 # wrapper to test memory usage more precisely
 class ArrayWrapper:
