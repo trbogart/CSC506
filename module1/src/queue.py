@@ -1,8 +1,10 @@
 from collection_interface import CollectionInterface
 from linked_list import LinkedList
 
+
 class Queue:
     """Simple LIFO Queue implemented with LinkedList"""
+
     def __init__(self):
         self.list = LinkedList()
 
@@ -37,6 +39,7 @@ class Queue:
     def clear(self):
         """Clears the queue"""
         self.list.clear()
+
 
 if __name__ == '__main__':
     CollectionInterface("queue", Queue()).execute()

@@ -12,6 +12,7 @@ class CollectionInterface:
 
     The collection should also support len() and iter()
     """
+
     def __init__(self, collection_type, collection):
         """
         Create a collection interface.
@@ -63,4 +64,3 @@ class CollectionInterface:
                 return
             else:
                 print('Invalid command')
-

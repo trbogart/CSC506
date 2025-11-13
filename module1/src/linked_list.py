@@ -8,6 +8,7 @@ from collection_interface import CollectionInterface
 
 class LinkedList:
     """Doubly linked list"""
+
     def __init__(self):
         self.head = None
         self.tail = None
@@ -78,7 +79,7 @@ class LinkedList:
         """Remove given element, or raise ValueError if not in list"""
         self._remove_node(self._get_node_by_value(value))
 
-    def pop(self, index = None):
+    def pop(self, index=None):
         """Remove and return the element with the given index, or raise IndexError if invalid"""
         if index is None:
             return self.remove_last()
@@ -154,10 +155,12 @@ class LinkedList:
 
     class Node:
         """Internal data structure representing a linked list node"""
-        def __init__(self, value, prev_node = None, next_node = None, ):
+
+        def __init__(self, value, prev_node=None, next_node=None, ):
             self.value = value
             self.prev_node = prev_node
             self.next_node = next_node
+
 
 if __name__ == '__main__':
     CollectionInterface("linked list", LinkedList()).execute()

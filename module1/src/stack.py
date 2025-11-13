@@ -1,7 +1,9 @@
 from collection_interface import CollectionInterface
 
+
 class Stack:
     """Simple stack"""
+
     def __init__(self):
         self.list = []
 
@@ -36,6 +38,7 @@ class Stack:
     def clear(self):
         """Clears the stack"""
         self.list.clear()
+
 
 if __name__ == '__main__':
     CollectionInterface("stack", Stack()).execute()

@@ -6,9 +6,11 @@ value1 = "value1"
 value2 = "value2"
 value3 = "value3"
 
+
 def test_empty():
     queue = Queue()
     _verify_elements(queue)
+
 
 def test_push():
     queue = Queue()
@@ -16,6 +18,7 @@ def test_push():
     _verify_elements(queue, value1)
     queue.push(value2)
     _verify_elements(queue, value1, value2)
+
 
 def test_peek():
     queue = Queue()
@@ -27,6 +30,7 @@ def test_peek():
     assert queue.peek() == value1
     queue.push(value2)
     assert queue.peek() == value1
+
 
 def test_pop():
     queue = Queue()
@@ -49,6 +53,7 @@ def test_pop():
     assert queue.pop() == value2
     _verify_elements(queue)
 
+
 def test_index():
     queue = Queue()
     queue.push(value1)
@@ -58,12 +63,14 @@ def test_index():
     with pytest.raises(ValueError):
         queue.index("invalid")
 
+
 def test_clear():
     queue = Queue()
     queue.push(value1)
     queue.push(value2)
     queue.clear()
     _verify_elements(queue)
+
 
 def _verify_elements(queue, *expected):
     assert len(queue) == len(expected)
