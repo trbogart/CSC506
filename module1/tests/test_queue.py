@@ -58,6 +58,13 @@ def test_index():
     with pytest.raises(ValueError):
         queue.index("invalid")
 
+def test_clear():
+    queue = Queue()
+    queue.push(value1)
+    queue.push(value2)
+    queue.clear()
+    _verify_elements(queue)
+
 def _verify_elements(queue, *expected):
     assert len(queue) == len(expected)
     expected_list = list(expected)

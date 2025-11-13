@@ -58,6 +58,13 @@ def test_index():
     assert stack.index(value1) == 0
     assert stack.index(value2) == 1
 
+def test_clear():
+    stack = Stack()
+    stack.push(value1)
+    stack.push(value2)
+    stack.clear()
+    _verify_elements(stack)
+
 def _verify_elements(stack, *expected):
     assert len(stack) == len(expected)
     expected_list = list(expected)

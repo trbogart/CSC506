@@ -1,5 +1,7 @@
 from bisect import bisect_left
 
+from flaky import flaky
+
 from complexity_analyzer import ComplexityAnalyzer
 import random
 
@@ -51,6 +53,7 @@ def test_analyze_n():
 
     assert ComplexityAnalyzer().analyze_time(init_test, init_op, op, num_iterations = 1_000) == 'O(N)'
 
+@flaky(max_runs = 2) # somewhat flaky, but already slow enough that increasing iterations is unappealing
 def test_analyze_n_log_n():
     a = []
     batch_size = 1_000

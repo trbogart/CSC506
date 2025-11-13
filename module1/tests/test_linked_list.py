@@ -198,6 +198,10 @@ def test_index():
     with pytest.raises(ValueError):
         ll.index("invalid")
 
+def test_clear():
+    ll = _init_list_with_4_elements()
+    ll.clear()
+    _verify_elements(ll)
 
 def _init_list_with_4_elements():
     ll = LinkedList()
