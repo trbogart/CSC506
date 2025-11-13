@@ -12,35 +12,46 @@ Supports O(1), O(log(N)), O(N), O(N*log(N)), and O(N^2).
 
 
 class ComplexityAnalyzer:
-    default_num_iterations = 10_000
-    default_num_tests = 5
-    threshold = 0.05
+    def __init__(self, plot = False, default_num_iterations = 10_000, default_num_tests = 5, default_threshold = 0.05):
+        """
+        Create complexity analyzer
+        :param plot: true to plot values against expected
+        :param default_num_iterations: default number of iterations per test (can be overridden in analyze methods)
+        :param default_num_tests: default number of tests (can be overridden in analyze methods)
+        :param default_threshold: default threshold (minimum proportion of error used to select higher level)
+        """
+        self.plot = plot
+        self.default_num_iterations = default_num_iterations
+        self.default_num_tests = default_num_tests
+        self.default_threshold = default_threshold
 
     def analyze_time(self, op, init_test=None, init_op=None, post_op=None,
-                     num_iterations=default_num_iterations, num_tests=default_num_tests):
+                     num_iterations=None, num_tests=None, threshold=None):
         return self.analyze(
             lambda _: time.perf_counter_ns(),
             op,
-            init_test=init_test,
-            init_op=init_op,
-            post_op=post_op,
-            num_iterations=num_iterations,
-            num_tests=num_tests
+            init_test = init_test,
+            init_op = init_op,
+            post_op = post_op,
+            num_iterations = num_iterations,
+            num_tests = num_tests,
+            threshold = threshold,
         )
 
     def analyze_space(self, op, init_test=None, init_op=None, post_op=None,
-                      num_iterations=default_num_iterations, num_tests=default_num_tests):
+                      num_iterations=None, num_tests=None, threshold=None):
         tracemalloc.start()
 
         result = self.analyze(
             lambda _: self._get_memory_usage(),
             op,
-            init_test=init_test,
-            init_op=init_op,
-            post_op=post_op,
-            init_test_metric=lambda _: gc.collect(),
+            init_test = init_test,
+            init_op = init_op,
+            post_op = post_op,
+            init_test_metric = lambda _: gc.collect(),
             num_iterations=num_iterations,
-            num_tests=num_tests
+            num_tests=num_tests,
+            threshold=threshold,
         )
 
         tracemalloc.stop()
@@ -48,7 +59,7 @@ class ComplexityAnalyzer:
 
     def analyze(self, metric, op, init_test=None, init_op=None, post_op=None,
                 init_test_metric=None, init_metric=None, post_metric=None,
-                num_iterations=default_num_iterations, num_tests=default_num_tests):
+                num_iterations=None, num_tests=None, threshold=None):
         """
         Estimates time complexity for the given operation.
         :param metric: metric to test (function with no arguments that returns a numeric value)
@@ -56,13 +67,21 @@ class ComplexityAnalyzer:
         :param init_op: initialize operation (function with iteration number argument)
         :param op: operation to test (function with iteration number arguments)
         :param post_op: cleanup after operation (function with iteration number argument)
-        :param num_iterations number of iterations to test
-        :param num_tests number of tests to run
+        :param num_iterations number of iterations to test, or None to use the class default
+        :param num_tests number of tests to run, or None to use the class default
+        :param threshold: threshold (minimum proportion of error used to select higher level), or None to use the class default
         :param init_test_metric: initialize metric before each test (function with test number argument)
         :param init_metric: initialize metric (function with iteration number argument)
         :param post_metric: cleanup after gathering metric (function with no arguments)
         """
         metrics = [0] * num_iterations
+
+        if num_tests is None:
+            num_tests = self.default_num_tests
+        if num_iterations is None:
+            num_iterations = self.default_num_iterations
+        if threshold is None:
+            threshold = self.default_threshold
 
         for test in range(num_tests):
             if init_test:
@@ -86,34 +105,34 @@ class ComplexityAnalyzer:
 
         x = [i + 1 for i in range(num_iterations)]
 
-        def get_error(x, degree):
-            coef = np.polyfit(x, metrics, degree)
+        def get_error_and_coordinates(x_transformed, degree):
+            coef = np.polyfit(x_transformed, metrics, degree)
             fit = np.poly1d(coef)
-            y_pred = fit(x)
+            y_pred = fit(x_transformed)
             return np.sqrt(np.mean((metrics - y_pred) ** 2))
 
         # O(N^2)
-        error_quadratic = get_error(x, 2)
+        error_quadratic = get_error_and_coordinates(x, 2)
 
         # O(N * log(N))
         x_n_log = np.log(x) * x
-        error_n_log = get_error(x_n_log, 1)
+        error_n_log = get_error_and_coordinates(x_n_log, 1)
 
         # O(N)
-        error_linear = get_error(x, 1)
+        error_linear = get_error_and_coordinates(x, 1)
 
         # O(log(N))
         x_log = np.log(x)
-        error_log = get_error(x_log, 1)
+        error_log = get_error_and_coordinates(x_log, 1)
 
         # O(1)
-        error_constant = get_error(x, 0)
+        error_constant = get_error_and_coordinates(x, 0)
 
         levels = [
-            (error_quadratic, 'O(N^2)', self.threshold),
-            (error_n_log, 'O(N*log(N))', self.threshold),
-            (error_linear, 'O(N)', self.threshold),
-            (error_log, 'O(log(N))', self.threshold),
+            (error_quadratic, 'O(N^2)', threshold),
+            (error_n_log, 'O(N*log(N))', threshold),
+            (error_linear, 'O(N)', threshold),
+            (error_log, 'O(log(N))', threshold),
             (error_constant, 'O(1)', None),
         ]
 
@@ -122,7 +141,8 @@ class ComplexityAnalyzer:
 
         for i, (error, name, threshold) in enumerate(levels):
             if threshold is None or error * (1 + threshold) < get_min_error(levels[i + 1:]):
-                print(name)
+                if self.plot:
+                    print(name)
                 return name
 
     @staticmethod
