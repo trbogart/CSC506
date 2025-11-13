@@ -14,40 +14,62 @@ class ComplexityAnalyzer:
     default_num_tests = 5
     threshold = 0.05
 
-    def analyze_time(self, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests):
-        return self.analyze(lambda: time.perf_counter_ns(), init_test, init_op, op, num_iterations, num_tests)
+    def analyze_time(self, op, init_test = None, init_op = None, post_op = None, num_iterations = default_num_iterations, num_tests = default_num_tests):
+        return self.analyze(
+            lambda: time.perf_counter_ns(),
+            op,
+            init_test = init_test,
+            init_op = init_op,
+            post_op = post_op,
+            num_iterations = num_iterations,
+            num_tests = num_tests
+        )
 
-    @staticmethod
-    def analyze_memory(self, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests):
-        def get_memory_usage():
-            gc.collect()
-            current, _ = tracemalloc.get_traced_memory()
-            return current
-
+    def analyze_space(self, op, init_test = None, init_op = None, post_op = None, num_iterations = default_num_iterations, num_tests = default_num_tests):
         tracemalloc.start()
-        result = self.analyze(lambda: get_memory_usage(), init_test, init_op, op, num_iterations, num_tests)
+        def post_metric():
+            gc.collect(0)
+
+        result = self.analyze(
+            lambda: self._get_memory_usage(),
+            op,
+            post_metric = post_metric(),
+            init_test = init_test,
+            init_op = init_op,
+            post_op = post_op,
+            num_iterations = num_iterations,
+            num_tests = num_tests
+        )
         tracemalloc.stop()
         return result
 
-    def analyze(self, metric, init_test, init_op, op, num_iterations = default_num_iterations, num_tests = default_num_tests):
+    def analyze(self, metric, op, post_metric = None, init_test = None, init_op = None, post_op = None, num_iterations = default_num_iterations, num_tests = default_num_tests):
         """
         Estimates time complexity for the given operation.
         :param metric: metric to test (function with no arguments that returns a numeric value)
+        :param post_metric: cleanup after gathering metric (function with no arguments)
         :param init_test: initialize collection before each test (function with num_iterations argument)
         :param init_op: initialize operation (function with index argument, not included in metric)
         :param op: operation to test (function with index arguments)
+        :param post_op: cleanup after operation (function with index argument, not included in metric)
         :param num_iterations number of iterations to test
         :param num_tests number of tests to run
         """
         metrics = [0] * num_iterations
 
         for test in range(num_tests):
-            init_test(num_iterations)
+            if init_test:
+                init_test(num_iterations)
             for i in range(num_iterations):
-                init_op(i)
+                if init_op:
+                    init_op(i)
                 start_metric = metric()
                 op(i)
+                if post_op:
+                    post_op(i)
                 end_metric = metric()
+                if post_metric:
+                    post_metric()
                 metrics[i] += end_metric - start_metric
 
         x = [i+1 for i in range(num_iterations)]
@@ -91,6 +113,13 @@ class ComplexityAnalyzer:
                 print(name)
                 return name
 
+    @staticmethod
+    def _get_memory_usage():
+        gc.collect(0)
+        current, _ = tracemalloc.get_traced_memory()
+        return current
+
+
     def execute(self, collection):
         while True:
             print('--------------------------------------------------------------')
@@ -111,26 +140,20 @@ class ComplexityAnalyzer:
                 def init_test(_):
                     collection.clear()
 
-                def init_op(_):
-                    pass
-
                 def op(_):
                     collection.push(random.random())
 
-                self.analyze_time(init_test, init_op, op, num_iterations = 2000)
+                self.analyze_time(op, init_test=init_test, num_iterations=2000)
             elif cmd == 'tr':
                 def init_test(num_iterations):
                     collection.clear()
                     for i in range(num_iterations):
                         collection.push(random.random())
 
-                def init_op(_):
-                    pass
-
                 def op(_):
                     collection.pop()
 
-                self.analyze_time(init_test, init_op, op, num_iterations = 1000)
+                self.analyze_time(op, init_test=init_test, num_iterations = 1000)
             elif cmd == 'ts':
                 def init_test(_):
                     collection.clear()
@@ -141,7 +164,7 @@ class ComplexityAnalyzer:
                 def op(_):
                     collection.index(random.randint(0, len(collection)-1))
 
-                self.analyze_time(init_test, init_op, op, num_iterations = 100)
+                self.analyze_time(op, init_test=init_test, init_op = init_op, num_iterations = 100)
             else:
                 print('Invalid command')
 
