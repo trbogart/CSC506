@@ -27,13 +27,10 @@ class ComplexityAnalyzer:
 
     def analyze_space(self, op, init_test = None, init_op = None, post_op = None, num_iterations = default_num_iterations, num_tests = default_num_tests):
         tracemalloc.start()
-        def post_metric():
-            gc.collect(0)
 
         result = self.analyze(
             lambda: self._get_memory_usage(),
             op,
-            post_metric = post_metric(),
             init_test = init_test,
             init_op = init_op,
             post_op = post_op,
@@ -49,9 +46,9 @@ class ComplexityAnalyzer:
         :param metric: metric to test (function with no arguments that returns a numeric value)
         :param post_metric: cleanup after gathering metric (function with no arguments)
         :param init_test: initialize collection before each test (function with num_iterations argument)
-        :param init_op: initialize operation (function with index argument, not included in metric)
-        :param op: operation to test (function with index arguments)
-        :param post_op: cleanup after operation (function with index argument, not included in metric)
+        :param init_op: initialize operation (function with iteration number argument, not included in metric)
+        :param op: operation to test (function with iteration number arguments)
+        :param post_op: cleanup after operation (function with iteration number argument, not included in metric)
         :param num_iterations number of iterations to test
         :param num_tests number of tests to run
         """
@@ -61,12 +58,13 @@ class ComplexityAnalyzer:
             if init_test:
                 init_test(num_iterations)
             for i in range(num_iterations):
+                iter_num = i+1
                 if init_op:
-                    init_op(i)
+                    init_op(iter_num)
                 start_metric = metric()
-                op(i)
+                op(iter_num)
                 if post_op:
-                    post_op(i)
+                    post_op(iter_num)
                 end_metric = metric()
                 if post_metric:
                     post_metric()
@@ -115,7 +113,7 @@ class ComplexityAnalyzer:
 
     @staticmethod
     def _get_memory_usage():
-        gc.collect(0)
+        gc.collect(1)
         current, _ = tracemalloc.get_traced_memory()
         return current
 
