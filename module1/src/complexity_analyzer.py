@@ -4,6 +4,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 class ComplexityAnalyzer:
     # TODO add O(log(N)) and O(N*log(N))
     """
