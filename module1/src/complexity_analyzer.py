@@ -248,6 +248,7 @@ class ComplexityAnalyzer:
             cmd = input('> ')
 
             if cmd == 'q':
+                # exit complexity analysis mode
                 collection.clear()
                 return
             elif cmd == 'ta':

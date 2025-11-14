@@ -16,9 +16,9 @@ class CollectionInterface:
 
     def __init__(self, collection_type, collection):
         """
-        Create a collection interface.
-        :param collection_type: description of interface (e.g. "linked list" or "stack")
-        :param collection: collection to test
+        Create a command-line interface to test or analyze a collection.
+        :param collection_type: description of what is being tested (e.g. "Linked List" or "Stack")
+        :param collection: collection to test (see class description for requirements)
         """
         self.collection_type = collection_type
         self.collection = collection
@@ -38,15 +38,18 @@ class CollectionInterface:
             print('  q) Quit')
             cmd = input('> ').lower()
             if cmd == 'a':
+                # adds an element to the collection using push()
                 cmd = input('Enter value to add: ')
                 self.collection.push(cmd)
             elif cmd == 'r':
+                # removes an element to the collection using pop()
                 try:
                     value = self.collection.pop()
                     print(f'Removed {value}')
                 except IndexError:
                     print('No element to remove')
             elif cmd == 's':
+                # searches for an element in the collection using index()
                 try:
                     cmd = input('Enter value to search: ')
                     index = self.collection.index(cmd)
@@ -54,16 +57,19 @@ class CollectionInterface:
                 except ValueError:
                     print(f'Value not found')
             elif cmd == 'l':
+                # lists elements in collection for testing
                 print('Values:')
                 for i, value in enumerate(self.collection):
                     print(f'[{i}] {value}')
             elif cmd == 'c':
+                # removes all elements in collection
                 self.collection.clear()
             elif cmd == 'o':
-                # enter complexity analysis mode, see ComplexityAnalyzer
+                # clear list and enter complexity analysis mode, see ComplexityAnalyzer
                 self.collection.clear()
                 ComplexityAnalyzer(plot=True).execute(self.collection, collection_type=self.collection_type)
             elif cmd == 'q':
+                # quit
                 return
             else:
                 print('Invalid command')
