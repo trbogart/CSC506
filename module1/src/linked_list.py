@@ -4,8 +4,7 @@ import sys
 from collection_interface import CollectionInterface
 
 
-# Doubly linked list. I made this doubly linked so it could be used to implement
-# a queue efficiently.
+# Doubly linked list. I made this doubly linked so it could be used to implement a queue efficiently.
 class LinkedList:
     """Doubly linked list"""
 
