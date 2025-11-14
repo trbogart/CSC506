@@ -16,7 +16,7 @@ class ComplexityAnalyzer:
     # a starting point in case it is required for future assignments.
 
     def __init__(self, plot=False, default_num_runs=10_000, default_num_tests=5, default_error_threshold=0.05,
-                 default_coef_threshold=0.000001):
+                 default_coef_threshold=0.001):
         """
         Create complexity analyzer
         :param plot: true to plot values against expected
@@ -213,7 +213,7 @@ class ComplexityAnalyzer:
                     # print level and plot expected vs. actual values
                     # use subplots in case the x-axis was transformed (not required for polynomial fits)
                     print(level_name)
-                    fig, ax = plt.subplots()
+                    fig, ax = plt.subplots(figsize=(6,3.3))
 
                     ax.plot(x, metrics, label='Actual')
                     ax.plot(level_x, level_y, label=f'Estimated')
@@ -294,11 +294,11 @@ class ComplexityAnalyzer:
                     # measure time to search for a random element
                     collection.index(random.randint(0, len(collection) - 1))
 
-                self.analyze_time(op, title=f'{collection_type} Add Space Complexity', init_test=init_test,
+                self.analyze_time(op, title=f'{collection_type} Search Time Complexity', init_test=init_test,
                                   init_op=init_op, num_runs=2_000)
             elif cmd == 'sa':
                 # analyze space complexity for add
-                num_runs = 20
+                num_runs = 1_000
 
                 def init_test(_):
                     # clear collection between each run
@@ -316,7 +316,7 @@ class ComplexityAnalyzer:
                                    init_test=init_test, num_runs=num_runs)
             elif cmd == 'sr':
                 # analyze space complexity for remove
-                num_runs = 20
+                num_runs = 1_000
 
                 def init_test(_):
                     # start with full collection (including extra initial run)
@@ -336,7 +336,7 @@ class ComplexityAnalyzer:
                                    init_test=init_test, num_runs=num_runs)
             elif cmd == 'ss':
                 # analyze space complexity for search
-                num_runs = 20
+                num_runs = 1_000
 
                 def init_test(_):
                     # clear collection between each run
