@@ -11,10 +11,6 @@ class ComplexityAnalyzer:
     This currently only supports O(1), O(N), and O(N^2).
     """
 
-    # TODO Restore O(log(N)) and O(N*log(N)). These basically work, but are kind of finicky, and require a lot
-    # runs. This may work better now that I've removed the first run from the calculation, so I'll leave it as
-    # a starting point in case it is required for future assignments.
-
     def __init__(self, plot=False, default_num_runs=10_000, default_num_tests=5, default_error_threshold=0.05,
                  default_coef_threshold=0.001):
         """
@@ -168,7 +164,10 @@ class ComplexityAnalyzer:
         # O(N^2)
         level_n_2 = get_level(x, 2, 'O(N^2)')
 
-        # TODO fix log
+        # TODO Restore O(log(N)) and O(N*log(N)). These basically work, but are kind of flaky, and require a lot
+        # runs. This may work better now that I've removed the first run from the calculation, so I'll leave it as
+        # a starting point in case it is required for future assignments.
+
         # O(N * log(N))
         # x_n_log = np.log(x) * x # transform x axis to do 1-degree polynomial fit
         # level_log_n_n = get_level(x_n_log, 1, 'O(N * log(N))')
