@@ -128,12 +128,9 @@ class ComplexityAnalyzer:
                 if run > 0:
                     # skip metric for first run
                     new_metric = metric(run) - start_metric - metric_adjustment
-                    print(f'??? run {run}, new_metric {new_metric}, metric_adjustment {metric_adjustment}')
                     metrics[run-1] = new_metric
                 if post_op:
                     post_op(run)
-
-        print(f'??? metrics {metrics}')
 
         x = [i + 1 for i in range(len(metrics))]
 
