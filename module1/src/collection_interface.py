@@ -59,7 +59,7 @@ class CollectionInterface:
                 self.collection.clear()
             elif cmd == 'ac':
                 self.collection.clear()
-                ComplexityAnalyzer(plot = True).execute(self.collection)
+                ComplexityAnalyzer(plot = True).execute(self.collection, collection_type = self.collection_type)
             elif cmd == 'q':
                 return
             else:

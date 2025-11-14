@@ -41,4 +41,4 @@ class Stack:
 
 
 if __name__ == '__main__':
-    CollectionInterface("stack", Stack()).execute()
+    CollectionInterface("Stack", Stack()).execute()

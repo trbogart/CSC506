@@ -4,6 +4,7 @@ import time
 import tracemalloc
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 """
 Estimates time or space complexity for an operation. 
@@ -25,11 +26,13 @@ class ComplexityAnalyzer:
         self.default_num_tests = default_num_tests
         self.default_threshold = default_threshold
 
-    def analyze_time(self, op, init_test=None, init_op=None, post_op=None,
+    def analyze_time(self, op, title = None, init_test=None, init_op=None, post_op=None,
                      num_iterations=None, num_tests=None, threshold=None):
         return self.analyze(
             lambda _: time.perf_counter_ns(),
             op,
+            title = title,
+            y_axis = 'Time',
             init_test = init_test,
             init_op = init_op,
             post_op = post_op,
@@ -38,7 +41,7 @@ class ComplexityAnalyzer:
             threshold = threshold,
         )
 
-    def analyze_space(self, op, init_test=None, init_op=None, post_op=None,
+    def analyze_space(self, op, title = None, init_test=None, init_op=None, post_op=None,
                       num_iterations=None, num_tests=None, threshold=None, full_gc=False):
         tracemalloc.start()
 
@@ -50,6 +53,8 @@ class ComplexityAnalyzer:
         result = self.analyze(
             lambda _: self._get_memory_usage(full_gc),
             op,
+            title = title,
+            y_axis = 'Space',
             init_test = init_test,
             init_op = init_op,
             post_op = post_op,
@@ -62,15 +67,17 @@ class ComplexityAnalyzer:
         tracemalloc.stop()
         return result
 
-    def analyze(self, metric, op, init_test=None, init_op=None, post_op=None,
+    def analyze(self, metric, op, title = None, y_axis = None, init_test=None, init_op=None, post_op=None,
                 init_test_metric=None, init_metric=None, post_metric=None,
                 num_iterations=None, num_tests=None, threshold=None):
         """
         Estimates time complexity for the given operation.
         :param metric: metric to test (function with no arguments that returns a numeric value)
+        :param op: operation to test (function with iteration number arguments)
+        :param title: title to print with plot (ignored if plot not enabled)
+        :param y_axis: name of y-axis (ignored if plot not enabled)
         :param init_test: initialize collection before each test (function with test number arguments)
         :param init_op: initialize operation (function with iteration number argument)
-        :param op: operation to test (function with iteration number arguments)
         :param post_op: cleanup after operation (function with iteration number argument)
         :param num_iterations number of iterations to test, or None to use the class default
         :param num_tests number of tests to run, or None to use the class default
@@ -150,6 +157,19 @@ class ComplexityAnalyzer:
             if i == len(levels) - 1 or error * (1 + threshold) < get_min_error(levels[i + 1:]):
                 if self.plot:
                     print(level_name)
+                    fig, ax = plt.subplots()
+
+                    ax.plot(x, metrics, label = 'Actual')
+                    ax.plot(level_x, level_y, label = f'Estimated')
+
+                    ax.set_xlabel('Size')
+                    ax.set_ylabel(y_axis)
+                    ax.legend()
+
+                    subtitle = f'{title} {level_name}' if title else level_name
+                    plt.suptitle(subtitle)
+                    plt.tight_layout()
+                    plt.show()
                 return level_name
 
     @staticmethod
@@ -158,7 +178,7 @@ class ComplexityAnalyzer:
         current, _ = tracemalloc.get_traced_memory()
         return current
 
-    def execute(self, collection):
+    def execute(self, collection, collection_type):
         while True:
             print('--------------------------------------------------------------')
             print('Enter command:')
@@ -182,7 +202,7 @@ class ComplexityAnalyzer:
                 def op(_):
                     collection.push(random.random())
 
-                self.analyze_time(op, init_test=init_test, num_iterations=2_000)
+                self.analyze_time(op, title=f'{collection_type} Add Time Complexity', init_test=init_test, num_iterations=2_000)
             elif cmd == 'tr':
                 # analyze time complexity for remove
                 num_iterations = 1_000
@@ -194,63 +214,58 @@ class ComplexityAnalyzer:
                 def op(_):
                     collection.pop()
 
-                self.analyze_time(op, init_test=init_test, num_iterations=num_iterations)
+                self.analyze_time(op, title=f'{collection_type} Remove Time Complexity', init_test=init_test, num_iterations=num_iterations)
             elif cmd == 'ts':
                 # analyze time complexity for search
 
                 def init_test(_):
                     collection.clear()
 
-                def init_op(_):
-                    collection.push(len(collection))
+                def init_op(i):
+                    collection.push(i)
 
                 def op(_):
-                    collection.index(random.randint(0, len(collection) - 1))
+                    collection.index(random.randint(1, len(collection)))
 
-                self.analyze_time(op, init_test=init_test, init_op=init_op, num_iterations=100)
+                self.analyze_time(op, title=f'{collection_type} Add Search Complexity', init_test=init_test, init_op=init_op, num_iterations=100)
             elif cmd == 'sa':
                 # analyze space complexity for add
-
-                batch_size = 100
-                num_iterations = 1_000
+                num_iterations = 100
 
                 def init_test(_):
                     collection.clear()
 
-                def op(_):
-                    for _ in range(batch_size):
-                        collection.push(random.random())
+                def op(i):
+                    collection.push(i)
 
-                self.analyze_space(op, init_test=init_test, num_iterations=num_iterations, full_gc=True)
+                self.analyze_space(op, title=f'{collection_type} Add Space Complexity', init_test=init_test, num_iterations=num_iterations, full_gc=True)
             elif cmd == 'sr':
-                batch_size = 100
-                num_iterations = 1_000
+                # analyze space complexity for remove
+                num_iterations = 100
 
                 def init_test(_):
                     # start with full collection
                     collection.clear()
-                    for _ in range(batch_size):
+                    for _ in range(num_iterations):
                         collection.push(0)
 
                 def op(_):
-                    for _ in range(batch_size):
-                        collection.pop()
+                    collection.pop()
 
-                self.analyze_space(op, init_test=init_test, num_iterations=num_iterations, full_gc=True)
+                self.analyze_space(op, title=f'{collection_type} Remove Space Complexity', init_test=init_test, num_iterations=num_iterations, full_gc=True)
             elif cmd == 'ss':
-                batch_size = 100
-                num_iterations = 1_000
+                # analyze space complexity for search
+                num_iterations = 100
 
                 def init_test(_):
                     collection.clear()
 
-                def init_op(_):
-                    for _ in range(batch_size):
-                        collection.push(len(collection))
+                def init_op(i):
+                    collection.push(i)
 
                 def op(_):
-                    collection.index(random.randint(0, len(collection) - 1))
+                    collection.index(random.randint(1, len(collection)))
 
-                self.analyze_space(op, init_test=init_test, init_op=init_op, num_iterations=100, full_gc=True)
+                self.analyze_space(op, title=f'{collection_type} Search Space Complexity', init_test=init_test, init_op=init_op, num_iterations=100, full_gc=True)
             else:
                 print('Invalid command')

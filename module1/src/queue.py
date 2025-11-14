@@ -42,4 +42,4 @@ class Queue:
 
 
 if __name__ == '__main__':
-    CollectionInterface("queue", Queue()).execute()
+    CollectionInterface("Queue", Queue()).execute()
