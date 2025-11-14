@@ -32,7 +32,7 @@ class CollectionInterface:
             print('  s) Search for an element')
             print('  l) List all elements')
             print('  c) Clear (remove all elements)')
-            print('  ac) Analyze complexity')
+            print('  o) Analyze complexity mode')
             print('  q) Quit')
             cmd = input('> ').lower()
             if cmd == 'a':
@@ -57,7 +57,7 @@ class CollectionInterface:
                     print(f'[{i}] {value}')
             elif cmd == 'c':
                 self.collection.clear()
-            elif cmd == 'ac':
+            elif cmd == 'o':
                 self.collection.clear()
                 ComplexityAnalyzer(plot = True).execute(self.collection, collection_type = self.collection_type)
             elif cmd == 'q':

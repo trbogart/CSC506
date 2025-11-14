@@ -13,21 +13,21 @@ Supports O(1), O(N), and O(N^2).
 # TODO add O(log(N)) and O(N*log(N))
 
 class ComplexityAnalyzer:
-    def __init__(self, plot = False, default_num_iterations = 10_000, default_num_tests = 5, default_threshold = 0.05):
+    def __init__(self, plot = False, default_num_runs = 10_000, default_num_tests = 5, default_threshold = 0.05):
         """
         Create complexity analyzer
         :param plot: true to plot values against expected
-        :param default_num_iterations: default number of iterations per test (can be overridden in analyze methods)
+        :param default_num_runs: default number of runs per test (can be overridden in analyze methods)
         :param default_num_tests: default number of tests (can be overridden in analyze methods)
         :param default_threshold: default threshold (minimum proportion of error used to select higher level)
         """
         self.plot = plot
-        self.default_num_iterations = default_num_iterations
+        self.default_num_runs = default_num_runs
         self.default_num_tests = default_num_tests
         self.default_threshold = default_threshold
 
     def analyze_time(self, op, title = None, init_test=None, init_op=None, post_op=None,
-                     num_iterations=None, num_tests=None, threshold=None):
+                     num_runs=None, num_tests=None, threshold=None):
         return self.analyze(
             lambda _: time.perf_counter_ns(),
             op,
@@ -36,13 +36,13 @@ class ComplexityAnalyzer:
             init_test = init_test,
             init_op = init_op,
             post_op = post_op,
-            num_iterations = num_iterations,
+            num_runs= num_runs,
             num_tests = num_tests,
             threshold = threshold,
         )
 
     def analyze_space(self, op, title = None, init_test=None, init_op=None, post_op=None,
-                      num_iterations=None, num_tests=None, threshold=None, full_gc=False):
+                      num_runs=None, num_tests=None, threshold=None, full_gc=False):
         tracemalloc.start()
 
         def init_test_metric(_):
@@ -59,7 +59,7 @@ class ComplexityAnalyzer:
             init_op = init_op,
             post_op = post_op,
             init_test_metric = init_test_metric,
-            num_iterations = num_iterations,
+            num_runs= num_runs,
             num_tests = num_tests,
             threshold = threshold,
         )
@@ -69,29 +69,29 @@ class ComplexityAnalyzer:
 
     def analyze(self, metric, op, title = None, y_axis = None, init_test=None, init_op=None, post_op=None,
                 init_test_metric=None, init_metric=None, post_metric=None,
-                num_iterations=None, num_tests=None, threshold=None):
+                num_runs=None, num_tests=None, threshold=None):
         """
         Estimates time complexity for the given operation.
         :param metric: metric to test (function with no arguments that returns a numeric value)
-        :param op: operation to test (function with iteration number arguments)
+        :param op: operation to test (function with run number arguments)
         :param title: title to print with plot (ignored if plot not enabled)
         :param y_axis: name of y-axis (ignored if plot not enabled)
         :param init_test: initialize collection before each test (function with test number arguments)
-        :param init_op: initialize operation (function with iteration number argument)
-        :param post_op: cleanup after operation (function with iteration number argument)
-        :param num_iterations number of iterations to test, or None to use the class default
+        :param init_op: initialize operation (function with run number argument)
+        :param post_op: cleanup after operation (function with run number argument)
         :param num_tests number of tests to run, or None to use the class default
+        :param num_runs number of runs per test, or None to use the class default
         :param threshold: threshold (minimum proportion of error used to select higher level), or None to use the class default
         :param init_test_metric: initialize metric before each test (function with test number argument)
-        :param init_metric: initialize metric (function with iteration number argument)
+        :param init_metric: initialize metric (function with run number argument)
         :param post_metric: cleanup after gathering metric (function with no arguments)
         """
-        metrics = [0] * num_iterations
+        metrics = [0] * num_runs
 
         if num_tests is None:
             num_tests = self.default_num_tests
-        if num_iterations is None:
-            num_iterations = self.default_num_iterations
+        if num_runs is None:
+            num_runs = self.default_num_runs
         if threshold is None:
             threshold = self.default_threshold
 
@@ -100,22 +100,28 @@ class ComplexityAnalyzer:
                 init_test(test + 1)
             if init_test_metric:
                 init_test_metric(test + 1)
-            for i in range(num_iterations):
-                iter_num = i + 1
-                if init_op:
-                    init_op(iter_num)
-                if init_metric:
-                    init_metric(iter_num)
-                start_metric = metric(iter_num)
-                op(iter_num)
-                end_metric = metric(iter_num)
-                if post_op:
-                    post_op(iter_num)
-                if post_metric:
-                    post_metric(iter_num)
-                metrics[i] += end_metric - start_metric
 
-        x = [i + 1 for i in range(num_iterations)]
+            # do an additional first run that is ignored for metrics
+            for i in range(num_runs + 1):
+                if init_op:
+                    init_op(i)
+                if i > 0:
+                    # skip metric for first run
+                    if init_metric:
+                        init_metric(i)
+                    start_metric = metric(i)
+                else:
+                    start_metric = None
+                op(i)
+                if start_metric:
+                    end_metric = metric(i)
+                    metrics[i-1] += end_metric - start_metric
+                    if post_metric:
+                        post_metric(i)
+                if post_op:
+                    post_op(i)
+
+        x = [i + 1 for i in range(len(metrics))]
 
         def get_level(x_transformed, degree, level_name):
             coef = np.polyfit(x_transformed, metrics, degree)
@@ -162,7 +168,7 @@ class ComplexityAnalyzer:
                     ax.plot(x, metrics, label = 'Actual')
                     ax.plot(level_x, level_y, label = f'Estimated')
 
-                    ax.set_xlabel('Size')
+                    ax.set_xlabel('Runs')
                     ax.set_ylabel(y_axis)
                     ax.legend()
 
@@ -202,19 +208,19 @@ class ComplexityAnalyzer:
                 def op(_):
                     collection.push(random.random())
 
-                self.analyze_time(op, title=f'{collection_type} Add Time Complexity', init_test=init_test, num_iterations=2_000)
+                self.analyze_time(op, title=f'{collection_type} Add Time Complexity', init_test=init_test, num_runs=2_000)
             elif cmd == 'tr':
                 # analyze time complexity for remove
-                num_iterations = 1_000
+                num_runs = 1_000
                 def init_test(_):
                     collection.clear()
-                    for i in range(num_iterations):
+                    for i in range(num_runs):
                         collection.push(random.random())
 
                 def op(_):
                     collection.pop()
 
-                self.analyze_time(op, title=f'{collection_type} Remove Time Complexity', init_test=init_test, num_iterations=num_iterations)
+                self.analyze_time(op, title=f'{collection_type} Remove Time Complexity', init_test=init_test, num_runs=num_runs)
             elif cmd == 'ts':
                 # analyze time complexity for search
 
@@ -227,10 +233,10 @@ class ComplexityAnalyzer:
                 def op(_):
                     collection.index(random.randint(1, len(collection)))
 
-                self.analyze_time(op, title=f'{collection_type} Add Search Complexity', init_test=init_test, init_op=init_op, num_iterations=100)
+                self.analyze_time(op, title=f'{collection_type} Add Search Complexity', init_test=init_test, init_op=init_op, num_runs=100)
             elif cmd == 'sa':
                 # analyze space complexity for add
-                num_iterations = 100
+                num_runs = 100
 
                 def init_test(_):
                     collection.clear()
@@ -238,24 +244,24 @@ class ComplexityAnalyzer:
                 def op(i):
                     collection.push(i)
 
-                self.analyze_space(op, title=f'{collection_type} Add Space Complexity', init_test=init_test, num_iterations=num_iterations, full_gc=True)
+                self.analyze_space(op, title=f'{collection_type} Add Space Complexity', init_test=init_test, num_runs=num_runs, full_gc=True)
             elif cmd == 'sr':
                 # analyze space complexity for remove
-                num_iterations = 100
+                num_runs = 100
 
                 def init_test(_):
                     # start with full collection
                     collection.clear()
-                    for _ in range(num_iterations):
+                    for _ in range(num_runs):
                         collection.push(0)
 
                 def op(_):
                     collection.pop()
 
-                self.analyze_space(op, title=f'{collection_type} Remove Space Complexity', init_test=init_test, num_iterations=num_iterations, full_gc=True)
+                self.analyze_space(op, title=f'{collection_type} Remove Space Complexity', init_test=init_test, num_runs=num_runs, full_gc=True)
             elif cmd == 'ss':
                 # analyze space complexity for search
-                num_iterations = 100
+                num_runs = 100
 
                 def init_test(_):
                     collection.clear()
@@ -266,6 +272,6 @@ class ComplexityAnalyzer:
                 def op(_):
                     collection.index(random.randint(1, len(collection)))
 
-                self.analyze_space(op, title=f'{collection_type} Search Space Complexity', init_test=init_test, init_op=init_op, num_iterations=100, full_gc=True)
+                self.analyze_space(op, title=f'{collection_type} Search Space Complexity', init_test=init_test, init_op=init_op, num_runs=100, full_gc=True)
             else:
                 print('Invalid command')

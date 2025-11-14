@@ -13,7 +13,7 @@ def test_analyze_space_1():
     def op(_):
         pass
 
-    assert ComplexityAnalyzer().analyze_space(op, num_iterations=1_000) == 'O(1)'
+    assert ComplexityAnalyzer().analyze_space(op, num_runs=1_000) == 'O(1)'
 
 def test_analyze_space_n():
     a = ArrayWrapper()
@@ -25,7 +25,7 @@ def test_analyze_space_n():
     def op(_):
         a.add_elements(batch_size)
 
-    assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_iterations=100) == 'O(1)'
+    assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_runs=100) == 'O(1)'
 
 
 @pytest.mark.skip('Too slow')
@@ -39,7 +39,7 @@ def test_analyze_space_log_n():
     def op(n):
         a.add_elements(batch_size * int(math.ceil(math.log2(n))))
 
-    assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_iterations=1_000) == 'O(log(N))'
+    assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_runs=1_000) == 'O(log(N))'
 
 @pytest.mark.skip('Too slow')
 def test_analyze_space_n_log_n():
@@ -52,11 +52,11 @@ def test_analyze_space_n_log_n():
     def op(n):
         a.add_elements(n * batch_size * int(math.ceil(math.log2(n))))
 
-    assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_iterations=1_000) == 'O(N*log(N))'
+    assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_runs=1_000) == 'O(N*log(N))'
 
 def test_analyze_space_n_2():
     a = ArrayWrapper()
-    batch_size = 1_000
+    batch_size = 100
 
     def init_test(_):
         a.clear()
@@ -64,7 +64,7 @@ def test_analyze_space_n_2():
     def op(n):
         a.add_elements(batch_size * n)
 
-    assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_iterations=200) == 'O(N^2)'
+    assert ComplexityAnalyzer().analyze_space(op, init_test=init_test, num_runs=500) == 'O(N^2)'
 
 # wrapper to test memory usage more precisely
 class ArrayWrapper:

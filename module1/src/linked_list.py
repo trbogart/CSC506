@@ -163,4 +163,4 @@ class LinkedList:
 
 
 if __name__ == '__main__':
-    CollectionInterface("linked list", LinkedList()).execute()
+    CollectionInterface("Linked List", LinkedList()).execute()

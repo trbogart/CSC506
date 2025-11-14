@@ -21,7 +21,7 @@ def test_analyze_time_1():
     def op(i):
         return i in a
 
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_iterations=5_000) == 'O(1)'
+    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=5_000) == 'O(1)'
 
 @pytest.mark.skip('TODO Fix log')
 def test_analyze_time_log_n():
@@ -39,7 +39,7 @@ def test_analyze_time_log_n():
         bisect_left(a, a[random.randint(0, len(a) - 1)])
 
     assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op,
-                                             num_iterations=100) == 'O(log(N))'
+                                             num_runs=100) == 'O(log(N))'
 
 
 def test_analyze_time_n():
@@ -56,11 +56,11 @@ def test_analyze_time_n():
     def op(_):
         return a[random.randint(0, len(a) - 1)] in a
 
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_iterations=100) == 'O(N)'
+    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=100) == 'O(N)'
 
 
 @pytest.mark.skip('TODO Fix log')
-@flaky(max_runs=2)  # somewhat flaky, but already slow enough that increasing iterations is unappealing
+@flaky(max_runs=2)  # somewhat flaky, but already slow enough that increasing runs is unappealing
 def test_analyze_time_n_log_n():
     a = []
     batch_size = 1_000
@@ -77,7 +77,7 @@ def test_analyze_time_n_log_n():
         a.sort()
 
     assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op,
-                                             num_iterations=200) == 'O(N*log(N))'
+                                             num_runs=200) == 'O(N*log(N))'
 
 
 def test_analyze_time_n_2():
@@ -96,4 +96,4 @@ def test_analyze_time_n_2():
             for _ in a:
                 pass
 
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_iterations=100) == 'O(N^2)'
+    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=100) == 'O(N^2)'
