@@ -7,6 +7,7 @@ import pytest
 
 from complexity_analyzer import ComplexityAnalyzer
 
+
 # Probabilistic test for ComplexityAnalyzer.analyze_space()
 
 def test_analyze_space_1_nop():
@@ -18,6 +19,7 @@ def test_analyze_space_1_nop():
 
     assert (ComplexityAnalyzer(default_num_tests=1)
             .analyze_space(op, get_estimated_space, num_runs=10) == 'O(1)')
+
 
 def test_analyze_space_1_add_in_init_op():
     a = ArrayWrapper()
@@ -35,7 +37,8 @@ def test_analyze_space_1_add_in_init_op():
         return a.get_estimated_space()
 
     assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_op = init_op, init_test=init_test, num_runs=10) == 'O(1)')
+            .analyze_space(op, get_estimated_space, init_op=init_op, init_test=init_test, num_runs=10) == 'O(1)')
+
 
 def test_analyze_space_n():
     a = ArrayWrapper()
@@ -51,6 +54,7 @@ def test_analyze_space_n():
 
     assert (ComplexityAnalyzer(default_num_tests=1)
             .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=100) == 'O(N)')
+
 
 @pytest.mark.skip('Too slow')
 def test_analyze_space_log_n():
@@ -68,6 +72,7 @@ def test_analyze_space_log_n():
     assert (ComplexityAnalyzer(default_num_tests=1)
             .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=10) == 'O(log(N))')
 
+
 @pytest.mark.skip('Too slow')
 def test_analyze_space_n_log_n():
     a = ArrayWrapper()
@@ -84,6 +89,7 @@ def test_analyze_space_n_log_n():
     assert (ComplexityAnalyzer(default_num_tests=1)
             .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=10) == 'O(N*log(N))')
 
+
 def test_analyze_space_n_2():
     a = ArrayWrapper()
 
@@ -99,6 +105,7 @@ def test_analyze_space_n_2():
     assert (ComplexityAnalyzer(default_num_tests=1)
             .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=10) == 'O(N^2)')
 
+
 # wrapper to test memory usage more precisely
 class ArrayWrapper:
     def __init__(self):
@@ -113,7 +120,7 @@ class ArrayWrapper:
 
     @staticmethod
     def _allocate(size):
-        return arr.array('i', itertools.repeat(0, size)) # ???
+        return arr.array('i', itertools.repeat(0, size))  # ???
 
     def get_estimated_space(self):
         """Helper method to get the estimated space consumed by this list"""

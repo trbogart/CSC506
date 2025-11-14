@@ -45,5 +45,6 @@ class Stack:
         """Helper method to get the estimated space consumed by this list"""
         return sys.getsizeof(self) + sum(map(lambda value: sys.getsizeof(value), self))
 
+
 if __name__ == '__main__':
     CollectionInterface("Stack", Stack()).execute()

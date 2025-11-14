@@ -23,6 +23,7 @@ def test_analyze_time_1():
 
     assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=5_000) == 'O(1)'
 
+
 @pytest.mark.skip('TODO Fix log')
 def test_analyze_time_log_n():
     a = []
@@ -39,7 +40,7 @@ def test_analyze_time_log_n():
         bisect_left(a, a[random.randint(0, len(a) - 1)])
 
     assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op,
-                                             num_runs=100) == 'O(log(N))'
+                                             num_runs=200) == 'O(log(N))'
 
 
 def test_analyze_time_n():
