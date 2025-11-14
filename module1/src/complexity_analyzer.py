@@ -4,15 +4,13 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
-"""
-Estimates time or space complexity for an operation. 
-Supports O(1), O(N), and O(N^2).
-"""
-
-
-# TODO add O(log(N)) and O(N*log(N))
-
 class ComplexityAnalyzer:
+    # TODO add O(log(N)) and O(N*log(N))
+    """
+    Estimates time or space complexity for an operation.
+    Supports O(1), O(N), and O(N^2).
+    """
+
     def __init__(self, plot=False, default_num_runs=10_000, default_num_tests=5, default_error_threshold=0.05,
                  default_coef_threshold=0.000001):
         """
@@ -158,7 +156,7 @@ class ComplexityAnalyzer:
         # TODO fix log (may work now)
         # # O(N * log(N))
         # x_n_log = np.log(x) * x
-        # level_log_n_n = get_level(x_n_log, 1, 'O(N * log(N)))
+        # level_log_n_n = get_level(x_n_log, 1, 'O(N * log(N))')
 
         # O(N)
         level_n = get_level(x, 1, 'O(N)')
