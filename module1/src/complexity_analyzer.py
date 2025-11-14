@@ -12,7 +12,7 @@ class ComplexityAnalyzer:
     """
 
     def __init__(self, plot=False, default_num_runs=10_000, default_num_tests=5, default_error_threshold=0.05,
-                 default_coef_threshold=0.001):
+                 default_coef_threshold=0.01):
         """
         Create complexity analyzer
         :param plot: true to plot values against expected
