@@ -120,7 +120,7 @@ class ArrayWrapper:
 
     @staticmethod
     def _allocate(size):
-        return arr.array('i', itertools.repeat(0, size))  # ???
+        return arr.array('i', itertools.repeat(0, size))
 
     def get_estimated_space(self):
         """Helper method to get the estimated space consumed by this list"""
