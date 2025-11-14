@@ -110,47 +110,47 @@ class ComplexityAnalyzer:
 
         x = [i + 1 for i in range(num_iterations)]
 
-        def get_error_and_coordinates(x_transformed, degree):
+        def get_level(x_transformed, degree, level_name):
             coef = np.polyfit(x_transformed, metrics, degree)
             fit = np.poly1d(coef)
             y_pred = fit(x_transformed)
-            return np.sqrt(np.mean((metrics - y_pred) ** 2))
+            return np.sqrt(np.mean((metrics - y_pred) ** 2)), x_transformed, y_pred, level_name
 
         # O(N^2)
-        error_quadratic = get_error_and_coordinates(x, 2)
+        level_n_2 = get_level(x, 2, 'O(N^2)')
 
         # TODO fix log
         # # O(N * log(N))
         # x_n_log = np.log(x) * x
-        # error_n_log = get_error_and_coordinates(x_n_log, 1)
+        # level_log_n_n = get_level(x_n_log, 1, 'O(N * log(N)))
 
         # O(N)
-        error_linear = get_error_and_coordinates(x, 1)
+        level_n = get_level(x, 1, 'O(N)')
 
         # TODO fix log
         # # O(log(N))
         # x_log = np.log(x)
-        # error_log = get_error_and_coordinates(x_log, 1)
+        # level_log_n = get_level(x_log, 1, 'O(log(N))')
 
         # O(1)
-        error_constant = get_error_and_coordinates(x, 0)
+        level_1 = get_level(x, 0, 'O(1)')
 
         levels = [
-            (error_quadratic, 'O(N^2)', threshold),
-            # (error_n_log, 'O(N*log(N))', threshold), # TODO fix log
-            (error_linear, 'O(N)', threshold),
-            # (error_log, 'O(log(N))', threshold), # TODO fix log
-            (error_constant, 'O(1)', None),
+            level_n_2,
+            # level_log_n_n, # TODO fix log
+            level_n,
+            # level_log_n # TODO fix log
+            level_1,
         ]
 
         def get_min_error(remaining_levels):
             return min(map(lambda level: level[0], remaining_levels))
 
-        for i, (error, name, threshold) in enumerate(levels):
-            if threshold is None or error * (1 + threshold) < get_min_error(levels[i + 1:]):
+        for i, (error, level_x, level_y, level_name) in enumerate(levels):
+            if i == len(levels) - 1 or error * (1 + threshold) < get_min_error(levels[i + 1:]):
                 if self.plot:
-                    print(name)
-                return name
+                    print(level_name)
+                return level_name
 
     @staticmethod
     def _get_memory_usage(full_gc):
