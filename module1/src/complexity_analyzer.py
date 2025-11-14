@@ -39,19 +39,24 @@ class ComplexityAnalyzer:
         )
 
     def analyze_space(self, op, init_test=None, init_op=None, post_op=None,
-                      num_iterations=None, num_tests=None, threshold=None):
+                      num_iterations=None, num_tests=None, threshold=None, full_gc=False):
         tracemalloc.start()
 
+        def init_test_metric(_):
+            # do a full garbage collection before each test unless already being done for each operation
+            if not full_gc:
+                gc.collect()
+
         result = self.analyze(
-            lambda _: self._get_memory_usage(),
+            lambda _: self._get_memory_usage(full_gc),
             op,
             init_test = init_test,
             init_op = init_op,
             post_op = post_op,
-            init_test_metric = lambda _: gc.collect(),
-            num_iterations=num_iterations,
-            num_tests=num_tests,
-            threshold=threshold,
+            init_test_metric = init_test_metric,
+            num_iterations = num_iterations,
+            num_tests = num_tests,
+            threshold = threshold,
         )
 
         tracemalloc.stop()
@@ -146,8 +151,8 @@ class ComplexityAnalyzer:
                 return name
 
     @staticmethod
-    def _get_memory_usage():
-        gc.collect(1)
+    def _get_memory_usage(full_gc):
+        gc.collect(2 if full_gc else 1)
         current, _ = tracemalloc.get_traced_memory()
         return current
 
@@ -168,15 +173,17 @@ class ComplexityAnalyzer:
                 collection.clear()
                 return
             elif cmd == 'ta':
+                # analyze time complexity for add
                 def init_test(_):
                     collection.clear()
 
                 def op(_):
                     collection.push(random.random())
 
-                self.analyze_time(op, init_test=init_test, num_iterations=2000)
+                self.analyze_time(op, init_test=init_test, num_iterations=2_000)
             elif cmd == 'tr':
-                num_iterations = 1000
+                # analyze time complexity for remove
+                num_iterations = 1_000
                 def init_test(_):
                     collection.clear()
                     for i in range(num_iterations):
@@ -187,6 +194,8 @@ class ComplexityAnalyzer:
 
                 self.analyze_time(op, init_test=init_test, num_iterations=num_iterations)
             elif cmd == 'ts':
+                # analyze time complexity for search
+
                 def init_test(_):
                     collection.clear()
 
@@ -197,5 +206,49 @@ class ComplexityAnalyzer:
                     collection.index(random.randint(0, len(collection) - 1))
 
                 self.analyze_time(op, init_test=init_test, init_op=init_op, num_iterations=100)
+            elif cmd == 'sa':
+                # analyze space complexity for add
+
+                batch_size = 100
+                num_iterations = 1_000
+
+                def init_test(_):
+                    collection.clear()
+
+                def op(_):
+                    for _ in range(batch_size):
+                        collection.push(random.random())
+
+                self.analyze_space(op, init_test=init_test, num_iterations=num_iterations, full_gc=True)
+            elif cmd == 'sr':
+                batch_size = 100
+                num_iterations = 1_000
+
+                def init_test(_):
+                    # start with full collection
+                    collection.clear()
+                    for _ in range(batch_size):
+                        collection.push(0)
+
+                def op(_):
+                    for _ in range(batch_size):
+                        collection.pop()
+
+                self.analyze_space(op, init_test=init_test, num_iterations=num_iterations, full_gc=True)
+            elif cmd == 'ss':
+                batch_size = 100
+                num_iterations = 1_000
+
+                def init_test(_):
+                    collection.clear()
+
+                def init_op(_):
+                    for _ in range(batch_size):
+                        collection.push(len(collection))
+
+                def op(_):
+                    collection.index(random.randint(0, len(collection) - 1))
+
+                self.analyze_space(op, init_test=init_test, init_op=init_op, num_iterations=100, full_gc=True)
             else:
                 print('Invalid command')
