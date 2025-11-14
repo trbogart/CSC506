@@ -40,6 +40,9 @@ class Queue:
         """Clears the queue"""
         self.list.clear()
 
+    def get_estimated_space(self):
+        return self.list.get_estimated_space()
+
 
 if __name__ == '__main__':
     CollectionInterface("Queue", Queue()).execute()

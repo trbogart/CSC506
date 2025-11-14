@@ -1,3 +1,5 @@
+import sys
+
 from collection_interface import CollectionInterface
 
 
@@ -39,6 +41,9 @@ class Stack:
         """Clears the stack"""
         self.list.clear()
 
+    def get_estimated_space(self):
+        """Helper method to get the estimated space consumed by this list"""
+        return sys.getsizeof(self) + sum(map(lambda value: sys.getsizeof(value), self))
 
 if __name__ == '__main__':
     CollectionInterface("Stack", Stack()).execute()

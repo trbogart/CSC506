@@ -9,6 +9,7 @@ class CollectionInterface:
     3 - peek() - return an element from the collection
     4 - index(value) - search for the given value and return an index or raise a ValueException if not found
     5 - clear() - remove all elements from the collection
+    6 - get_estimated_space() - return the estimated space consumed by the collection
 
     The collection should also support len() and iter()
     """

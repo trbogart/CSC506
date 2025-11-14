@@ -1,7 +1,5 @@
-import gc
 import random
 import time
-import tracemalloc
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,9 +26,21 @@ class ComplexityAnalyzer:
 
     def analyze_time(self, op, title = None, init_test=None, init_op=None, post_op=None,
                      num_runs=None, num_tests=None, threshold=None):
+        """
+        Estimates space complexity for the given operation.
+        :param op: operation to test (function with run number arguments)
+        :param title: title to print with plot (ignored if plot not enabled)
+        :param init_test: initialize collection before each test (function with test number arguments)
+        :param init_op: initialize operation (function with run number argument)
+        :param post_op: cleanup after operation (function with run number argument)
+        :param num_tests number of tests to run, or None to use the class default
+        :param num_runs number of runs per test (not including initial non-measured run), or None to use the class default
+        :param threshold: threshold (minimum proportion of error used to select higher level), or None to use the class default
+        """
         return self.analyze(
-            lambda _: time.perf_counter_ns(),
             op,
+            metric = lambda _: time.perf_counter_ns(),
+            absolute_metric = False,
             title = title,
             y_axis = 'Time',
             init_test = init_test,
@@ -41,50 +51,51 @@ class ComplexityAnalyzer:
             threshold = threshold,
         )
 
-    def analyze_space(self, op, title = None, init_test=None, init_op=None, post_op=None,
-                      num_runs=None, num_tests=None, threshold=None, full_gc=False):
-        tracemalloc.start()
-
-        def init_test_metric(_):
-            # do a full garbage collection before each test unless already being done for each operation
-            if not full_gc:
-                gc.collect()
-
+    def analyze_space(self, op, get_estimated_space, title = None, init_test=None, init_op=None, post_op=None,
+                      num_runs=None, num_tests=None, threshold=None):
+        """
+        Estimates space complexity for the given operation.
+        :param op: operation to test (function with run number argument)
+        :param get_estimated_space: no-arg function to get the current space
+        :param title: title to print with plot (ignored if plot not enabled)
+        :param init_test: initialize collection before each test (function with test number arguments)
+        :param init_op: initialize operation (function with run number argument)
+        :param post_op: cleanup after operation (function with run number argument)
+        :param num_tests number of tests to run, or None to use the class default
+        :param num_runs number of runs per test (not including initial non-measured run), or None to use the class default
+        :param threshold: threshold (minimum proportion of error used to select higher level), or None to use the class default
+        """
         result = self.analyze(
-            lambda _: self._get_memory_usage(full_gc),
             op,
+            metric = lambda _: get_estimated_space(),
+            absolute_metric = True,
             title = title,
             y_axis = 'Space',
             init_test = init_test,
             init_op = init_op,
             post_op = post_op,
-            init_test_metric = init_test_metric,
             num_runs= num_runs,
             num_tests = num_tests,
             threshold = threshold,
         )
 
-        tracemalloc.stop()
         return result
 
-    def analyze(self, metric, op, title = None, y_axis = None, init_test=None, init_op=None, post_op=None,
-                init_test_metric=None, init_metric=None, post_metric=None,
+    def analyze(self, op, metric, absolute_metric, title = None, y_axis = None, init_test=None, init_op=None, post_op=None,
                 num_runs=None, num_tests=None, threshold=None):
         """
-        Estimates time complexity for the given operation.
+        Estimates complexity for the given operation.
         :param metric: metric to test (function with no arguments that returns a numeric value)
-        :param op: operation to test (function with run number arguments)
+        :param absolute_metric: true if the metric represents an absolute value such as a size rather than a relative value such as a timestamp
+        :param op: command to test (function with run number arguments)
         :param title: title to print with plot (ignored if plot not enabled)
         :param y_axis: name of y-axis (ignored if plot not enabled)
         :param init_test: initialize collection before each test (function with test number arguments)
         :param init_op: initialize operation (function with run number argument)
         :param post_op: cleanup after operation (function with run number argument)
         :param num_tests number of tests to run, or None to use the class default
-        :param num_runs number of runs per test, or None to use the class default
+        :param num_runs number of runs per test (not including initial non-measured run), or None to use the class default
         :param threshold: threshold (minimum proportion of error used to select higher level), or None to use the class default
-        :param init_test_metric: initialize metric before each test (function with test number argument)
-        :param init_metric: initialize metric (function with run number argument)
-        :param post_metric: cleanup after gathering metric (function with no arguments)
         """
         metrics = [0] * num_runs
 
@@ -98,28 +109,31 @@ class ComplexityAnalyzer:
         for test in range(num_tests):
             if init_test:
                 init_test(test + 1)
-            if init_test_metric:
-                init_test_metric(test + 1)
+
+            metric_adjustment = 0 # adjustment for any changes in init_op for absolute metrics
 
             # do an additional first run that is ignored for metrics
-            for i in range(num_runs + 1):
+            for run in range(num_runs + 1):
                 if init_op:
-                    init_op(i)
-                if i > 0:
+                    if absolute_metric:
+                        # ignore metric changes in init_op for absolute metrics like size
+                        pre_init_metric = metric(run)
+                        init_op(run)
+                        metric_adjustment += metric(run) - pre_init_metric
+                    else:
+                        init_op(run)
+
+                start_metric = metric(run) if run > 0 and not absolute_metric else 0
+                op(run)
+                if run > 0:
                     # skip metric for first run
-                    if init_metric:
-                        init_metric(i)
-                    start_metric = metric(i)
-                else:
-                    start_metric = None
-                op(i)
-                if start_metric:
-                    end_metric = metric(i)
-                    metrics[i-1] += end_metric - start_metric
-                    if post_metric:
-                        post_metric(i)
+                    new_metric = metric(run) - start_metric - metric_adjustment
+                    print(f'??? run {run}, new_metric {new_metric}, metric_adjustment {metric_adjustment}')
+                    metrics[run-1] = new_metric
                 if post_op:
-                    post_op(i)
+                    post_op(run)
+
+        print(f'??? metrics {metrics}')
 
         x = [i + 1 for i in range(len(metrics))]
 
@@ -132,7 +146,7 @@ class ComplexityAnalyzer:
         # O(N^2)
         level_n_2 = get_level(x, 2, 'O(N^2)')
 
-        # TODO fix log
+        # TODO fix log (may work now)
         # # O(N * log(N))
         # x_n_log = np.log(x) * x
         # level_log_n_n = get_level(x_n_log, 1, 'O(N * log(N)))
@@ -159,8 +173,8 @@ class ComplexityAnalyzer:
         def get_min_error(remaining_levels):
             return min(map(lambda level: level[0], remaining_levels))
 
-        for i, (error, level_x, level_y, level_name) in enumerate(levels):
-            if i == len(levels) - 1 or error * (1 + threshold) < get_min_error(levels[i + 1:]):
+        for run, (error, level_x, level_y, level_name) in enumerate(levels):
+            if run == len(levels) - 1 or error * (1 + threshold) < get_min_error(levels[run + 1:]):
                 if self.plot:
                     print(level_name)
                     fig, ax = plt.subplots()
@@ -178,23 +192,23 @@ class ComplexityAnalyzer:
                     plt.show()
                 return level_name
 
-    @staticmethod
-    def _get_memory_usage(full_gc):
-        gc.collect(2 if full_gc else 1)
-        current, _ = tracemalloc.get_traced_memory()
-        return current
-
     def execute(self, collection, collection_type):
+        """
+        Execute complexity analyzer mode.
+        See CollectionInterface for collection requirements.
+        :param collection: collection instance
+        :param collection_type: collection type, e.g. 'Linked List'
+        """
         while True:
             print('--------------------------------------------------------------')
-            print('Enter command:')
+            print('Enter complexity analyzer command:')
             print('  ta) Analyze time complexity to add')
             print('  tr) Analyze time complexity to remove')
             print('  ts) Analyze time complexity to search for random element')
             print('  sa) Analyze space complexity to add')
             print('  sr) Analyze space complexity to remove')
             print('  ss) Analyze space complexity to search for random element')
-            print('  q) Quit')
+            print('  q) Quit complexity analyzer mode')
             cmd = input('> ')
 
             if cmd == 'q':
@@ -214,7 +228,8 @@ class ComplexityAnalyzer:
                 num_runs = 1_000
                 def init_test(_):
                     collection.clear()
-                    for i in range(num_runs):
+                    # populate with number of runs, including initial extra run
+                    for i in range(num_runs+1):
                         collection.push(random.random())
 
                 def op(_):
@@ -228,50 +243,61 @@ class ComplexityAnalyzer:
                     collection.clear()
 
                 def init_op(i):
+                    # add next item
                     collection.push(i)
 
                 def op(_):
-                    collection.index(random.randint(1, len(collection)))
+                    collection.index(random.randint(0, len(collection)-1))
 
                 self.analyze_time(op, title=f'{collection_type} Add Search Complexity', init_test=init_test, init_op=init_op, num_runs=100)
             elif cmd == 'sa':
                 # analyze space complexity for add
-                num_runs = 100
+                num_runs = 20
 
                 def init_test(_):
                     collection.clear()
 
-                def op(i):
-                    collection.push(i)
+                def op(_):
+                    collection.push(len(collection))
 
-                self.analyze_space(op, title=f'{collection_type} Add Space Complexity', init_test=init_test, num_runs=num_runs, full_gc=True)
+                def get_estimated_space():
+                    return collection.get_estimated_space()
+
+                self.analyze_space(op, get_estimated_space, title=f'{collection_type} Add Space Complexity', init_test=init_test, num_runs=num_runs)
             elif cmd == 'sr':
                 # analyze space complexity for remove
-                num_runs = 100
+                num_runs = 20
 
                 def init_test(_):
-                    # start with full collection
+                    # start with full collection (including extra initial run)
                     collection.clear()
-                    for _ in range(num_runs):
+                    for _ in range(num_runs+1):
                         collection.push(0)
 
                 def op(_):
                     collection.pop()
 
-                self.analyze_space(op, title=f'{collection_type} Remove Space Complexity', init_test=init_test, num_runs=num_runs, full_gc=True)
+                def get_estimated_space():
+                    return collection.get_estimated_space()
+
+                self.analyze_space(op, get_estimated_space, title=f'{collection_type} Remove Space Complexity', init_test=init_test, num_runs=num_runs)
             elif cmd == 'ss':
                 # analyze space complexity for search
-                num_runs = 100
+                num_runs = 20
 
                 def init_test(_):
                     collection.clear()
 
                 def init_op(i):
+                    # not included in metric
                     collection.push(i)
 
                 def op(_):
-                    collection.index(random.randint(1, len(collection)))
+                    collection.index(random.randint(0, len(collection)-1))
 
-                self.analyze_space(op, title=f'{collection_type} Search Space Complexity', init_test=init_test, init_op=init_op, num_runs=100, full_gc=True)
+                def get_estimated_space():
+                    return collection.get_estimated_space()
+
+                self.analyze_space(op, get_estimated_space, title=f'{collection_type} Search Space Complexity', init_test=init_test, init_op=init_op, num_runs=num_runs)
             else:
                 print('Invalid command')

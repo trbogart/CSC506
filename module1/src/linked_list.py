@@ -1,4 +1,5 @@
 import itertools
+import sys
 
 from collection_interface import CollectionInterface
 
@@ -153,13 +154,21 @@ class LinkedList:
         self.size -= 1
         return node.value
 
+    def get_estimated_space(self):
+        """Helper method to get the estimated space consumed by this list"""
+        return sys.getsizeof(self) + sum(map(lambda node: node.get_estimated_space(), self._iter_nodes()))
+
     class Node:
         """Internal data structure representing a linked list node"""
 
-        def __init__(self, value, prev_node=None, next_node=None, ):
+        def __init__(self, value, prev_node=None, next_node=None):
             self.value = value
             self.prev_node = prev_node
             self.next_node = next_node
+
+        def get_estimated_space(self):
+            """Helper method to get the estimated space consumed by this node"""
+            return sys.getsizeof(self) + sys.getsizeof(self.value)
 
 
 if __name__ == '__main__':
