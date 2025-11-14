@@ -3,7 +3,7 @@ from linked_list import LinkedList
 
 
 class Queue:
-    """Simple LIFO Queue implemented with LinkedList"""
+    """Simple LIFO Queue implemented using an internal LinkedList"""
 
     def __init__(self):
         self.list = LinkedList()
@@ -41,8 +41,10 @@ class Queue:
         self.list.clear()
 
     def get_estimated_space(self):
+        """Helper method to get the estimated space consumed by this list"""
         return self.list.get_estimated_space()
 
 
 if __name__ == '__main__':
+    # run command-line interface for testing and analysis
     CollectionInterface("Queue", Queue()).execute()

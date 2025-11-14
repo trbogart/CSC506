@@ -9,9 +9,9 @@ class CollectionInterface:
     3 - peek() - return an element from the collection
     4 - index(value) - search for the given value and return an index or raise a ValueException if not found
     5 - clear() - remove all elements from the collection
-    6 - get_estimated_space() - return the estimated space consumed by the collection
+    6 - get_estimated_space() - return the estimated space consumed by the collection (for space complexity analysis)
 
-    The collection should also support len() and iter()
+    The collection should also support len() and iter().
     """
 
     def __init__(self, collection_type, collection):
@@ -24,6 +24,7 @@ class CollectionInterface:
         self.collection = collection
 
     def execute(self):
+        """Displays a menu to select to manipulate and test the collection."""
         while True:
             print('--------------------------------------------------------------')
             print(f'{self.collection_type} has {len(self.collection)} elements:')
@@ -59,6 +60,7 @@ class CollectionInterface:
             elif cmd == 'c':
                 self.collection.clear()
             elif cmd == 'o':
+                # enter complexity analysis mode, see ComplexityAnalyzer
                 self.collection.clear()
                 ComplexityAnalyzer(plot=True).execute(self.collection, collection_type=self.collection_type)
             elif cmd == 'q':

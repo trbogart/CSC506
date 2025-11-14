@@ -47,4 +47,5 @@ class Stack:
 
 
 if __name__ == '__main__':
+    # run command-line interface for testing and analysis
     CollectionInterface("Stack", Stack()).execute()

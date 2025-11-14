@@ -6,7 +6,6 @@ from collection_interface import CollectionInterface
 
 # Doubly linked list. I made this doubly linked so it could be used to implement
 # a queue efficiently.
-
 class LinkedList:
     """Doubly linked list"""
 
@@ -31,17 +30,17 @@ class LinkedList:
         return f'[{','.join(self)}]'
 
     def get_first(self):
-        """Returns the first element, or raise IndexError if invalid"""
+        """Returns the first element, or raise IndexError if index invalid"""
         self._validate_non_empty()
         return self.head.value
 
     def get_last(self):
-        """Returns the last element, or raise IndexError if invalid"""
+        """Returns the last element, or raise IndexError if index invalid"""
         self._validate_non_empty()
         return self.tail.value
 
     def get(self, index):
-        """Returns the element with the given index, or raise IndexError if invalid"""
+        """Returns the element with the given index, or raise IndexError if index invalid"""
         return self._get_node_by_index(index).value
 
     def add_first(self, value):
@@ -81,17 +80,17 @@ class LinkedList:
         self._remove_node(self._get_node_by_value(value))
 
     def pop(self, index=None):
-        """Remove and return the element with the given index, or raise IndexError if invalid"""
+        """Remove and return the element with the given index, or raise IndexError if index invalid"""
         if index is None:
             return self.remove_last()
         return self._remove_node(self._get_node_by_index(index))
 
     def push(self, value):
-        """Add element to end of list (synonym for add_last)"""
+        """Add element to end of list (same as add_last)"""
         self.add_last(value)
 
     def peek(self):
-        """Returns the last element, or raise IndexError if invalid (synonym for get_first)"""
+        """Returns the last element, or raise IndexError if index invalid (synonym for get_first)"""
         return self.get_last()
 
     def index(self, value):
@@ -115,6 +114,7 @@ class LinkedList:
         self.tail = None
 
     def _validate_non_empty(self):
+        """Raises an IndexError if the list is empty"""
         if self.size == 0:
             raise IndexError('List is empty')
 
@@ -172,4 +172,5 @@ class LinkedList:
 
 
 if __name__ == '__main__':
+    # run command-line interface for testing and analysis
     CollectionInterface("Linked List", LinkedList()).execute()
