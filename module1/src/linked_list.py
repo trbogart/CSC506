@@ -167,7 +167,10 @@ class LinkedList:
             self.next_node = next_node
 
         def get_estimated_space(self):
-            """Helper method to get the estimated space consumed by this node"""
+            """
+            Helper method to get the estimated space consumed by this node.
+            Includes the size of this node, including links, plus the size of the value.
+            """
             return sys.getsizeof(self) + sys.getsizeof(self.value)
 
 

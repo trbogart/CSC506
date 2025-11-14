@@ -3,7 +3,7 @@ from linked_list import LinkedList
 
 
 class Queue:
-    """Simple LIFO Queue implemented using an internal LinkedList"""
+    """Simple FIFO Queue implemented using an internal LinkedList"""
 
     def __init__(self):
         self.list = LinkedList()
