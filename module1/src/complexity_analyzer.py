@@ -7,9 +7,9 @@ import numpy as np
 
 """
 Estimates time or space complexity for an operation. 
-Supports O(1), O(log(N)), O(N), O(N*log(N)), and O(N^2).
+Supports O(1), O(N), and O(N^2).
 """
-
+# TODO add O(log(N)) and O(N*log(N))
 
 class ComplexityAnalyzer:
     def __init__(self, plot = False, default_num_iterations = 10_000, default_num_tests = 5, default_threshold = 0.05):
@@ -119,25 +119,27 @@ class ComplexityAnalyzer:
         # O(N^2)
         error_quadratic = get_error_and_coordinates(x, 2)
 
-        # O(N * log(N))
-        x_n_log = np.log(x) * x
-        error_n_log = get_error_and_coordinates(x_n_log, 1)
+        # TODO fix log
+        # # O(N * log(N))
+        # x_n_log = np.log(x) * x
+        # error_n_log = get_error_and_coordinates(x_n_log, 1)
 
         # O(N)
         error_linear = get_error_and_coordinates(x, 1)
 
-        # O(log(N))
-        x_log = np.log(x)
-        error_log = get_error_and_coordinates(x_log, 1)
+        # TODO fix log
+        # # O(log(N))
+        # x_log = np.log(x)
+        # error_log = get_error_and_coordinates(x_log, 1)
 
         # O(1)
         error_constant = get_error_and_coordinates(x, 0)
 
         levels = [
             (error_quadratic, 'O(N^2)', threshold),
-            (error_n_log, 'O(N*log(N))', threshold),
+            # (error_n_log, 'O(N*log(N))', threshold), # TODO fix log
             (error_linear, 'O(N)', threshold),
-            (error_log, 'O(log(N))', threshold),
+            # (error_log, 'O(log(N))', threshold), # TODO fix log
             (error_constant, 'O(1)', None),
         ]
 

@@ -15,7 +15,6 @@ def test_analyze_space_1():
 
     assert ComplexityAnalyzer().analyze_space(op, num_iterations=1_000) == 'O(1)'
 
-
 def test_analyze_space_n():
     a = ArrayWrapper()
     batch_size = 100
