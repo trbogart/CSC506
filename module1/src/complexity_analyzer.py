@@ -156,11 +156,11 @@ class ComplexityAnalyzer:
         def get_level(x_transformed, degree, level_name):
             # Helper method to get the best polynomial fit of given degree, along with corresponding error
             # Modified from Google AI Overview
-            # TODO check if this works for logarithmic
             coef = np.polyfit(x_transformed, metrics, degree)
             fit = np.poly1d(coef)
             y_pred = fit(x_transformed)
-            return np.sqrt(np.mean((metrics - y_pred) ** 2)), x_transformed, y_pred, coef, level_name
+            error = np.sqrt(np.mean((metrics - y_pred) ** 2)) # root mean squared error
+            return error, x_transformed, y_pred, coef, level_name
 
         # calculate levels
         # O(n^2)
