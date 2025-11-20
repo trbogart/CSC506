@@ -1,7 +1,4 @@
-import array as arr
-import itertools
 import math
-import sys
 
 from complexity_analyzer import ComplexityAnalyzer
 
@@ -9,119 +6,62 @@ from complexity_analyzer import ComplexityAnalyzer
 # Probabilistic test for ComplexityAnalyzer.analyze_space()
 
 def test_analyze_space_1_nop():
-    def op(_):
-        pass
-
-    def get_estimated_space():
-        return 0
-
-    assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, num_runs=10) == 'O(1)')
+    def new_size(_, old_size):
+        return old_size
+    SpaceTester(new_size).test_analyze_space('O(1)')
 
 
 def test_analyze_space_1_add_in_init_op():
-    a = ArrayWrapper()
-
-    def init_test(_):
-        a.clear()
-
-    def init_op(_):
-        a.add_elements(1)
-
-    def op(_):
-        pass
-
-    def get_estimated_space():
-        return a.get_estimated_space()
-
-    assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_op=init_op, init_test=init_test, num_runs=10) == 'O(1)')
+    def new_size(_, old_size):
+        return old_size
+    def init_op_new_size(i, old_size):
+        return old_size + i # ignore space added in init_op
+    SpaceTester(new_size, init_op_new_size).test_analyze_space('O(1)')
 
 
 def test_analyze_space_n():
-    a = ArrayWrapper()
-
-    def init_test(_):
-        a.clear()
-
-    def op(_):
-        a.add_elements(1)
-
-    def get_estimated_space():
-        return a.get_estimated_space()
-
-    assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=100) == 'O(n)')
+    def new_size(_, old_size):
+        return old_size + 1
+    SpaceTester(new_size).test_analyze_space('O(n)')
 
 
 def test_analyze_space_log_n():
-    a = ArrayWrapper()
-
-    def init_test(_):
-        a.clear()
-
-    def op(n):
-        a.set_size(int(math.ceil(math.log2(n + 1))))
-
-    def get_estimated_space():
-        return a.get_estimated_space()
-
-    assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=5_000) == 'O(log n)')
+    def new_size(i, _):
+        return math.log2(i+1)
+    SpaceTester(new_size).test_analyze_space('O(log n)')
 
 
 def test_analyze_space_n_log_n():
-    a = ArrayWrapper()
-
-    def init_test(_):
-        a.clear()
-
-    def op(n):
-        a.add_elements(int(math.ceil(math.log2(n + 1))))
-
-    def get_estimated_space():
-        return a.get_estimated_space()
-
-    assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=1_000) == 'O(n log n)')
+    def new_size(i, old_size):
+        return old_size + math.log2(i+1)
+    SpaceTester(new_size).test_analyze_space('O(n log n)')
 
 
 def test_analyze_space_n_2():
-    a = ArrayWrapper()
-
-    def init_test(_):
-        a.clear()
-
-    def op(n):
-        a.add_elements(n)
-
-    def get_estimated_space():
-        return a.get_estimated_space()
-
-    assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=10) == 'O(n^2)')
+    def new_size(i, old_size):
+        return old_size + i
+    SpaceTester(new_size).test_analyze_space('O(n^2)')
 
 
-# wrapper to test memory usage more precisely
-class ArrayWrapper:
-    def __init__(self):
-        self.a = self._allocate(0)
+class SpaceTester:
+    def __init__(self, op_get_space, init_op_get_space = None):
+        self.size = 0
+        self.op_get_space = op_get_space
+        self.init_op_get_space = init_op_get_space
 
-    def set_size(self, size):
-        if size != len(self.a):
-            self.a = self._allocate(size)
+    def init_op(self, i):
+        if self.init_op_get_space:
+            self.size = self.init_op_get_space(i, self.size)
 
-    def add_elements(self, delta):
-        if delta != 0:
-            self.a = self._allocate(len(self.a) + delta)
-
-    def clear(self):
-        self.a = self._allocate(0)
-
-    @staticmethod
-    def _allocate(size):
-        return arr.array('i', itertools.repeat(0, size))
+    def op(self, i):
+        self.size = self.op_get_space(i, self.size)
 
     def get_estimated_space(self):
-        """Helper method to get the estimated space consumed by this list"""
-        return sys.getsizeof(self) + sys.getsizeof(self.a)
+        return self.size
+
+    def test_analyze_space(self, expected, num_runs = 20):
+        actual = (ComplexityAnalyzer(default_num_tests=1)
+                  .analyze_space(self.op, self.get_estimated_space, init_op = self.init_op, num_runs=num_runs))
+        assert actual == expected
+
+
