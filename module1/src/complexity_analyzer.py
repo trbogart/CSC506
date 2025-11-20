@@ -170,17 +170,17 @@ class ComplexityAnalyzer:
         # and require a lot runs. This may work better now that I've removed the first run from the calculation,
         # so I'll leave it as a starting point in case it is required for future assignments.
 
-        # O(N * log(N))
+        # # O(n log n)
         # x_n_log = np.log(x) * x # transform x axis to do 1-degree polynomial fit
-        # level_log_n_n = get_level(x_n_log, 1, 'O(n log(n))')
+        # level_n_log_n = get_level(x_n_log, 1, 'O(n log n)')
 
         # O(n)
         level_n = get_level(x, 1, 'O(n)')
 
         # TODO fix log
-        # # O(log(N))
+        # # O(log n)
         # x_log = np.log(x) # transform x axis to do 1-degree polynomial fit
-        # level_log_n = get_level(x_log, 1, 'O(log(n))')
+        # level_log_n = get_level(x_log, 1, 'O(log n)')
 
         # O(1)
         level_1 = get_level(x, 0, 'O(1)')
@@ -189,7 +189,7 @@ class ComplexityAnalyzer:
         # high enough first coefficient and sufficient error improvement over later levels)
         levels = [
             level_n_2,
-            # level_log_n_n, # TODO fix log
+            # level_n_log_n, # TODO fix log
             level_n,
             # level_log_n # TODO fix log
             level_1,

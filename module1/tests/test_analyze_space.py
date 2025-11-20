@@ -56,7 +56,7 @@ def test_analyze_space_n():
             .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=100) == 'O(n)')
 
 
-@pytest.mark.skip('Too slow')
+@pytest.mark.skip('TODO fix log')
 def test_analyze_space_log_n():
     a = ArrayWrapper()
 
@@ -64,16 +64,16 @@ def test_analyze_space_log_n():
         a.clear()
 
     def op(n):
-        a.add_elements(int(math.ceil(math.log2(n))))
+        a.add_elements(int(math.ceil(math.log2(n+1))))
 
     def get_estimated_space():
         return a.get_estimated_space()
 
     assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=10) == 'O(log(N))')
+            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=1_000) == 'O(log n)')
 
 
-@pytest.mark.skip('Too slow')
+@pytest.mark.skip('TODO fix log')
 def test_analyze_space_n_log_n():
     a = ArrayWrapper()
 
@@ -81,13 +81,13 @@ def test_analyze_space_n_log_n():
         a.clear()
 
     def op(n):
-        a.add_elements(n * int(math.ceil(math.log2(n))))
+        a.add_elements(n * int(math.ceil(math.log2(n+1))))
 
     def get_estimated_space():
         return a.get_estimated_space()
 
     assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=10) == 'O(N*log(N))')
+            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=1_000) == 'O(n log n)')
 
 
 def test_analyze_space_n_2():
