@@ -20,6 +20,7 @@ class ComplexityAnalyzer:
         :param default_num_tests: default number of tests (can be overridden in analyze methods)
         :param default_error_threshold: default threshold (minimum proportion of error used to select higher level)
         :param default_coef_threshold: default threshold of first coefficient to ignore a level
+        @param timer: timer used to gather start and stop times
         """
         self.plot = plot
         self.default_num_runs = default_num_runs
@@ -28,7 +29,7 @@ class ComplexityAnalyzer:
         self.default_coef_threshold = default_coef_threshold
 
     def analyze_time(self, op, title=None, init_test=None, init_op=None, post_op=None,
-                     num_runs=None, num_tests=None, error_threshold=None, coef_threshold=None):
+                     num_runs=None, num_tests=None, error_threshold=None, coef_threshold=None, timer = time.perf_counter_ns):
         """
         Estimates space complexity for the given operation.
         :param op: operation to test (function with run number arguments)
@@ -43,7 +44,7 @@ class ComplexityAnalyzer:
         """
         return self.analyze(
             op,
-            metric=lambda _: time.perf_counter_ns(),
+            metric=lambda _: timer(),
             absolute_metric=False,
             title=title,
             y_axis='Time',
@@ -105,8 +106,6 @@ class ComplexityAnalyzer:
         :param error_threshold: threshold (minimum proportion of error used to select higher level), or None to use the class default
         :param coef_threshold: threshold to ignore coefficients, or None to use the class default
         """
-        metrics = [0] * num_runs
-
         if num_tests is None:
             num_tests = self.default_num_tests
         if num_runs is None:
@@ -115,6 +114,8 @@ class ComplexityAnalyzer:
             error_threshold = self.default_error_threshold
         if coef_threshold is None:
             coef_threshold = self.default_coef_threshold
+
+        metrics = [0] * num_runs
 
         # sum metrics over multiple runs to reduce noise
         for test in range(num_tests):

@@ -1,51 +1,55 @@
 import math
-from time import sleep
-
-from flaky import flaky
 
 from complexity_analyzer import ComplexityAnalyzer
 
 
 # Probabilistic test for ComplexityAnalyzer.analyze_time()
 
-@flaky(max_runs=3)
 def test_analyze_time_1():
-    def op(_):
-        sleep(0)
+    def op_elapsed_time(_):
+        return 1
 
-    assert ComplexityAnalyzer().analyze_time(op, num_runs=200) == 'O(1)'
+    AnalyzeTimeTester(op_elapsed_time).test('O(1)')
 
-@flaky(max_runs=3)
 def test_analyze_time_n():
-    def op(i):
-        for _ in range(i):
-            sleep(0)
+    def op_elapsed_time(i):
+        return i
 
-    assert ComplexityAnalyzer().analyze_time(op, num_runs=200) == 'O(n)'
+    AnalyzeTimeTester(op_elapsed_time).test('O(n)')
 
 
-@flaky(max_runs=3)
 def test_analyze_time_log_n():
-    def op(i):
-        for _ in range(int(math.ceil(math.log2(i+1)))):
-            sleep(0)
+    def op_elapsed_time(i):
+        return math.log2(i+1)
 
-    assert ComplexityAnalyzer().analyze_time(op, num_runs=200) == 'O(log n)'
+    AnalyzeTimeTester(op_elapsed_time).test('O(log n)')
 
 
-@flaky(max_runs=3)
 def test_analyze_time_n_log_n():
-    def op(i):
-        for _ in range(int(math.ceil(i * math.log2(i+1)))):
-            sleep(0)
+    def op_elapsed_time(i):
+        return i * math.log2(i+1)
 
-    assert ComplexityAnalyzer().analyze_time(op, num_runs=200) == 'O(n log n)'
+    AnalyzeTimeTester(op_elapsed_time).test('O(n log n)')
 
 
-@flaky(max_runs=3)
 def test_analyze_time_n_2():
-    def op(i):
-        for _ in range(i ** 2):
-            sleep(0)
+    def op_elapsed_time(i):
+        return i ** 2
 
-    assert ComplexityAnalyzer().analyze_time(op, num_runs=100) == 'O(n^2)'
+    AnalyzeTimeTester(op_elapsed_time).test('O(n^2)')
+
+class AnalyzeTimeTester:
+    def __init__(self, op_elapsed_time, num_runs = 500):
+        self.analyzer = ComplexityAnalyzer(default_num_tests=1, default_num_runs=num_runs)
+        self.current_time = 1_000_000
+        self.op_elapsed_time = op_elapsed_time
+
+    def get_current_time(self):
+        return self.current_time
+
+    def op(self, i):
+        self.current_time += self.op_elapsed_time(i)
+
+    def test(self, expected):
+        actual = self.analyzer.analyze_time(self.op, timer=self.get_current_time)
+        assert actual == expected
