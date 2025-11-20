@@ -8,7 +8,7 @@ import numpy as np
 class ComplexityAnalyzer:
     """
     Estimates time or space complexity for an operation.
-    This currently only supports O(1), O(N), and O(N^2).
+    This currently only supports O(1), O(n), and O(n^2).
     """
 
     def __init__(self, plot=False, default_num_runs=10_000, default_num_tests=5, default_error_threshold=0.05,
@@ -154,31 +154,33 @@ class ComplexityAnalyzer:
         x = [i + 1 for i in range(len(metrics))]
 
         def get_level(x_transformed, degree, level_name):
-            # Helper method to get best polynomial fit of given degree, along with corresponding error
+            # Helper method to get the best polynomial fit of given degree, along with corresponding error
+            # Modified from Google AI Overview
+            # TODO check if this works for logarithmic
             coef = np.polyfit(x_transformed, metrics, degree)
             fit = np.poly1d(coef)
             y_pred = fit(x_transformed)
             return np.sqrt(np.mean((metrics - y_pred) ** 2)), x_transformed, y_pred, coef, level_name
 
         # calculate levels
-        # O(N^2)
-        level_n_2 = get_level(x, 2, 'O(N^2)')
+        # O(n^2)
+        level_n_2 = get_level(x, 2, 'O(n^2)')
 
-        # TODO Restore O(log(N)) and O(N*log(N)). These basically work, but are kind of flaky, and require a lot
-        # runs. This may work better now that I've removed the first run from the calculation, so I'll leave it as
-        # a starting point in case it is required for future assignments.
+        # TODO Restore O(log(N)) and O(N*log(N)). These basically work (except for graphing), but are kind of flaky,
+        # and require a lot runs. This may work better now that I've removed the first run from the calculation,
+        # so I'll leave it as a starting point in case it is required for future assignments.
 
         # O(N * log(N))
         # x_n_log = np.log(x) * x # transform x axis to do 1-degree polynomial fit
-        # level_log_n_n = get_level(x_n_log, 1, 'O(N * log(N))')
+        # level_log_n_n = get_level(x_n_log, 1, 'O(n log(n))')
 
-        # O(N)
-        level_n = get_level(x, 1, 'O(N)')
+        # O(n)
+        level_n = get_level(x, 1, 'O(n)')
 
         # TODO fix log
         # # O(log(N))
         # x_log = np.log(x) # transform x axis to do 1-degree polynomial fit
-        # level_log_n = get_level(x_log, 1, 'O(log(N))')
+        # level_log_n = get_level(x_log, 1, 'O(log(n))')
 
         # O(1)
         level_1 = get_level(x, 0, 'O(1)')
@@ -215,7 +217,7 @@ class ComplexityAnalyzer:
                     fig, ax = plt.subplots(figsize=(6,3.3))
 
                     ax.plot(x, metrics, label='Actual')
-                    ax.plot(level_x, level_y, label=f'Estimated')
+                    ax.plot(level_x, level_y, label='Estimated')
 
                     ax.set_xlabel('Runs')
                     ax.set_ylabel(y_axis)

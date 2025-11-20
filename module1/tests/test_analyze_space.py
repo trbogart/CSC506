@@ -53,7 +53,7 @@ def test_analyze_space_n():
         return a.get_estimated_space()
 
     assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=100) == 'O(N)')
+            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=100) == 'O(n)')
 
 
 @pytest.mark.skip('Too slow')
@@ -103,7 +103,7 @@ def test_analyze_space_n_2():
         return a.get_estimated_space()
 
     assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=10) == 'O(N^2)')
+            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=10) == 'O(n^2)')
 
 
 # wrapper to test memory usage more precisely

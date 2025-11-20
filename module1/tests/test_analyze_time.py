@@ -57,7 +57,7 @@ def test_analyze_time_n():
     def op(_):
         return a[random.randint(0, len(a) - 1)] in a
 
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=100) == 'O(N)'
+    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=100) == 'O(n)'
 
 
 @pytest.mark.skip('TODO Fix log')
@@ -97,4 +97,4 @@ def test_analyze_time_n_2():
             for _ in a:
                 pass
 
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=100) == 'O(N^2)'
+    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=100) == 'O(n^2)'
