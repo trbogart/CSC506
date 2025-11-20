@@ -167,7 +167,7 @@ class ComplexityAnalyzer:
         level_n_2 = get_level(x, 2, 'O(n^2)')
 
         # TODO Restore O(log(N)) and O(N*log(N)). These basically work (except for graphing), but are kind of flaky,
-        # and require a lot runs. This may work better now that I've removed the first run from the calculation,
+        # and require a lot of runs. This may work better now that I've removed the first run from the calculation,
         # so I'll leave it as a starting point in case it is required for future assignments.
 
         # # O(n log n)
