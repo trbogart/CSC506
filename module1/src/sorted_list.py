@@ -34,7 +34,7 @@ class SortedList:
 
     def index(self, value):
         """Returns index of value, or raises ValueError if not in list"""
-        index = bisect.bisect_left(self.list, value)
+        index = bisect.bisect_right(self.list, value)
         if self.list[index] != value:
             raise ValueError("Element not found")
         return index
