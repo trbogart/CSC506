@@ -3,8 +3,6 @@ import itertools
 import math
 import sys
 
-import pytest
-
 from complexity_analyzer import ComplexityAnalyzer
 
 
@@ -56,7 +54,6 @@ def test_analyze_space_n():
             .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=100) == 'O(n)')
 
 
-@pytest.mark.skip('TODO fix log')
 def test_analyze_space_log_n():
     a = ArrayWrapper()
 
@@ -64,16 +61,15 @@ def test_analyze_space_log_n():
         a.clear()
 
     def op(n):
-        a.add_elements(int(math.ceil(math.log2(n+1))))
+        a.set_size(int(math.ceil(math.log2(n + 1))))
 
     def get_estimated_space():
         return a.get_estimated_space()
 
     assert (ComplexityAnalyzer(default_num_tests=1)
-            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=1_000) == 'O(log n)')
+            .analyze_space(op, get_estimated_space, init_test=init_test, num_runs=5_000) == 'O(log n)')
 
 
-@pytest.mark.skip('TODO fix log')
 def test_analyze_space_n_log_n():
     a = ArrayWrapper()
 
@@ -81,7 +77,7 @@ def test_analyze_space_n_log_n():
         a.clear()
 
     def op(n):
-        a.add_elements(n * int(math.ceil(math.log2(n+1))))
+        a.add_elements(int(math.ceil(math.log2(n + 1))))
 
     def get_estimated_space():
         return a.get_estimated_space()
@@ -110,6 +106,10 @@ def test_analyze_space_n_2():
 class ArrayWrapper:
     def __init__(self):
         self.a = self._allocate(0)
+
+    def set_size(self, size):
+        if size != len(self.a):
+            self.a = self._allocate(size)
 
     def add_elements(self, delta):
         if delta != 0:

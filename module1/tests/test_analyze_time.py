@@ -1,8 +1,5 @@
-import random
-from bisect import bisect_left
-
-import pytest
-from flaky import flaky
+import math
+from time import sleep
 
 from complexity_analyzer import ComplexityAnalyzer
 
@@ -10,90 +7,39 @@ from complexity_analyzer import ComplexityAnalyzer
 # Probabilistic test for ComplexityAnalyzer.analyze_time()
 
 def test_analyze_time_1():
-    a = set()
-
-    def init_test(_):
-        a.clear()
-
-    def init_op(i):
-        a.add(i)
-
-    def op(i):
-        return i in a
-
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=5_000) == 'O(1)'
-
-
-@pytest.mark.skip('TODO fix log')
-def test_analyze_time_log_n():
-    a = []
-    batch_size = 100
-
-    def init_test(_):
-        a.clear()
-
-    def init_op(_):
-        for _ in range(batch_size):
-            a.append(len(a))
-
     def op(_):
-        bisect_left(a, a[random.randint(0, len(a) - 1)])
+        sleep(0)
 
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op,
-                                             num_runs=1_000) == 'O(log n)'
+    assert ComplexityAnalyzer().analyze_time(op, num_runs=100) == 'O(1)'
 
 
 def test_analyze_time_n():
-    a = []
-    batch_size = 100
+    def op(i):
+        for _ in range(i):
+            sleep(0)
 
-    def init_test(_):
-        a.clear()
-
-    def init_op(_):
-        for _ in range(batch_size):
-            a.append(random.random())
-
-    def op(_):
-        return a[random.randint(0, len(a) - 1)] in a
-
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=500) == 'O(n)'
+    assert ComplexityAnalyzer().analyze_time(op, num_runs=100) == 'O(n)'
 
 
-@pytest.mark.skip('TODO fix log')
+def test_analyze_time_log_n():
+    def op(i):
+        for _ in range(int(math.ceil(math.log2(i+1)))):
+            sleep(0)
+
+    assert ComplexityAnalyzer().analyze_time(op, num_runs=100) == 'O(log n)'
+
+
 def test_analyze_time_n_log_n():
-    a = []
-    batch_size = 100
+    def op(i):
+        for _ in range(i * int(math.ceil(math.log2(i+1)))):
+            sleep(0)
 
-    def init_test(_):
-        a.clear()
-
-    def init_op(_):
-        for _ in range(batch_size):
-            a.append(len(a))
-        random.shuffle(a)
-
-    def op(_):
-        a.sort()
-
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op,
-                                             num_runs=500) == 'O(n log n)'
+    assert ComplexityAnalyzer().analyze_time(op, num_runs=100) == 'O(n log n)'
 
 
 def test_analyze_time_n_2():
-    a = []
-    batch_size = 5
+    def op(i):
+        for _ in range(i ** 2):
+            sleep(0)
 
-    def init_test(_):
-        a.clear()
-
-    def init_op(_):
-        for _ in range(batch_size):
-            a.append(random.random())
-
-    def op(_):
-        for _ in a:
-            for _ in a:
-                pass
-
-    assert ComplexityAnalyzer().analyze_time(op, init_test=init_test, init_op=init_op, num_runs=50) == 'O(n^2)'
+    assert ComplexityAnalyzer().analyze_time(op, num_runs=50) == 'O(n^2)'

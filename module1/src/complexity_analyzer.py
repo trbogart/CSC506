@@ -8,7 +8,7 @@ import numpy as np
 class ComplexityAnalyzer:
     """
     Estimates time or space complexity for an operation.
-    This currently only supports O(1), O(n), and O(n^2).
+    This currently only supports O(1), O(log n), O(n), O(n log n), and O(n^2).
     """
 
     def __init__(self, plot=False, default_num_runs=10_000, default_num_tests=5, default_error_threshold=0.05,
@@ -159,28 +159,23 @@ class ComplexityAnalyzer:
             coef = np.polyfit(x_transformed, metrics, degree)
             fit = np.poly1d(coef)
             y_pred = fit(x_transformed)
-            error = np.sqrt(np.mean((metrics - y_pred) ** 2)) # root mean squared error
+            error = np.sqrt(np.mean((metrics - y_pred) ** 2))  # root mean squared error
             return error, x_transformed, y_pred, coef, level_name
 
         # calculate levels
         # O(n^2)
         level_n_2 = get_level(x, 2, 'O(n^2)')
 
-        # TODO Restore O(log(N)) and O(N*log(N)). These basically work (except for graphing), but are kind of flaky,
-        # and require a lot of runs. This may work better now that I've removed the first run from the calculation,
-        # so I'll leave it as a starting point in case it is required for future assignments.
-
-        # # O(n log n)
-        # x_n_log = np.log(x) * x # transform x axis to do 1-degree polynomial fit
-        # level_n_log_n = get_level(x_n_log, 1, 'O(n log n)')
+        # O(n log n)
+        x_n_log = np.log(x) * x  # transform x axis to do 1-degree polynomial fit
+        level_n_log_n = get_level(x_n_log, 1, 'O(n log n)')
 
         # O(n)
         level_n = get_level(x, 1, 'O(n)')
 
-        # TODO fix log
-        # # O(log n)
-        # x_log = np.log(x) # transform x axis to do 1-degree polynomial fit
-        # level_log_n = get_level(x_log, 1, 'O(log n)')
+        # O(log n)
+        x_log = np.log(x)  # transform x axis to do 1-degree polynomial fit
+        level_log_n = get_level(x_log, 1, 'O(log n)')
 
         # O(1)
         level_1 = get_level(x, 0, 'O(1)')
@@ -189,9 +184,9 @@ class ComplexityAnalyzer:
         # high enough first coefficient and sufficient error improvement over later levels)
         levels = [
             level_n_2,
-            # level_n_log_n, # TODO fix log
+            level_n_log_n,
             level_n,
-            # level_log_n # TODO fix log
+            level_log_n,
             level_1,
         ]
 
@@ -214,7 +209,7 @@ class ComplexityAnalyzer:
                     # print level and plot expected vs. actual values
                     # use subplots in case the x-axis was transformed (not required for polynomial fits)
                     print(level_name)
-                    fig, ax = plt.subplots(figsize=(6,3.3))
+                    fig, ax = plt.subplots(figsize=(6, 3.3))
 
                     ax.plot(x, metrics, label='Actual')
                     ax.plot(level_x, level_y, label='Estimated')

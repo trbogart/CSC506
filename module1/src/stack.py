@@ -48,6 +48,7 @@ class Stack:
         """
         return sys.getsizeof(self) + sys.getsizeof(self.list) + sum(map(lambda value: sys.getsizeof(value), self))
 
+
 if __name__ == '__main__':
     # run command-line interface for testing and analysis
     CollectionInterface("Stack", Stack()).execute()
