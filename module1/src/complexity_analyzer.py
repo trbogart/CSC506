@@ -11,7 +11,7 @@ class ComplexityAnalyzer:
     This currently only supports O(1), O(log n), O(n), O(n log n), and O(n^2).
     """
 
-    def __init__(self, plot=False, default_num_runs=10_000, default_num_tests=5, default_error_threshold=0.05,
+    def __init__(self, plot=False, default_num_runs=5_000, default_num_tests=10, default_error_threshold=0.05,
                  default_coef_threshold=0.01):
         """
         Create complexity analyzer
@@ -213,7 +213,7 @@ class ComplexityAnalyzer:
                     fig, ax = plt.subplots(figsize=(6, 3.3))
 
                     ax.plot(x, metrics, label='Actual')
-                    ax.plot(level_x, level_y, label='Estimated')
+                    ax.plot(x, level_y, label='Estimated')
 
                     ax.set_xlabel('Runs')
                     ax.set_ylabel(y_axis)
@@ -258,24 +258,20 @@ class ComplexityAnalyzer:
                     # measure time to add a random element
                     collection.push(random.random())
 
-                self.analyze_time(op, title=f'{collection_type} Add Time Complexity', init_test=init_test,
-                                  num_runs=2_000)
+                self.analyze_time(op, title=f'{collection_type} Add Time Complexity', init_test=init_test)
             elif cmd == 'tr':
                 # analyze time complexity for remove
-                num_runs = 2_000
-
                 def init_test(_):
                     # populate collection with number of runs, including initial extra run
                     collection.clear()
-                    for i in range(num_runs + 1):
+                    for i in range(self.default_num_runs + 1):
                         collection.push(random.random())
 
                 def op(_):
                     # measure time to remove an element
                     collection.pop()
 
-                self.analyze_time(op, title=f'{collection_type} Remove Time Complexity', init_test=init_test,
-                                  num_runs=num_runs)
+                self.analyze_time(op, title=f'{collection_type} Remove Time Complexity', init_test=init_test)
             elif cmd == 'ts':
                 # analyze time complexity for search
 
@@ -292,11 +288,9 @@ class ComplexityAnalyzer:
                     collection.index(random.randint(0, len(collection) - 1))
 
                 self.analyze_time(op, title=f'{collection_type} Search Time Complexity', init_test=init_test,
-                                  init_op=init_op, num_runs=2_000)
+                                  init_op=init_op)
             elif cmd == 'sa':
                 # analyze space complexity for add
-                num_runs = 1_000
-
                 def init_test(_):
                     # clear collection between each run
                     collection.clear()
@@ -310,15 +304,13 @@ class ComplexityAnalyzer:
                     return collection.get_estimated_space()
 
                 self.analyze_space(op, get_estimated_space, title=f'{collection_type} Add Space Complexity',
-                                   init_test=init_test, num_runs=num_runs)
+                                   init_test=init_test)
             elif cmd == 'sr':
                 # analyze space complexity for remove
-                num_runs = 1_000
-
                 def init_test(_):
                     # start with full collection (including extra initial run)
                     collection.clear()
-                    for _ in range(num_runs + 1):
+                    for _ in range(self.default_num_runs + 1):
                         collection.push(0)
 
                 def op(_):
@@ -330,11 +322,9 @@ class ComplexityAnalyzer:
                     return collection.get_estimated_space()
 
                 self.analyze_space(op, get_estimated_space, title=f'{collection_type} Remove Space Complexity',
-                                   init_test=init_test, num_runs=num_runs)
+                                   init_test=init_test)
             elif cmd == 'ss':
                 # analyze space complexity for search
-                num_runs = 1_000
-
                 def init_test(_):
                     # clear collection between each run
                     collection.clear()
@@ -352,6 +342,6 @@ class ComplexityAnalyzer:
                     return collection.get_estimated_space()
 
                 self.analyze_space(op, get_estimated_space, title=f'{collection_type} Search Space Complexity',
-                                   init_test=init_test, init_op=init_op, num_runs=num_runs)
+                                   init_test=init_test, init_op=init_op)
             else:
                 print('Invalid command')
