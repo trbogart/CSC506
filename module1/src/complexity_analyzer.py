@@ -12,7 +12,7 @@ class ComplexityAnalyzer:
     """
 
     def __init__(self, plot=False, default_num_runs=5_000, default_num_tests=10, default_error_threshold=0.05,
-                 default_coef_threshold=0.01):
+                 default_coef_threshold=0.001):
         """
         Create complexity analyzer
         :param plot: true to plot values against expected
@@ -29,7 +29,8 @@ class ComplexityAnalyzer:
         self.default_coef_threshold = default_coef_threshold
 
     def analyze_time(self, op, title=None, init_test=None, init_op=None, post_op=None,
-                     num_runs=None, num_tests=None, error_threshold=None, coef_threshold=None, timer = time.perf_counter_ns):
+                     num_runs=None, num_tests=None, error_threshold=None, coef_threshold=None,
+                     timer=time.perf_counter_ns):
         """
         Estimates space complexity for the given operation.
         :param op: operation to test (function with run number arguments)

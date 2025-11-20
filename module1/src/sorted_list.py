@@ -53,4 +53,4 @@ class SortedList:
 
 if __name__ == '__main__':
     # run command-line interface for testing and analysis
-    CollectionInterface("Sorted List", SortedList()).execute(num_runs = 200_000)
+    CollectionInterface("Sorted List", SortedList()).execute(num_runs=200_000)

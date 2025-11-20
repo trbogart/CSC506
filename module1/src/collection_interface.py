@@ -23,7 +23,7 @@ class CollectionInterface:
         self.collection_type = collection_type
         self.collection = collection
 
-    def execute(self, num_runs = 5_000):
+    def execute(self, num_runs=5_000):
         """Displays a menu to select to manipulate and test the collection."""
         while True:
             print('--------------------------------------------------------------')
@@ -67,7 +67,8 @@ class CollectionInterface:
             elif cmd == 'o':
                 # clear list and enter complexity analysis mode, see ComplexityAnalyzer
                 self.collection.clear()
-                ComplexityAnalyzer(plot=True, default_num_runs=num_runs).execute(self.collection, collection_type=self.collection_type)
+                ComplexityAnalyzer(plot=True, default_num_runs=num_runs).execute(self.collection,
+                                                                                 collection_type=self.collection_type)
             elif cmd == 'q':
                 # quit
                 return

@@ -1,4 +1,5 @@
 import math
+import random
 
 from complexity_analyzer import ComplexityAnalyzer
 
@@ -11,6 +12,7 @@ def test_analyze_time_1():
 
     AnalyzeTimeTester(op_elapsed_time).test('O(1)')
 
+
 def test_analyze_time_n():
     def op_elapsed_time(i):
         return i
@@ -20,14 +22,14 @@ def test_analyze_time_n():
 
 def test_analyze_time_log_n():
     def op_elapsed_time(i):
-        return math.log2(i+1)
+        return math.log2(i + 1)
 
     AnalyzeTimeTester(op_elapsed_time).test('O(log n)')
 
 
 def test_analyze_time_n_log_n():
     def op_elapsed_time(i):
-        return i * math.log2(i+1)
+        return i * math.log2(i + 1)
 
     AnalyzeTimeTester(op_elapsed_time).test('O(n log n)')
 
@@ -38,8 +40,9 @@ def test_analyze_time_n_2():
 
     AnalyzeTimeTester(op_elapsed_time).test('O(n^2)')
 
+
 class AnalyzeTimeTester:
-    def __init__(self, op_elapsed_time, num_runs = 500):
+    def __init__(self, op_elapsed_time, num_runs=1_000):
         self.analyzer = ComplexityAnalyzer(default_num_tests=1, default_num_runs=num_runs)
         self.current_time = 1_000_000
         self.op_elapsed_time = op_elapsed_time
@@ -48,7 +51,7 @@ class AnalyzeTimeTester:
         return self.current_time
 
     def op(self, i):
-        self.current_time += self.op_elapsed_time(i)
+        self.current_time += self.op_elapsed_time(i) * random.uniform(0.9, 1.1)
 
     def test(self, expected):
         actual = self.analyzer.analyze_time(self.op, timer=self.get_current_time)

@@ -1,4 +1,5 @@
 import math
+import random
 
 from complexity_analyzer import ComplexityAnalyzer
 
@@ -7,44 +8,55 @@ from complexity_analyzer import ComplexityAnalyzer
 
 def test_analyze_space_1_nop():
     def op_new_size(_, old_size):
-        return old_size
+        return old_size * _noise()
+
     AnalyzeSpaceTester(op_new_size).test('O(1)')
 
 
 def test_analyze_space_1_add_in_init_op():
     def op_new_size(_, old_size):
         return old_size
+
     def init_op_new_size(i, old_size):
-        return old_size + i # ignore space added in init_op
+        return old_size + i  # ignore space added in init_op
+
     AnalyzeSpaceTester(op_new_size, init_op_new_size).test('O(1)')
 
 
 def test_analyze_space_n():
     def op_new_size(_, old_size):
-        return old_size + 1
+        return old_size + _noise()
+
     AnalyzeSpaceTester(op_new_size).test('O(n)')
 
 
 def test_analyze_space_log_n():
     def op_new_size(i, _):
-        return math.log2(i+1)
+        return math.log2(i + 1) * _noise()
+
     AnalyzeSpaceTester(op_new_size).test('O(log n)')
 
 
 def test_analyze_space_n_log_n():
     def new_size(i, old_size):
-        return old_size + math.log2(i+1)
+        return old_size + math.log2(i + 1) * _noise()
+
     AnalyzeSpaceTester(new_size).test('O(n log n)')
 
 
 def test_analyze_space_n_2():
     def new_size(i, old_size):
-        return old_size + i
+        return old_size + i * random.uniform(0.9, 1.1)
+
     AnalyzeSpaceTester(new_size).test('O(n^2)')
 
 
+def _noise():
+    return random.uniform(0.8, 1.2)
+
+
 class AnalyzeSpaceTester:
-    def __init__(self, op_get_space, init_op_get_space = None, num_runs = 20):
+    def __init__(self, op_get_space, init_op_get_space=None, num_runs=1_000):
         self.size = 0
         self.op_get_space = op_get_space
         self.init_op_get_space = init_op_get_space
@@ -61,7 +73,5 @@ class AnalyzeSpaceTester:
         return self.size
 
     def test(self, expected):
-        actual = self.analyzer.analyze_space(self.op, self.get_estimated_space, init_op = self.init_op)
+        actual = self.analyzer.analyze_space(self.op, self.get_estimated_space, init_op=self.init_op)
         assert actual == expected
-
-
