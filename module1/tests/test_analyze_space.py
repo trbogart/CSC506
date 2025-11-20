@@ -8,7 +8,7 @@ from complexity_analyzer import ComplexityAnalyzer
 
 def test_analyze_space_1_nop():
     def op_new_size(_, old_size):
-        return old_size * _noise()
+        return old_size
 
     AnalyzeSpaceTester(op_new_size).test('O(1)')
 
@@ -46,13 +46,13 @@ def test_analyze_space_n_log_n():
 
 def test_analyze_space_n_2():
     def new_size(i, old_size):
-        return old_size + i * random.uniform(0.9, 1.1)
+        return old_size + i * _noise()
 
     AnalyzeSpaceTester(new_size).test('O(n^2)')
 
 
-def _noise():
-    return random.uniform(0.8, 1.2)
+def _noise(noise=0.1):
+    return 1.0 + random.uniform(-noise, noise)
 
 
 class AnalyzeSpaceTester:
