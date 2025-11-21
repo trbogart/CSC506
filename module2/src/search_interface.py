@@ -90,7 +90,7 @@ class SearchInterface:
             suffix = f'(values between 1 and {len(self.a)} will be found)'
         else:
             suffix = '(no values will be found)'
-        return self.get_int_input(prompt=f'Enter a value between 0 and {self.max_size} {suffix}: ')
+        return self.get_int_input(prompt=f'Enter a value {suffix}: ')
 
     def set_size(self, new_size: int) -> None:
         if new_size != len(self.a):
