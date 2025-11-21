@@ -20,19 +20,19 @@ def test_binary_search_not_found():
 
 
 def test_binary_search_10():
-    _test_binary_search_all_elements(10)
+rename     _test_binary_search(10)
 
 
 def test_binary_search_100():
-    _test_binary_search_all_elements(100)
+    _test_binary_search(100)
 
 
 def test_binary_search_1_000():
-    _test_binary_search_all_elements(1_000)
+    _test_binary_search(1_000)
 
 
 def test_binary_search_10_000():
-    _test_binary_search_all_elements(10_000)
+    _test_binary_search(10_000)
 
 
 def test_linear_search_empty():
@@ -46,33 +46,33 @@ def test_linear_search_not_found():
 
 
 def test_linear_search_10():
-    _test_linear_search_all_elements(10)
+    _test_linear_search(10)
 
 
 def test_linear_search_100():
-    _test_linear_search_all_elements(100)
+    _test_linear_search(100)
 
 
 def test_linear_search_1_000():
-    _test_linear_search_all_elements(1_000)
+    _test_linear_search(1_000)
 
 
 def test_linear_search_10_000():
-    _test_linear_search_all_elements(10_000)
+    _test_linear_search(10_000)
 
 
-def _test_linear_search_all_elements(count):
+def _test_linear_search(count):
     a = [i for i in range(count)]
     random.shuffle(a)
-    _test_search_all_elements(a, linear_search)
+    _test_search(a, linear_search)
 
 
-def _test_binary_search_all_elements(count):
+def _test_binary_search(count):
     a = [i for i in range(count)]
-    _test_search_all_elements(a, binary_search)
+    _test_search(a, binary_search)
 
 
-def _test_search_all_elements(a, search_op):
+def _test_search(a, search_op):
     skip = 1 if len(a) < 1_000 else len(a) // 10
     for i in range(0, len(a), skip):
         assert search_op(a, a[i]) == i
