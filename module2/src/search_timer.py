@@ -32,16 +32,16 @@ class SearchTimer:
     log_complexity = 'O(log n)'
     linear_complexity = 'O(n)'
 
-    def __init__(self, description: str, search_op: Callable[[Iterable[int], int], int], sorted_data: bool):
+    def __init__(self, description: str, search_op: Callable[[Iterable[int], int], int], requires_sorted: bool):
         """
         Creates a search timer.
         :param description: description of the search algorithm (e.g. linear or binary)
         :param search_op: search operation
-        :param sorted_data: true if the data must be sorted
+        :param requires_sorted: true if the data must be sorted
         """
         self.description = description
         self.search_op = search_op
-        self.sorted_data = sorted_data
+        self.requires_sorted = requires_sorted
 
     def test_search(self, size: int, num_samples: int, num_tests: int) -> float:
         """
@@ -54,14 +54,14 @@ class SearchTimer:
         :return: average search time
         """
         a = [i for i in range(size)]
-        if not self.sorted_data:
+        if not self.requires_sorted:
             shuffle(a)
         total_time = 0
 
         # search for 10 evenly distributed values
         for i in range(num_samples):
             idx = i * size // num_samples
-            value = idx if self.sorted_data else a[idx]
+            value = idx if self.requires_sorted else a[idx]
             for _ in range(num_tests):
                 start_time = perf_counter()
                 self.search_op(a, value)
@@ -110,10 +110,10 @@ class SearchTimer:
 
 
 class LinearSearchTimer(SearchTimer):
-    def __init__(self, sorted_data=False):
-        super().__init__(description="Linear search", search_op=linear_search, sorted_data=sorted_data)
+    def __init__(self):
+        super().__init__(description="Linear search", search_op=linear_search, requires_sorted=False)
 
 
 class BinarySearchTimer(SearchTimer):
     def __init__(self):
-        super().__init__(description="Binary search", search_op=binary_search, sorted_data=True)
+        super().__init__(description="Binary search", search_op=binary_search, requires_sorted=True)

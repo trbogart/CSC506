@@ -1,6 +1,7 @@
 import random
 import sys
 from time import perf_counter
+from typing import Callable, Iterable
 
 import search
 from search_timer import SearchTimer, LinearSearchTimer, BinarySearchTimer, SearchResults
@@ -9,9 +10,9 @@ from search_timer import SearchTimer, LinearSearchTimer, BinarySearchTimer, Sear
 class SearchInterface:
     max_size = 10_000_000
 
-    def __init__(self, size=0, sorted=True):
+    def __init__(self, size=0, is_sorted=True):
         self.a = []
-        self.sorted = sorted
+        self.is_sorted = is_sorted
         self.set_size(size)
 
     @staticmethod
@@ -28,9 +29,9 @@ class SearchInterface:
             print('Invalid input. Try again.')
 
     def print_menu(self):
-        binary_prefix = '' if self.sorted else 'DISABLED (UNSORTED) - '
-        print('-------------------')
-        print(f'List has {len(self.a)} {'sorted' if self.sorted else 'unsorted'} elements')
+        binary_prefix = '' if self.is_sorted else 'DISABLED (UNSORTED) - '
+        print('------------------------------------------------------------')
+        print(f'List has {len(self.a)} {'sorted' if self.is_sorted else 'unsorted'} elements')
         print('0) Exit')
         print('1) Set size')
         print('2) Toggle sorted')
@@ -49,7 +50,7 @@ class SearchInterface:
             self.set_size(new_size)
         elif cmd == 2:
             # toggle sorted
-            self.set_sorted(not self.sorted)
+            self.toggle_sorted()
         elif cmd == 3:
             # list elements
             size = len(self.a)
@@ -65,66 +66,70 @@ class SearchInterface:
                     print(f'[#{size}]: {self.a[size - 1]}')
         elif cmd == 4:
             # linear search
-            value = self.get_int_input(prompt=f'Enter a value (values between 1 and {len(self.a)}) will be found: ')
+            value = self.get_search_value()
             self.linear_search(value)
         elif cmd == 5:
-            if self.sorted:
-                value = self.get_int_input(prompt=f'Enter a value (values between 1 and {len(self.a)}) will be found: ')
+            # binary search (disabled if not sorted)
+            if self.is_sorted:
+                value = self.get_search_value()
                 self.binary_search(value)
             else:
                 print('Must be sorted')
         elif cmd == 6:
             # linear performance test
-            self.run_performance_tests(LinearSearchTimer(sorted_data=self.sorted))
+            self.run_performance_tests(LinearSearchTimer())
         elif cmd == 7:
-            if self.sorted:
+            # binary performance test (disabled if not sorted)
+            if self.is_sorted:
                 self.run_performance_tests(BinarySearchTimer())
             else:
                 print('Must be sorted')
 
+    def get_search_value(self):
+        if len(self.a) > 0:
+            suffix = f'(values between 1 and {len(self.a)} will be found)'
+        else:
+            suffix = '(no values will be found)'
+        return self.get_int_input(prompt=f'Enter a value between 0 and {self.max_size} {suffix}: ')
+
     def set_size(self, new_size: int) -> None:
         if new_size != len(self.a):
             self.a = self.new_sorted_list(new_size)
-            if not self.sorted:
+            if not self.is_sorted:
                 random.shuffle(self.a)
 
-    def set_sorted(self, new_sorted: bool) -> None:
-        if new_sorted != self.sorted:
-            self.sorted = new_sorted
-            if new_sorted:
-                self.a = self.new_sorted_list(len(self.a))
-            else:
-                random.shuffle(self.a)
+    def toggle_sorted(self) -> None:
+        self.is_sorted = not self.is_sorted
+        if self.is_sorted:
+            self.a = self.new_sorted_list(len(self.a))
+        else:
+            random.shuffle(self.a)
 
     def linear_search(self, value: int) -> (int, float):
-        start_time = perf_counter()
-        try:
-            index = search.linear_search(self.a, value)
-        except ValueError:
-            index = -1
-        elapsed_time = perf_counter() - start_time
-        print(
-            f'Linear search took {elapsed_time * 1000:.3f} ms over {len(self.a)} items: {f'found at {index}' if index > 0 else "not found"}')
-        return index, elapsed_time
+        return self.do_search(value, "Linear search", search.linear_search)
 
     def binary_search(self, value: int) -> (int, float):
         self._validate_sorted()
+        return self.do_search(value, "Binary search", search.binary_search)
+
+    def do_search(self, value: int, description: str, search_op: Callable[[Iterable[int], int], int]) -> (int, float):
         start_time = perf_counter()
         try:
-            index = search.binary_search(self.a, value)
+            index = search_op(self.a, value)
         except ValueError:
             index = -1
         elapsed_time = perf_counter() - start_time
         print(
-            f'Binary search took {elapsed_time * 1000:.3f} ms over {len(self.a)} items: {index if index > 0 else "not found"}')
+            f'{description} took {elapsed_time * 1000:.3f} ms over {len(self.a)} items: {index if index > 0 else "not found"}')
         return index, elapsed_time
 
     def _validate_sorted(self):
-        if not self.sorted:
+        if not self.is_sorted:
             raise ValueError('List must be sorted')
 
-    @staticmethod
-    def run_performance_tests(search_timer: SearchTimer) -> SearchResults:
+    def run_performance_tests(self, search_timer: SearchTimer) -> SearchResults:
+        if search_timer.requires_sorted:
+            self._validate_sorted()
         results = search_timer.test()
         print(f'{search_timer.description} ran in {results.complexity} time')
         for i in range(results.num_sizes):

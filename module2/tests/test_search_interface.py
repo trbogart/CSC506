@@ -16,12 +16,12 @@ def test_constructor_default():
 
 
 def test_constructor_unsorted():
-    si = SearchInterface(sorted=False)
+    si = SearchInterface(is_sorted=False)
     _validate_items_unsorted(si, 0)
 
 
 def test_constructor_sorted():
-    si = SearchInterface(sorted=True)
+    si = SearchInterface(is_sorted=True)
     _validate_items_sorted(si, 0)
 
 
@@ -36,17 +36,17 @@ def test_constructor_non_empty():
 
 
 def test_constructor_non_empty_unsorted():
-    si = SearchInterface(size=100, sorted=False)
+    si = SearchInterface(size=100, is_sorted=False)
     _validate_items_unsorted(si, 100)
 
 
 def test_constructor_non_empty_sorted():
-    si = SearchInterface(size=100, sorted=True)
+    si = SearchInterface(size=100, is_sorted=True)
     _validate_items_sorted(si, 100)
 
 
 def test_set_size_unsorted():
-    si = SearchInterface(sorted=False)
+    si = SearchInterface(is_sorted=False)
     si.set_size(10)
     _validate_items_unsorted(si, 10)
     si.set_size(20)
@@ -58,7 +58,7 @@ def test_set_size_unsorted():
 
 
 def test_set_size_sorted():
-    si = SearchInterface(sorted=True)
+    si = SearchInterface(is_sorted=True)
     si.set_size(10)
     _validate_items_sorted(si, 10)
     si.set_size(20)
@@ -70,45 +70,45 @@ def test_set_size_sorted():
 
 
 def test_set_sorted_empty():
-    si = SearchInterface()
-    si.set_sorted(True)
+    si = SearchInterface(is_sorted=False)
+    si.toggle_sorted()
     _validate_items_sorted(si, 0)
 
 
 def test_set_sorted_non_empty():
-    si = SearchInterface(100)
-    si.set_sorted(True)
+    si = SearchInterface(100, is_sorted=False)
+    si.toggle_sorted()
     _validate_items_sorted(si, 100)
 
 
 def test_set_unsorted_empty():
-    si = SearchInterface(sorted=True)
-    si.set_sorted(False)
+    si = SearchInterface(is_sorted=True)
+    si.toggle_sorted()
     _validate_items_unsorted(si, 0)
 
 
 def test_set_unsorted_non_empty():
-    si = SearchInterface(100, sorted=True)
-    si.set_sorted(False)
+    si = SearchInterface(100, is_sorted=True)
+    si.toggle_sorted()
     _validate_items_unsorted(si, 100)
 
 
 def test_linear_search_unsorted_empty():
-    si = SearchInterface()
+    si = SearchInterface(is_sorted=False)
     index, elapsed_time = si.linear_search(0)
     assert index == -1
     assert elapsed_time > 0
 
 
 def test_linear_search_unsorted_not_found():
-    si = SearchInterface(10)
+    si = SearchInterface(10, is_sorted=False)
     index, elapsed_time = si.linear_search(0)
     assert index == -1
     assert elapsed_time > 0
 
 
 def test_linear_search_unsorted_found():
-    si = SearchInterface(10)
+    si = SearchInterface(10, is_sorted=False)
     index, elapsed_time = si.linear_search(1)
     assert index >= 0
     assert elapsed_time > 0
@@ -116,42 +116,42 @@ def test_linear_search_unsorted_found():
 
 
 def test_linear_search_sorted_empty():
-    si = SearchInterface(sorted=True)
+    si = SearchInterface(is_sorted=True)
     index, elapsed_time = si.linear_search(0)
     assert index == -1
     assert elapsed_time > 0
 
 
 def test_linear_search_sorted_not_found():
-    si = SearchInterface(10, sorted=True)
+    si = SearchInterface(10, is_sorted=True)
     index, elapsed_time = si.linear_search(0)
     assert index == -1
     assert elapsed_time > 0
 
 
 def test_linear_search_sorted_found():
-    si = SearchInterface(10, sorted=True)
+    si = SearchInterface(10, is_sorted=True)
     index, elapsed_time = si.linear_search(1)
     assert index == 0
     assert elapsed_time > 0
 
 
 def test_binary_search_empty():
-    si = SearchInterface(sorted=True)
+    si = SearchInterface(is_sorted=True)
     index, elapsed_time = si.binary_search(0)
     assert index == -1
     assert elapsed_time > 0
 
 
 def test_binary_search_not_found():
-    si = SearchInterface(10, sorted=True)
+    si = SearchInterface(10, is_sorted=True)
     index, elapsed_time = si.binary_search(0)
     assert index == -1
     assert elapsed_time > 0
 
 
 def test_binary_search_found():
-    si = SearchInterface(10, sorted=True)
+    si = SearchInterface(10, is_sorted=True)
     index, elapsed_time = si.binary_search(1)
     assert index == 0
     assert elapsed_time > 0
@@ -169,7 +169,7 @@ def test_run_linear_performance_tests():
 
 
 def test_run_binary_performance_tests():
-    si = SearchInterface(10, sorted=True)
+    si = SearchInterface(10, is_sorted=True)
     original_list = si.a
     results = si.run_performance_tests(BinarySearchTimer())
     assert results.complexity == SearchTimer.log_complexity
@@ -179,7 +179,7 @@ def test_run_binary_performance_tests():
 
 
 def _validate_items_unsorted(si: SearchInterface, size: int) -> None:
-    assert si.sorted == False
+    assert si.is_sorted == False
     assert len(si.a) == size
     expected_values = {i + 1 for i in range(size)}
     actual_values = set(si.a)
@@ -195,7 +195,7 @@ def _validate_items_unsorted(si: SearchInterface, size: int) -> None:
 
 
 def _validate_items_sorted(si: SearchInterface, size: int) -> None:
-    assert si.sorted == True
+    assert si.is_sorted == True
     assert len(si.a) == size
     for i in range(size):
         assert si.a[i] == i + 1
