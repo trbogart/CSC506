@@ -20,7 +20,7 @@ def test_binary_search_not_found():
 
 
 def test_binary_search_10():
-rename     _test_binary_search(10)
+    _test_binary_search(10)
 
 
 def test_binary_search_100():
