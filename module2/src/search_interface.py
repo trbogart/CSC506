@@ -59,10 +59,10 @@ class SearchInterface:
                 max_items = 50
                 num_shown_items = 20 if size > max_items else size
                 for i in range(num_shown_items):
-                    print(f'[#{i+1}]: {self.a[i]}')
+                    print(f'[#{i + 1}]: {self.a[i]}')
                 if size > num_shown_items:
-                    print(f'... {size-num_shown_items-1} items excluded')
-                    print(f'[#{size}]: {self.a[size-1]}')
+                    print(f'... {size - num_shown_items - 1} items excluded')
+                    print(f'[#{size}]: {self.a[size - 1]}')
         elif cmd == 4:
             # linear search
             value = self.get_int_input(prompt=f'Enter a value (values between 1 and {len(self.a)}) will be found: ')
@@ -81,7 +81,6 @@ class SearchInterface:
                 self.run_performance_tests(BinarySearchTimer())
             else:
                 print('Must be sorted')
-
 
     def set_size(self, new_size: int) -> None:
         if new_size != len(self.a):
@@ -104,7 +103,8 @@ class SearchInterface:
         except ValueError:
             index = -1
         elapsed_time = perf_counter() - start_time
-        print(f'Linear search took {elapsed_time*1000:.3f} ms over {len(self.a)} items: {f'found at {index}' if index > 0 else "not found"}')
+        print(
+            f'Linear search took {elapsed_time * 1000:.3f} ms over {len(self.a)} items: {f'found at {index}' if index > 0 else "not found"}')
         return index, elapsed_time
 
     def binary_search(self, value: int) -> (int, float):
@@ -115,7 +115,8 @@ class SearchInterface:
         except ValueError:
             index = -1
         elapsed_time = perf_counter() - start_time
-        print(f'Binary search took {elapsed_time*1000:.3f} ms over {len(self.a)} items: {index if index > 0 else "not found"}')
+        print(
+            f'Binary search took {elapsed_time * 1000:.3f} ms over {len(self.a)} items: {index if index > 0 else "not found"}')
         return index, elapsed_time
 
     def _validate_sorted(self):
@@ -127,7 +128,8 @@ class SearchInterface:
         results = search_timer.test()
         print(f'{search_timer.description} ran in {results.complexity} time')
         for i in range(results.num_sizes):
-            print(f'  Average search time for {results.num_elements[i]} elements: {results.elapsed_times[i] * 1000:.3f} ms')
+            print(
+                f'  Average search time for {results.num_elements[i]} elements: {results.elapsed_times[i] * 1000:.3f} ms')
 
         return results
 
