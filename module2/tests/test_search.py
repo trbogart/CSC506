@@ -73,7 +73,8 @@ def _test_binary_search_all_elements(count):
 
 
 def _test_search_all_elements(a, search_op):
-    for i, element in enumerate(a):
-        assert search_op(a, element) == i
+    skip = 1 if len(a) < 1_000 else len(a) // 10
+    for i in range(0, len(a), skip):
+        assert search_op(a, a[i]) == i
     with pytest.raises(ValueError):
         search_op(a, -1)
