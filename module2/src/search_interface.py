@@ -120,7 +120,7 @@ class SearchInterface:
             index = -1
         elapsed_time = perf_counter() - start_time
         print(
-            f'{description} took {elapsed_time * 1000:.3f} ms over {len(self.a)} items: {index if index > 0 else "not found"}')
+            f'{description} took {elapsed_time * 1000:.4f} ms over {len(self.a)} items: {index if index > 0 else "not found"}')
         return index, elapsed_time
 
     def _validate_sorted(self):
@@ -134,7 +134,7 @@ class SearchInterface:
         print(f'{search_timer.description} ran in {results.complexity} time')
         for i in range(results.num_sizes):
             print(
-                f'  Average search time for {results.num_elements[i]} elements: {results.elapsed_times[i] * 1000:.3f} ms')
+                f'  Average time for {results.num_elements[i]} elements: {results.elapsed_times[i] * 1000:.4f} ms')
 
         return results
 
