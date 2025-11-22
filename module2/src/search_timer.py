@@ -28,7 +28,6 @@ class SearchTimer:
     default_base_size = 10
     default_num_sizes = 4  # check 4 sizes (10, 100, 1_000, and 10_000)
     default_num_tests = 5  # run 5 tests for each size
-    log_slope_threshold = 1.1
     log_complexity = 'O(log n)'
     linear_complexity = 'O(n)'
 
@@ -82,26 +81,38 @@ class SearchTimer:
         self.test_search(size, base_size, num_tests=1)
 
         elapsed_times = []
+        sizes = []
         for _ in range(num_sizes):
+            sizes.append(size)
             elapsed_times.append(self.test_search(size, base_size, num_tests))
             size *= base_size
-        complexity = self.get_complexity(elapsed_times)
+        complexity = self.get_complexity(sizes, elapsed_times)
         return SearchResults(base_size, num_sizes, elapsed_times, complexity)
 
     @staticmethod
-    def get_complexity(elapsed_times: list[float]) -> str:
+    def get_complexity(x: list[int], y: list[float]) -> str:
         """
         Estimates the time complexity based on the given elapsed times, which are for exponentially increasing sizes.
-        :param elapsed_times: list of elapsed times
+        :param x: x values
+        :param y: y values
         :return: either `log_complexity` or `linear_complexity`
         """
         # I used Google AI search results and online tutorials for this portion (such as how to do polyfit and get
         # predicted values), but the logic is my own
-        x = np.arange(0, len(elapsed_times))
-        log_y = np.log(elapsed_times)
-        coef = np.polyfit(x, log_y, 1)
-        slope = coef[0]
-        if slope < SearchTimer.log_slope_threshold:
+
+        # log fit
+        log_x = np.log(x)
+        log_y = np.log(y)
+        log_coef = np.polyfit(log_x, log_y, 1)
+        log_y_pred = np.exp(np.poly1d(log_coef)(log_x))
+        log_error = np.sqrt(np.sum((log_y_pred - y) ** 2))
+
+        # linear fit
+        linear_coef = np.polyfit(x, y, 1)
+        linear_y_pred = np.poly1d(linear_coef)(x)
+        linear_error = np.sqrt(np.sum((linear_y_pred - y) ** 2))
+
+        if log_error < linear_error:
             complexity = SearchTimer.log_complexity
         else:
             complexity = SearchTimer.linear_complexity
