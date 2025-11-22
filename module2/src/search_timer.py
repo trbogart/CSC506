@@ -25,6 +25,9 @@ class SearchResults:
 
 
 class SearchTimer:
+    """
+    Runs search performance tests.
+    """
     default_base_size = 10
     default_num_sizes = 4  # check 4 sizes (10, 100, 1_000, and 10_000)
     default_num_tests = 5  # run 5 tests for each size
