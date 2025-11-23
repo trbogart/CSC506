@@ -50,4 +50,4 @@ def _linear_elapsed_times():
 
 
 def _get_random_elapsed_time(scale):
-    return random.randint(1, 10) + scale * random.uniform(0.5, 1.5)
+    return random.randint(1, 5) + scale * random.uniform(0.75, 1.25)

@@ -30,7 +30,7 @@ class SearchTimer:
     """
     default_base_size = 10
     default_num_sizes = 4  # check 4 sizes (10, 100, 1_000, and 10_000)
-    default_num_tests = 5  # run 5 tests for each size
+    default_num_tests = 10 # run 10 tests for each size
     log_complexity = 'O(log n)'
     linear_complexity = 'O(n)'
 
@@ -105,9 +105,8 @@ class SearchTimer:
 
         # log fit
         log_x = np.log(x)
-        log_y = np.log(y)
-        log_coef = np.polyfit(log_x, log_y, 1)
-        log_y_pred = np.exp(np.poly1d(log_coef)(log_x))
+        log_coef = np.polyfit(log_x, y, 1)
+        log_y_pred = np.poly1d(log_coef)(log_x)
         log_error = np.sqrt(np.sum((log_y_pred - y) ** 2))
 
         # linear fit

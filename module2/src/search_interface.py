@@ -18,10 +18,10 @@ class SearchInterface:
     @staticmethod
     def get_int_input(min_value=0, max_value=max_size, prompt=None):
         if prompt is None:
-            prompt = f'Enter a number between {min_value} and {max_value}: '
+            prompt = f'Enter a number between {min_value:,} and {max_value:,}: '
         while True:
             try:
-                cmd = int(input(prompt))
+                cmd = int(input(prompt).replace(',',''))
                 if min_value <= cmd <= max_value:
                     return cmd
             except ValueError:
@@ -31,7 +31,7 @@ class SearchInterface:
     def print_menu(self):
         binary_prefix = '' if self.is_sorted else 'DISABLED (UNSORTED) - '
         print('------------------------------------------------------------')
-        print(f'List has {len(self.a)} {'sorted' if self.is_sorted else 'unsorted'} elements')
+        print(f'List has {len(self.a):,} {'sorted' if self.is_sorted else 'unsorted'} elements')
         print('0) Exit')
         print('1) Set size')
         print('2) Toggle sorted')
@@ -87,7 +87,7 @@ class SearchInterface:
 
     def get_search_value(self):
         if len(self.a) > 0:
-            suffix = f'(values between 1 and {len(self.a)} will be found)'
+            suffix = f'(values between 1 and {len(self.a):,} will be found)'
         else:
             suffix = '(no values will be found)'
         return self.get_int_input(prompt=f'Enter a value {suffix}: ')
@@ -120,7 +120,7 @@ class SearchInterface:
             index = -1
         elapsed_time = perf_counter() - start_time
         print(
-            f'{description} took {elapsed_time * 1000:.4f} ms over {len(self.a)} items: {index if index > 0 else "not found"}')
+            f'{description} took {elapsed_time * 1000:.4f} ms over {len(self.a):,} items: {index if index > 0 else "not found"}')
         return index, elapsed_time
 
     def _validate_sorted(self):
@@ -134,7 +134,7 @@ class SearchInterface:
         print(f'{search_timer.description} ran in {results.complexity} time')
         for i in range(results.num_sizes):
             print(
-                f'  Average time for {results.num_elements[i]} elements: {results.elapsed_times[i] * 1000:.4f} ms')
+                f'  Average time for {results.num_elements[i]:,} elements: {results.elapsed_times[i] * 1000:.4f} ms')
 
         return results
 

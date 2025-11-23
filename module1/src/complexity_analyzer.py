@@ -11,7 +11,7 @@ class ComplexityAnalyzer:
     This currently only supports O(1), O(log n), O(n), O(n log n), and O(n^2).
     """
 
-    def __init__(self, plot=False, default_num_runs=5_000, default_num_tests=10, default_error_threshold=0.05,
+    def __init__(self, plot=False, default_num_runs=5_000, default_num_tests=100, default_error_threshold=0.05,
                  default_coef_threshold=0.001):
         """
         Create complexity analyzer
