@@ -30,7 +30,7 @@ class SearchTimer:
     """
     default_base_size = 10
     default_num_sizes = 4  # check 4 sizes (10, 100, 1_000, and 10_000)
-    default_num_tests = 10 # run 10 tests for each size
+    default_num_tests = 10  # run 10 tests for each size
     log_complexity = 'O(log n)'
     linear_complexity = 'O(n)'
 

@@ -21,7 +21,7 @@ class SearchInterface:
             prompt = f'Enter a number between {min_value:,} and {max_value:,}: '
         while True:
             try:
-                cmd = int(input(prompt).replace(',',''))
+                cmd = int(input(prompt).replace(',', ''))
                 if min_value <= cmd <= max_value:
                     return cmd
             except ValueError:
