@@ -89,8 +89,8 @@ class SearchInterface:
                 print(f'[{i}]: {self.a[i]}')
             if size > num_shown_items:
                 print(f'... {size - num_shown_items * 2} items excluded')
-            for i in range(size - num_shown_items, size):
-                print(f'[{i}]: {self.a[i]}')
+                for i in range(size - num_shown_items, size):
+                    print(f'[{i}]: {self.a[i]}')
 
     def get_search_value(self):
         if len(self.a) > 0:
