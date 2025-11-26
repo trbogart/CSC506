@@ -1,4 +1,4 @@
-def bubble_sort(data: list):
+def bubble_sort(data: list) -> None:
     """Perform a bubble sort on the data."""
     n = len(data)
     # top i elements are sorted
@@ -6,10 +6,9 @@ def bubble_sort(data: list):
         for j in range(n - i - 1):
             if data[j] > data[j + 1]:
                 data[j], data[j + 1] = data[j + 1], data[j]
-    # TODO optimize by stopping if inner loop does no swaps
 
 
-def selection_sort(data: list):
+def selection_sort(data: list) -> None:
     n = len(data)
     # bottom i elements are sorted
     for i in range(n - 1):
@@ -17,10 +16,9 @@ def selection_sort(data: list):
         for j in range(i + 1, n):
             if data[i] > data[j]:
                 data[i], data[j] = data[j], data[i]
-    # TODO optimize by stopping if inner loop does no swaps
 
 
-def insertion_sort(data: list):
+def insertion_sort(data: list) -> None:
     # bottom i elements are sorted
     for i in range(1, len(data)):
         # move item backwards until reach beginning of list OR find proper place
@@ -30,12 +28,13 @@ def insertion_sort(data: list):
             j -= 1
 
 
-def merge_sort(data: list):
+def merge_sort(data: list, insertion_sort_threshold: int = 10) -> None:
     n = len(data)
     if n <= 1:
         return
 
-    # TODO optimize by doing insertion sort below a certain threshold
+    if n <= insertion_sort_threshold:
+        insertion_sort(data)
 
     middle = n // 2
 

@@ -1,6 +1,6 @@
 import random
 
-from data_generator import generate_sorted, generate_unsorted, generate_reverse_sorted
+from data_generator import generate_sorted, generate_shuffled, generate_reverse_sorted
 from sort import bubble_sort, insertion_sort, selection_sort, merge_sort
 
 
@@ -94,7 +94,7 @@ def _verify_sort(sort_algorithm, n, already_sorted=False, reverse_sorted=False):
     elif reverse_sorted:
         data = generate_reverse_sorted(n)
     else:
-        data = generate_unsorted(n)
+        data = generate_shuffled(n)
 
     sort_algorithm(data)
 

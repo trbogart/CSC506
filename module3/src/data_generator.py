@@ -10,7 +10,7 @@ def generate_sorted(n: int):
     return [i + 1 for i in range(n)]
 
 
-def generate_unsorted(n: int):
+def generate_shuffled(n: int):
     """
     Generate shuffled data of the given size, without duplicates.
     :param n: size of the data to generate
@@ -30,7 +30,7 @@ def randomize(data: list[int]):
         data[i] += random.randint(-1, 1)
 
 
-def generate_nearly_sorted(n: int):
+def generate_partially_sorted(n: int):
     """
     Generate nearly sorted data with duplicates.
     :param n: size of the data to generate
@@ -39,6 +39,7 @@ def generate_nearly_sorted(n: int):
     data = generate_sorted(n)
     randomize(data)
     return data
+
 
 def generate_reverse_sorted(n: int):
     """
