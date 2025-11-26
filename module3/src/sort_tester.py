@@ -11,10 +11,10 @@ data_generators = {
     'partially sorted': generate_partially_sorted,
 }
 sort_algorithms = {
-    'bubble': bubble_sort,
-    'selection': selection_sort,
-    'insertion': insertion_sort,
-    'merge': merge_sort,
+    'Bubble sort': bubble_sort,
+    'Selection sort': selection_sort,
+    'Insertion sort': insertion_sort,
+    'Merge sort': merge_sort,
 }
 num_tests = 5
 
@@ -27,13 +27,14 @@ def validate_sorted(data):
 if __name__ == '__main__':
     results = []
     best_results = []
-    for data_type, data_generator in data_generators.items():
-        for size in sizes:
+    for size in sizes:
+        for data_type, data_generator in data_generators.items():
+            print('----------------------------------------------------------------------')
+            print(f'Sorting {size:,} {data_type} elements')
             best_sort_type = None
             best_sort_time_ms = float('inf')
             for sort_type, sort_algorithm in sort_algorithms.items():
-                description = f'{sort_type} sort with {size:,} {data_type} elements'
-                print(f'Testing {description}...', end=' ')
+                print(f'{sort_type} with {size:,} {data_type} elements...', end='\t')
                 total_time = 0
                 for test in range(num_tests):
                     data = data_generator(size)
@@ -49,15 +50,16 @@ if __name__ == '__main__':
                     best_sort_time_ms = average_time_ms
                     best_sort_type = sort_type
 
+            print(f'Best sort type for {size:,} {data_type} elements: {best_sort_type}')
             best_results.append((data_type, size, best_sort_type))
 
-    print('--------------------------------------------------')
+    print('----------------------------------------------------------------------')
     print('all results')
     print('data_type,size,sort_type,average_time_ms')
     for data_type, size, sort_type, average_time_ms in results:
         print(f'{data_type},{size},{sort_type},{average_time_ms:.1f}')
 
-    print('--------------------------------------------------')
+    print('----------------------------------------------------------------------')
     print('data_type,size,best_sort_type')
     for (data_type, size, best_sort_type) in best_results:
         print(f'{data_type},{size},{best_sort_type}')
