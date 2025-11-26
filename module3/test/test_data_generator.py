@@ -1,6 +1,6 @@
 import random
 
-from data_generator import generate_sorted, generate_unsorted, generate_reverse_sorted, generate_partially_sorted
+from data_generator import generate_sorted, generate_unsorted, generate_reverse_sorted, generate_nearly_sorted
 
 
 def setup_function():
@@ -29,23 +29,27 @@ def test_generate_unsorted():
     assert len(data) == n
     assert sum(data) == (n // 2) * (n + 1)  # sum of 1 to n
 
-    unsorted_elements = get_unsorted_elements(data)
+    unsorted_elements = _get_unsorted_elements(data)
     assert unsorted_elements > n * 0.99
 
 
-def test_generate_partially_sorted():
+def test_generate_nearly_sorted():
     n = 10_000
-    data = generate_partially_sorted(n)
+    data = generate_nearly_sorted(n)
     assert len(data) == n
-    assert sum(data) == (n // 2) * (n + 1)  # sum of 1 to n
 
-    unsorted_elements = get_unsorted_elements(data)
-    # expected 2 * n * 1%
-    assert unsorted_elements > 100
-    assert unsorted_elements < 300
+    unsorted_count = 0
 
+    for i in range(n):
+        assert data[i] >= i
+        assert data[i] <= i+2
+        if i > 0 and data[i] < data[i-1]:
+            unsorted_count += 1
 
-def get_unsorted_elements(data: list[int]):
+    assert unsorted_count > 0
+    assert len(set(data)) < n # have at least some duplicates
+
+def _get_unsorted_elements(data: list[int]):
     count = 0
     for i, x in enumerate(data):
         if x != i + 1:
