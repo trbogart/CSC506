@@ -1,9 +1,10 @@
-from time import perf_counter
+import matplotlib.pyplot as plt
 
+from time import perf_counter
 from data_generator import generate_shuffled, generate_partially_sorted, generate_sorted, generate_reverse_sorted
 from sort import bubble_sort, selection_sort, insertion_sort, merge_sort
 
-# sizes = [10, 100, 1_000]
+# sizes = [10, 100, 1_000, 5_000]
 sizes = [1_000, 5_000, 10_000, 50_000]
 
 data_generators = {
@@ -18,7 +19,7 @@ sort_algorithms = {
     'insertion': insertion_sort,
     'merge': merge_sort,
 }
-num_tests = 5
+num_tests = 3
 
 
 def validate_sorted(data):
@@ -31,39 +32,63 @@ if __name__ == '__main__':
     best_results = []
     for size in sizes:
         for data_type, data_generator in data_generators.items():
-            data_type_csv = data_type.lower().replace(' ', '_')
             print('----------------------------------------------------------------------')
             print(f'Sorting {size:,} {data_type} elements')
             best_sort_type = None
             best_sort_time_ms = float('inf')
             for sort_type, sort_algorithm in sort_algorithms.items():
                 print(f'- {sort_type} sort with {size:,} {data_type} elements...', end='\t')
-                total_time = 0
+                times = []
                 for test in range(num_tests):
                     data = data_generator(size)
                     start_time = perf_counter()
                     sort_algorithm(data)
-                    total_time += (perf_counter() - start_time)
+                    times.append(perf_counter() - start_time)
                     validate_sorted(data)
-                average_time_ms = total_time * 1000 / num_tests
-                print(f'{average_time_ms:.1f} ms')
-                results.append((size, data_type_csv, sort_type, average_time_ms))
 
-                if average_time_ms < best_sort_time_ms:
-                    best_sort_time_ms = average_time_ms
+                times.sort()
+                if len(times) >= 3:  # drop slowest and fastest run
+                    times = times[1:-1]
+                time_ms = sum(times) * 1000 / len(times)
+
+                print(f'{time_ms:.1f} ms')
+                results.append((size, data_type, sort_type, time_ms))
+
+                if time_ms < best_sort_time_ms:
+                    best_sort_time_ms = time_ms
                     best_sort_type = sort_type
 
             print(f'Best sort type for {size:,} {data_type} elements: {best_sort_type}')
-            best_results.append((size, data_type_csv, best_sort_type))
+            best_results.append((size, data_type, best_sort_type))
 
     print('----------------------------------------------------------------------')
     print('All results (csv)')
-    print('size,data_type,sort_type,average_time_ms')
-    for size, data_type, sort_type, average_time_ms in results:
-        print(f'{size},{data_type},{sort_type},{average_time_ms:.1f}')
+    print('size,data_type,sort_type,time_ms')
+    for size, data_type, sort_type, time_ms in results:
+        print(f'{size},{data_type},{sort_type},{time_ms:.1f}')
 
     print('----------------------------------------------------------------------')
     print('Best sort type (csv)')
     print('size,data_type,best_sort_type')
-    for (size, data_type, best_sort_type) in best_results:
+    for size, data_type, best_sort_type in best_results:
         print(f'{size},{data_type},{best_sort_type}')
+
+    # graphs
+    graph_data = {
+        (data_type, sort_type, size): time_ms for size, data_type, sort_type, time_ms in results
+    }
+
+    for data_type in data_generators.keys():
+        fig, ax = plt.subplots(figsize=(6, 3.3))
+        for sort_type in sort_algorithms.keys():
+            times = [graph_data[(data_type, sort_type, size)] for size in sizes]
+
+            ax.plot(sizes, times, label=sort_type)
+
+            ax.set_xlabel('Elements')
+            ax.set_ylabel('Time (ms)')
+            ax.legend()
+
+        plt.suptitle(f'{data_type} elements')
+        plt.tight_layout()
+        plt.show()
