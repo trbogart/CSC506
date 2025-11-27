@@ -62,27 +62,27 @@ if __name__ == '__main__':
             for sort_type, sort_algorithm in sort_type_map.items():
                 label = f'- {sort_type} sort: '
                 print(f'{label:<18}', end='')
-                times_seconds: list[float] = []
+                times_s: list[float] = []
                 for run in range(max_num_runs):
                     data = data_generator(size)
                     start_time = perf_counter()
                     sort_algorithm(data)
-                    times_seconds.append(perf_counter() - start_time)
+                    times_s.append(perf_counter() - start_time)
                     if run == 0:
                         # validate sort algorithm on first run only
                         validate_sorted(data)
-                    if sum(times_seconds) > max_total_seconds_for_next_run:
+                    if sum(times_s) > max_total_seconds_for_next_run:
                         # skip multiple runs for slower runs
                         # (multiple runs are more useful and less painful for shorter runs anyway)
                         break
 
-                time_ms = get_median(times_seconds) * 1000
+                time_s = get_median(times_s)
 
-                print(f'{time_ms:.2f} ms')
-                results.append((size, data_type, sort_type, time_ms))
+                print(f'{time_s:.6f} s')
+                results.append((size, data_type, sort_type, time_s))
 
-                if time_ms < best_sort_time_ms:
-                    best_sort_time_ms = time_ms
+                if time_s < best_sort_time_ms:
+                    best_sort_time_ms = time_s
                     best_sort_type = sort_type
 
             print(f'Best sort type for {size:,} {data_type} elements: {best_sort_type}')
@@ -90,9 +90,9 @@ if __name__ == '__main__':
 
     print(line)
     print('All results (csv)')
-    print('size,data_type,sort_type,time_ms')
-    for size, data_type, sort_type, time_ms in results:
-        print(f'{size},{data_type},{sort_type},{time_ms:.2f}')
+    print('size,data_type,sort_type,time_sec')
+    for size, data_type, sort_type, time_s in results:
+        print(f'{size},{data_type},{sort_type},{time_s:.6f}')
 
     print(line)
     print('Best sort type (csv)')
