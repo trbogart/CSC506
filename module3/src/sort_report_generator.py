@@ -42,10 +42,15 @@ def validate_sorted(a: list[int]) -> None:
 
 
 def get_median(times: list[float]) -> float:
+    """
+    Returns the mean of the middle third of the data.
+    :param times: array of values
+    :return: the mean of the middle third of the data
+    """
     num_runs = len(times)
     if num_runs > 2:
         times.sort()
-        drop_times = (num_runs + 1) // 2 - 1
+        drop_times = num_runs // 3
         times = times[drop_times:-drop_times]
     return sum(times) / len(times)
 
