@@ -8,8 +8,8 @@ from sort import bubble_sort, selection_sort, insertion_sort, merge_sort
 
 line = '----------------------------------------------------------------------'
 
-# sizes = [10, 50, 100, 500, 1_000]
 sizes = [1_000, 5_000, 10_000, 50_000]
+# sizes = [10, 50, 100, 500, 1_000]
 
 data_generators = {
     'shuffled': generate_shuffled,
@@ -23,7 +23,7 @@ sort_algorithms = {
     'insertion': insertion_sort,
     'merge': merge_sort,
 }
-num_tests = 5  # take median
+num_runs = 5  # take median
 
 
 def validate_sorted(data):
@@ -43,17 +43,18 @@ if __name__ == '__main__':
             for sort_type, sort_algorithm in sort_algorithms.items():
                 print(f'- {sort_type} sort with {size:,} {data_type} elements...', end='\t')
                 times = []
-                for test in range(num_tests):
+                for run in range(num_runs):
                     data = data_generator(size)
                     start_time = perf_counter()
                     sort_algorithm(data)
                     times.append(perf_counter() - start_time)
-                    validate_sorted(data)
+                    if run == 0:
+                        # validate sort algorithm on first run only
+                        validate_sorted(data)
 
                 times.sort()
-                num_times = len(times)
-                if num_times >= 3:  # drop slowest and fastest run
-                    drop_times = (num_times + 1) // 2 - 1
+                if num_runs >= 3:  # drop slowest and fastest run
+                    drop_times = (num_runs + 1) // 2 - 1
                     times = times[drop_times:-drop_times]
                 time_ms = sum(times) * 1000 / len(times)
 
@@ -79,14 +80,12 @@ if __name__ == '__main__':
     for size, data_type, best_sort_type in best_results:
         print(f'{size},{data_type},{best_sort_type}')
 
-    # graphs
-    graph_data = {
-        (data_type, sort_type, size): time_ms for size, data_type, sort_type, time_ms in results
-    }
-
     # graph times for each sort algorithm for each type of data
     # use logarithmic scale to make it easier to compare
     log_sizes = np.log10(sizes)
+    graph_data = {
+        (data_type, sort_type, size): time_ms for size, data_type, sort_type, time_ms in results
+    }
     for data_type in data_generators.keys():
         fig, ax = plt.subplots(figsize=(6, 3.3))
         for sort_type in sort_algorithms.keys():
@@ -97,6 +96,6 @@ if __name__ == '__main__':
             ax.set_ylabel('Log₁₀ time ms')
             ax.legend()
 
-        plt.suptitle(f'{data_type} elements') # e.g. "sorted elements"
+        plt.suptitle(f'{data_type} elements')  # e.g. "sorted elements"
         plt.tight_layout()
         plt.show()

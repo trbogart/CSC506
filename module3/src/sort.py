@@ -1,24 +1,44 @@
 def bubble_sort(data: list) -> None:
-    """Perform a bubble sort on the data."""
+    """
+    Perform a bubble insertion sort on the data.
+    :param data: The data list to sort in place
+    :return: None
+    """
     n = len(data)
-    # top i elements are sorted
-    for i in range(n - 1):
-        for j in range(n - i - 1):
+    # elements above i are sorted
+    for i in range(n - 1, -1, -1):
+        for j in range(i):
             if data[j] > data[j + 1]:
                 data[j], data[j + 1] = data[j + 1], data[j]
 
 
 def selection_sort(data: list) -> None:
+    """
+    Perform a selection sort on the data.
+    :param data: The data list to sort in place
+    :return: None
+    """
     n = len(data)
     # bottom i elements are sorted
     for i in range(n - 1):
-        # find next smallest value to put at i
+        # find next smallest value to swap to put at i
+        smallest_index = i
+        smallest_value = data[i]
         for j in range(i + 1, n):
-            if data[i] > data[j]:
-                data[i], data[j] = data[j], data[i]
+            current_value = data[j]
+            if current_value < smallest_value:
+                smallest_index = j
+                smallest_value = current_value
+        if smallest_index != i:
+            data[i], data[smallest_index] = data[smallest_index], data[i]
 
 
 def insertion_sort(data: list) -> None:
+    """
+    Perform an insertion sort on the data.
+    :param data: The data list to sort in place
+    :return: None
+    """
     # bottom i elements are sorted
     for i in range(1, len(data)):
         # move item backwards until reach beginning of list OR find proper place
@@ -29,6 +49,12 @@ def insertion_sort(data: list) -> None:
 
 
 def merge_sort(data: list, insertion_sort_threshold: int = 10) -> None:
+    """
+    Perform a merge sort on the data.
+    :param data: The data list to sort in place
+    :param insertion_sort_threshold: Size threshold below which sublist is sorted with insertion sort
+    :return: None
+    """
     n = len(data)
     if n <= 1:
         return
