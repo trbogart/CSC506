@@ -23,7 +23,7 @@ def generate_shuffled(n: int) -> list[int]:
 
 def slightly_shuffle(data: list[int], max_adjustment: int = 1) -> None:
     """
-    Adds a random factor  each value in an integer list, possibly adding duplicates.
+    Adds a random factor to each value in an integer list, possibly adding duplicates.
     :param data: data to modify
     :param max_adjustment: maximum adjustment in either direction
     :return: None
