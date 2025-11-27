@@ -1,4 +1,7 @@
+from multiprocessing.util import log_to_stderr
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 from time import perf_counter
 from data_generator import generate_shuffled, generate_partially_sorted, generate_sorted, generate_reverse_sorted
@@ -6,7 +9,7 @@ from sort import bubble_sort, selection_sort, insertion_sort, merge_sort
 
 line = '----------------------------------------------------------------------'
 
-# sizes = [10, 100, 1_000, 5_000]
+# sizes = [10, 50, 100, 500, 1_000]
 sizes = [1_000, 5_000, 10_000, 50_000]
 
 data_generators = {
@@ -21,7 +24,7 @@ sort_algorithms = {
     'insertion': insertion_sort,
     'merge': merge_sort,
 }
-num_tests = 3
+num_tests = 5 # take median
 
 
 def validate_sorted(data):
@@ -49,8 +52,10 @@ if __name__ == '__main__':
                     validate_sorted(data)
 
                 times.sort()
-                if len(times) >= 3:  # drop slowest and fastest run
-                    times = times[1:-1]
+                num_times = len(times)
+                if num_times >= 3:  # drop slowest and fastest run
+                    drop_times = (num_times+1)//2 - 1
+                    times = times[drop_times:-drop_times]
                 time_ms = sum(times) * 1000 / len(times)
 
                 print(f'{time_ms:.1f} ms')
@@ -80,15 +85,16 @@ if __name__ == '__main__':
         (data_type, sort_type, size): time_ms for size, data_type, sort_type, time_ms in results
     }
 
+    log_sizes = np.log(sizes)
     for data_type in data_generators.keys():
         fig, ax = plt.subplots(figsize=(6, 3.3))
         for sort_type in sort_algorithms.keys():
-            times = [graph_data[(data_type, sort_type, size)] for size in sizes]
+            log_times = np.log([graph_data[(data_type, sort_type, size)] for size in sizes])
 
-            ax.plot(sizes, times, label=sort_type)
+            ax.plot(log_sizes, log_times, label=sort_type)
 
-            ax.set_xlabel('Elements')
-            ax.set_ylabel('Time (ms)')
+            ax.set_xlabel('Elements (log)')
+            ax.set_ylabel('Time (log)')
             ax.legend()
 
         plt.suptitle(f'{data_type} elements')
