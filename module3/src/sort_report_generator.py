@@ -3,27 +3,28 @@ from time import perf_counter
 import matplotlib.pyplot as plt
 import numpy as np
 
-from data_generator import generate_shuffled, generate_partially_sorted, generate_sorted, generate_reverse_sorted
-from sort import bubble_sort, selection_sort, insertion_sort, merge_sort
+import data_generator as dg
+import sort
 
 line = '----------------------------------------------------------------------'
 
 sizes = [1_000, 5_000, 10_000, 50_000]
-# sizes = [10, 50, 100, 500, 1_000]
 
 data_type_map = {
-    'shuffled': generate_shuffled,
-    'already sorted': generate_sorted,
-    'reverse sorted': generate_reverse_sorted,
-    'partially sorted': generate_partially_sorted,
+    # data type name to data generator function
+    'shuffled': dg.generate_shuffled,
+    'reverse sorted': dg.generate_reverse_sorted,
+    'partially sorted': dg.generate_partially_sorted,
+    'already sorted': dg.generate_sorted,
 }
+max_num_runs = 3
 sort_type_map = {
-    'bubble': bubble_sort,
-    'selection': selection_sort,
-    'insertion': insertion_sort,
-    'merge': merge_sort,
+    # sort type name to (sort function, num_runs)
+    'bubble': (sort.bubble_sort, 1),
+    'selection': (sort.selection_sort, 1),
+    'insertion': (sort.insertion_sort, max_num_runs),
+    'merge': (sort.merge_sort, max_num_runs),
 }
-num_runs = 3  # take median
 
 
 def validate_sorted(data: list[int]) -> None:
@@ -54,7 +55,7 @@ if __name__ == '__main__':
             print(f'Sorting {size:,} {data_type} elements')
             best_sort_type = None
             best_sort_time_ms = float('inf')
-            for sort_type, sort_algorithm in sort_type_map.items():
+            for sort_type, (sort_algorithm, num_runs) in sort_type_map.items():
                 label = f'- {sort_type} sort: '
                 print(f'{label:<18}', end='')
                 times: list[float] = []
@@ -69,7 +70,7 @@ if __name__ == '__main__':
 
                 time_ms = get_median(times) * 1000
 
-                print(f'{time_ms:.1f} ms')
+                print(f'{time_ms:.2f} ms')
                 results.append((size, data_type, sort_type, time_ms))
 
                 if time_ms < best_sort_time_ms:
@@ -83,7 +84,7 @@ if __name__ == '__main__':
     print('All results (csv)')
     print('size,data_type,sort_type,time_ms')
     for size, data_type, sort_type, time_ms in results:
-        print(f'{size},{data_type},{sort_type},{time_ms:.1f}')
+        print(f'{size},{data_type},{sort_type},{time_ms:.2f}')
 
     print(line)
     print('Best sort type (csv)')

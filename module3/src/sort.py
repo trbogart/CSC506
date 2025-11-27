@@ -48,14 +48,20 @@ def insertion_sort(data: list) -> None:
             j -= 1
 
 
-def merge_sort(data: list) -> None:
+def merge_sort(data: list, merge_threshold: int = 10) -> None:
     """
     Perform a merge sort on the data.
     :param data: The data list to sort in place
+    :param merge_threshold: Minimum size to do merge, do insertion sort below this size
     :return: None
     """
     n = len(data)
     if n <= 1:
+        return
+
+    # use insertion sort at or below the merge size threshold
+    if n <= merge_threshold:
+        insertion_sort(data)
         return
 
     middle = n // 2
@@ -63,8 +69,8 @@ def merge_sort(data: list) -> None:
     # recursively sort copies of left and right data
     data1 = data[0:middle]
     data2 = data[middle:]
-    merge_sort(data1)
-    merge_sort(data2)
+    merge_sort(data1, merge_threshold)
+    merge_sort(data2, merge_threshold)
 
     # merge left and right data
     n1 = len(data1)
@@ -90,3 +96,12 @@ def merge_sort(data: list) -> None:
             # only data2 has elements remaining
             data[i] = data2[i2]
             i2 += 1
+
+
+def merge_sort_pure(data: list) -> None:
+    """
+    Perform a pure merge sort on the data without using insertion sort for smaller sublists.
+    :param data: The data list to sort in place
+    :return: None
+    """
+    merge_sort(data, merge_threshold=0)
