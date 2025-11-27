@@ -84,6 +84,8 @@ if __name__ == '__main__':
         (data_type, sort_type, size): time_ms for size, data_type, sort_type, time_ms in results
     }
 
+    # graph times for each sort algorithm for each type of data
+    # use logarithmic scale to make it easier to compare
     log_sizes = np.log10(sizes)
     for data_type in data_generators.keys():
         fig, ax = plt.subplots(figsize=(6, 3.3))
@@ -91,7 +93,6 @@ if __name__ == '__main__':
             log_times = np.log10([graph_data[(data_type, sort_type, size)] for size in sizes])
 
             ax.plot(log_sizes, log_times, label=sort_type)
-
             ax.set_xlabel('Log₁₀ elements')
             ax.set_ylabel('Log₁₀ time ms')
             ax.legend()
