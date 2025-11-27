@@ -6,6 +6,7 @@ import numpy as np
 import data_generator as dg
 import sort
 
+# sizes to test
 sizes = [1_000, 5_000, 10_000, 50_000]
 
 data_type_map = {
@@ -25,7 +26,7 @@ sort_type_map = {
 # maximum number of runs
 max_num_runs = 10
 # stop adding runs if total time in seconds is more than this
-max_total_seconds_for_next_run = 30
+max_total_seconds_for_next_run = 10
 # horizontal separator
 line = '-' * 80
 
