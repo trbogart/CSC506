@@ -26,9 +26,23 @@ sort_type_map = {
 num_runs = 3  # take median
 
 
-def validate_sorted(data):
+def validate_sorted(data: list[int]) -> None:
+    """
+    Validates if the data is sorted.
+    :param data: data to validate
+    :return: None
+    """
     for i in range(1, len(data)):
         assert data[i - 1] <= data[i]
+
+
+def get_median(times: list[int]) -> float:
+    num_runs = len(times)
+    if num_runs > 2:
+        times.sort()
+        drop_times = (num_runs + 1) // 2 - 1
+        times = times[drop_times:-drop_times]
+    return sum(times) / len(times)
 
 
 if __name__ == '__main__':
@@ -52,11 +66,7 @@ if __name__ == '__main__':
                         # validate sort algorithm on first run only
                         validate_sorted(data)
 
-                if num_runs > 2:
-                    times.sort()
-                    drop_times = (num_runs + 1) // 2 - 1
-                    times = times[drop_times:-drop_times]
-                time_ms = sum(times) * 1000 / len(times)
+                time_ms = get_median(times) * 1000
 
                 print(f'{time_ms:.1f} ms')
                 results.append((size, data_type, sort_type, time_ms))
