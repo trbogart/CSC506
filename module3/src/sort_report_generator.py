@@ -36,7 +36,7 @@ def validate_sorted(data: list[int]) -> None:
         assert data[i - 1] <= data[i]
 
 
-def get_median(times: list[int]) -> float:
+def get_median(times: list[float]) -> float:
     num_runs = len(times)
     if num_runs > 2:
         times.sort()
@@ -56,7 +56,7 @@ if __name__ == '__main__':
             best_sort_time_ms = float('inf')
             for sort_type, sort_algorithm in sort_type_map.items():
                 print(f'- {sort_type} sort with {size:,} {data_type} elements...', end='\t')
-                times = []
+                times: list[float] = []
                 for run in range(num_runs):
                     data = data_generator(size)
                     start_time = perf_counter()
