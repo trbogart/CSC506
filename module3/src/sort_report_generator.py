@@ -55,7 +55,8 @@ if __name__ == '__main__':
             best_sort_type = None
             best_sort_time_ms = float('inf')
             for sort_type, sort_algorithm in sort_type_map.items():
-                print(f'- {sort_type} sort with {size:,} {data_type} elements:', end='\t')
+                label = f'- {sort_type} sort: '
+                print(f'{label:<18}', end='')
                 times: list[float] = []
                 for run in range(num_runs):
                     data = data_generator(size)
