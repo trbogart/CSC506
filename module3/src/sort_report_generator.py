@@ -11,13 +11,13 @@ line = '----------------------------------------------------------------------'
 sizes = [1_000, 5_000, 10_000, 50_000]
 # sizes = [10, 50, 100, 500, 1_000]
 
-data_generators = {
+data_type_map = {
     'shuffled': generate_shuffled,
     'already sorted': generate_sorted,
     'reverse sorted': generate_reverse_sorted,
     'partially sorted': generate_partially_sorted,
 }
-sort_algorithms = {
+sort_type_map = {
     'bubble': bubble_sort,
     'selection': selection_sort,
     'insertion': insertion_sort,
@@ -35,12 +35,12 @@ if __name__ == '__main__':
     results = []
     best_results = []
     for size in sizes:
-        for data_type, data_generator in data_generators.items():
+        for data_type, data_generator in data_type_map.items():
             print(line)
             print(f'Sorting {size:,} {data_type} elements')
             best_sort_type = None
             best_sort_time_ms = float('inf')
-            for sort_type, sort_algorithm in sort_algorithms.items():
+            for sort_type, sort_algorithm in sort_type_map.items():
                 print(f'- {sort_type} sort with {size:,} {data_type} elements...', end='\t')
                 times = []
                 for run in range(num_runs):
@@ -86,9 +86,9 @@ if __name__ == '__main__':
     graph_data = {
         (data_type, sort_type, size): time_ms for size, data_type, sort_type, time_ms in results
     }
-    for data_type in data_generators.keys():
+    for data_type in data_type_map.keys():
         fig, ax = plt.subplots(figsize=(6, 3.3))
-        for sort_type in sort_algorithms.keys():
+        for sort_type in sort_type_map.keys():
             log_times = np.log10([graph_data[(data_type, sort_type, size)] for size in sizes])
 
             ax.plot(log_sizes, log_times, label=sort_type)
