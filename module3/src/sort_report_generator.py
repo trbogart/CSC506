@@ -6,8 +6,6 @@ import numpy as np
 import data_generator as dg
 import sort
 
-line = '----------------------------------------------------------------------'
-
 sizes = [1_000, 5_000, 10_000, 50_000]
 
 data_type_map = {
@@ -17,14 +15,19 @@ data_type_map = {
     'partially sorted': dg.generate_partially_sorted,
     'already sorted': dg.generate_sorted,
 }
-max_num_runs = 3
 sort_type_map = {
-    # sort type name to (sort function, num_runs)
-    'bubble': (sort.bubble_sort, 1),
-    'selection': (sort.selection_sort, 1),
-    'insertion': (sort.insertion_sort, max_num_runs),
-    'merge': (sort.merge_sort, max_num_runs),
+    # sort type name to sort function
+    'bubble': sort.bubble_sort,
+    'selection': sort.selection_sort,
+    'insertion': sort.insertion_sort,
+    'merge': sort.merge_sort,
 }
+# maximum number of runs
+max_num_runs = 10
+# stop adding runs if total time in seconds is more than this
+max_total_seconds_for_next_run = 30
+# horizontal separator
+line = '-' * 80
 
 
 def validate_sorted(data: list[int]) -> None:
@@ -55,20 +58,24 @@ if __name__ == '__main__':
             print(f'Sorting {size:,} {data_type} elements')
             best_sort_type = None
             best_sort_time_ms = float('inf')
-            for sort_type, (sort_algorithm, num_runs) in sort_type_map.items():
+            for sort_type, sort_algorithm in sort_type_map.items():
                 label = f'- {sort_type} sort: '
                 print(f'{label:<18}', end='')
-                times: list[float] = []
-                for run in range(num_runs):
+                times_seconds: list[float] = []
+                for run in range(max_num_runs):
                     data = data_generator(size)
                     start_time = perf_counter()
                     sort_algorithm(data)
-                    times.append(perf_counter() - start_time)
+                    times_seconds.append(perf_counter() - start_time)
                     if run == 0:
                         # validate sort algorithm on first run only
                         validate_sorted(data)
+                    if sum(times_seconds) > max_total_seconds_for_next_run:
+                        # skip multiple runs for slower runs
+                        # (multiple runs are more useful and less painful for shorter runs anyway)
+                        break
 
-                time_ms = get_median(times) * 1000
+                time_ms = get_median(times_seconds) * 1000
 
                 print(f'{time_ms:.2f} ms')
                 results.append((size, data_type, sort_type, time_ms))
