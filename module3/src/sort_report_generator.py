@@ -84,18 +84,18 @@ if __name__ == '__main__':
         (data_type, sort_type, size): time_ms for size, data_type, sort_type, time_ms in results
     }
 
-    log_sizes = np.log(sizes)
+    log_sizes = np.log10(sizes)
     for data_type in data_generators.keys():
         fig, ax = plt.subplots(figsize=(6, 3.3))
         for sort_type in sort_algorithms.keys():
-            log_times = np.log([graph_data[(data_type, sort_type, size)] for size in sizes])
+            log_times = np.log10([graph_data[(data_type, sort_type, size)] for size in sizes])
 
             ax.plot(log_sizes, log_times, label=sort_type)
 
-            ax.set_xlabel('Elements (log)')
-            ax.set_ylabel('Time (log)')
+            ax.set_xlabel('Log₁₀ elements')
+            ax.set_ylabel('Log₁₀ time ms')
             ax.legend()
 
-        plt.suptitle(f'{data_type} elements')
+        plt.suptitle(f'{data_type} elements') # e.g. "sorted elements"
         plt.tight_layout()
         plt.show()
