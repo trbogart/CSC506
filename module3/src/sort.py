@@ -48,19 +48,15 @@ def insertion_sort(data: list) -> None:
             j -= 1
 
 
-def merge_sort(data: list, insertion_sort_threshold: int = 10) -> None:
+def merge_sort(data: list) -> None:
     """
     Perform a merge sort on the data.
     :param data: The data list to sort in place
-    :param insertion_sort_threshold: Size threshold below which sublist is sorted with insertion sort
     :return: None
     """
     n = len(data)
     if n <= 1:
         return
-
-    if n <= insertion_sort_threshold:
-        insertion_sort(data)
 
     middle = n // 2
 
