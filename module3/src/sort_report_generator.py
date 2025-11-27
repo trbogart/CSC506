@@ -1,9 +1,8 @@
-from multiprocessing.util import log_to_stderr
+from time import perf_counter
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-from time import perf_counter
 from data_generator import generate_shuffled, generate_partially_sorted, generate_sorted, generate_reverse_sorted
 from sort import bubble_sort, selection_sort, insertion_sort, merge_sort
 
@@ -24,7 +23,7 @@ sort_algorithms = {
     'insertion': insertion_sort,
     'merge': merge_sort,
 }
-num_tests = 5 # take median
+num_tests = 5  # take median
 
 
 def validate_sorted(data):
@@ -54,7 +53,7 @@ if __name__ == '__main__':
                 times.sort()
                 num_times = len(times)
                 if num_times >= 3:  # drop slowest and fastest run
-                    drop_times = (num_times+1)//2 - 1
+                    drop_times = (num_times + 1) // 2 - 1
                     times = times[drop_times:-drop_times]
                 time_ms = sum(times) * 1000 / len(times)
 
