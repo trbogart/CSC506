@@ -81,7 +81,7 @@ if __name__ == '__main__':
         print(f'{size},{data_type},{best_sort_type}')
 
     # graph times for each sort algorithm for each type of data
-    # use logarithmic scale to make it easier to compare
+    # use logarithmic scale to make it easier to compare different algorithms
     log_sizes = np.log10(sizes)
     graph_data = {
         (data_type, sort_type, size): time_ms for size, data_type, sort_type, time_ms in results
