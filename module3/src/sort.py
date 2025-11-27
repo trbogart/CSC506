@@ -7,9 +7,15 @@ def bubble_sort(data: list) -> None:
     n = len(data)
     # elements above i are sorted
     for i in range(n - 1, -1, -1):
+        swapped = False
         for j in range(i):
             if data[j] > data[j + 1]:
+                swapped = True
                 data[j], data[j + 1] = data[j + 1], data[j]
+        if not swapped:
+            # optimization to break early if already sorted
+            # unlike insertion sort, this only works if completely sorted
+            break
 
 
 def selection_sort(data: list) -> None:
