@@ -4,6 +4,8 @@ from time import perf_counter
 from data_generator import generate_shuffled, generate_partially_sorted, generate_sorted, generate_reverse_sorted
 from sort import bubble_sort, selection_sort, insertion_sort, merge_sort
 
+line = '----------------------------------------------------------------------'
+
 # sizes = [10, 100, 1_000, 5_000]
 sizes = [1_000, 5_000, 10_000, 50_000]
 
@@ -32,7 +34,7 @@ if __name__ == '__main__':
     best_results = []
     for size in sizes:
         for data_type, data_generator in data_generators.items():
-            print('----------------------------------------------------------------------')
+            print(line)
             print(f'Sorting {size:,} {data_type} elements')
             best_sort_type = None
             best_sort_time_ms = float('inf')
@@ -61,13 +63,13 @@ if __name__ == '__main__':
             print(f'Best sort type for {size:,} {data_type} elements: {best_sort_type}')
             best_results.append((size, data_type, best_sort_type))
 
-    print('----------------------------------------------------------------------')
+    print(line)
     print('All results (csv)')
     print('size,data_type,sort_type,time_ms')
     for size, data_type, sort_type, time_ms in results:
         print(f'{size},{data_type},{sort_type},{time_ms:.1f}')
 
-    print('----------------------------------------------------------------------')
+    print(line)
     print('Best sort type (csv)')
     print('size,data_type,best_sort_type')
     for size, data_type, best_sort_type in best_results:
