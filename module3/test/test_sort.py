@@ -16,7 +16,7 @@ def test_bubble_sort_singleton():
     _verify_sort(bubble_sort, 1)
 
 
-def test_bubble_sort():
+def test_bubble_sort_shuffled():
     _verify_sort(bubble_sort, 100)
 
 
@@ -36,7 +36,7 @@ def test_selection_sort_singleton():
     _verify_sort(selection_sort, 1)
 
 
-def test_selection_sort_unsorted():
+def test_selection_sort_shuffled():
     _verify_sort(selection_sort, 100)
 
 
@@ -56,7 +56,7 @@ def test_insertion_sort_singleton():
     _verify_sort(insertion_sort, 1)
 
 
-def test_insertion_sort_unsorted():
+def test_insertion_sort_shuffled():
     _verify_sort(insertion_sort, 100)
 
 
@@ -76,7 +76,7 @@ def test_merge_sort_singleton():
     _verify_sort(merge_sort, 1)
 
 
-def test_merge_sort_unsorted():
+def test_merge_sort_shuffled():
     _verify_sort(merge_sort, 100)
 
 

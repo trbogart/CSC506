@@ -21,25 +21,26 @@ def generate_shuffled(n: int) -> list[int]:
     return data
 
 
-def slightly_shuffle(data: list[int], max_adjustment: int = 1) -> None:
+def partially_shuffle(data: list[int], max_adjustment: int = 1) -> None:
     """
     Adds a random factor to each value in an integer list, possibly adding duplicates.
     :param data: data to modify
     :param max_adjustment: maximum adjustment in either direction
     :return: None
     """
-    for i in range(1, len(data)):
-        data[i] += random.randint(-max_adjustment, max_adjustment)
+    if max_adjustment > 0:
+        for i in range(len(data)):
+            data[i] += random.randint(-max_adjustment, max_adjustment)
 
 
 def generate_partially_sorted(n: int) -> list[int]:
     """
-    Generate nearly sorted data with duplicates.
+    Generate nearly sorted data that may have duplicates.
     :param n: size of the data to generate
     :return: nearly sorted data of the given size
     """
     data = generate_sorted(n)
-    slightly_shuffle(data)
+    partially_shuffle(data)
     return data
 
 
