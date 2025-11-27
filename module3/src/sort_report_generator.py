@@ -31,14 +31,14 @@ max_total_seconds_for_next_run = 10
 line = '-' * 80
 
 
-def validate_sorted(data: list[int]) -> None:
+def validate_sorted(a: list[int]) -> None:
     """
     Validates if the data is sorted.
-    :param data: data to validate
+    :param a: data to validate
     :return: None
     """
-    for i in range(1, len(data)):
-        assert data[i - 1] <= data[i]
+    for i in range(1, len(a)):
+        assert a[i - 1] <= a[i]
 
 
 def get_median(times: list[float]) -> float:
