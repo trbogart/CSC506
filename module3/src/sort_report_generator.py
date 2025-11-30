@@ -22,6 +22,7 @@ sort_type_map = {
     'selection': sort.selection_sort,
     'insertion': sort.insertion_sort,
     'merge': sort.merge_sort,
+    # 'default': lambda x: x.sort(),
 }
 # maximum number of runs
 max_num_runs = 10
