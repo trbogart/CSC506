@@ -1,5 +1,7 @@
 import random
 
+# Functions to generate data to test sort algorithms.
+
 
 def generate_sorted(n: int) -> list[int]:
     """

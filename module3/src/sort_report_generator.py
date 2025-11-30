@@ -6,6 +6,9 @@ import numpy as np
 import data_generator as dg
 import sort
 
+# Command-line tool to compare performance of different sorting algorithms against different sizes and types of data
+# (e.g. sorted or shuffled)
+
 # sizes to test
 sizes = [1_000, 5_000, 10_000, 50_000]
 
