@@ -41,13 +41,6 @@ class Stack:
         """Clears the stack"""
         self.list.clear()
 
-    def get_estimated_space(self):
-        """
-        Helper method to get the estimated space consumed by this list. Includes the size of this object,
-        the list itself, and sum of the size of all values
-        """
-        return sys.getsizeof(self) + sys.getsizeof(self.list) + sum(map(lambda value: sys.getsizeof(value), self))
-
 
 if __name__ == '__main__':
     # run command-line interface for testing and analysis
