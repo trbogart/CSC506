@@ -11,4 +11,3 @@ def verify_collection(collection, *expected):
         assert collection[i] == value
         assert value in collection
         assert collection.search(value) == i
-

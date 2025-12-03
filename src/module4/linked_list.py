@@ -1,13 +1,13 @@
 import itertools
 from typing import Iterable
 
-from module4.dequeue import IDequeue
+from module4.deque import IDeque
 from module4.queue import IQueue
 from module4.stack import IStack
 
 
 # Doubly linked list
-class LinkedList[T](IStack[T], IQueue[T], IDequeue[T]):
+class LinkedList[T](IStack[T], IQueue[T], IDeque[T]):
     """
     Doubly linked list (can function as a Stack, Queue, or Deque)
     """
@@ -108,6 +108,27 @@ class LinkedList[T](IStack[T], IQueue[T], IDequeue[T]):
 
     def front(self) -> T:
         return self.get_front()
+
+    # Implemented linked list specific classes
+    def insert(self, value: T) -> None:
+        """
+        Adds an element to the end of the list.
+        :param value: Element to add
+        """
+        self.add_rear(value)
+
+    def delete(self, value: T) -> int:
+        """
+        Deletes the given value.
+        :param value: Value to remove
+        :return: Index of value
+        :raise: ValueError if not found
+        """
+        for i, node in enumerate(self._iter_nodes()):
+            if node.value == value:
+                self._remove_node(node)
+                return i
+        raise ValueError(f'Element not in list')
 
     class Node:
         """Internal data structure representing a linked list node"""

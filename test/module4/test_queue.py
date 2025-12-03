@@ -1,8 +1,8 @@
 import pytest
 
-from base_collection_test import verify_collection
 from module4.linked_list import LinkedList
 from module4.queue import IQueue, Queue
+from module4.test_collection import verify_collection
 
 
 @pytest.fixture(params=[Queue, LinkedList])
