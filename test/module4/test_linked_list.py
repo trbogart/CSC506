@@ -50,3 +50,22 @@ def test_delete():
 
     with pytest.raises(ValueError):
         ll.delete(1)
+
+def test_insert_after():
+    ll = LinkedList()
+
+    ll.insert_after(1, 2)
+    verify_collection(ll, 2)
+
+    ll.insert_after(2, 3)
+    verify_collection(ll, 2, 3)
+
+    ll.insert_after(2, 1)
+    verify_collection(ll, 2, 1, 3)
+
+    ll.insert_after(3, 4)
+    verify_collection(ll, 2, 1, 3, 4)
+
+    ll.insert_after(5, 5)
+    verify_collection(ll, 2, 1, 3, 4, 5)
+

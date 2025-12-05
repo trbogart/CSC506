@@ -117,6 +117,33 @@ class LinkedList[T](IStack[T], IQueue[T], IDeque[T]):
         """
         self.add_rear(value)
 
+    def insert_after(self, after: T, value: T) -> None:
+        """
+        Adds an element after the given value, or at the end of the list if not found.
+        :param after: insert value after this value
+        :param value: value to add
+        """
+        if after is None:
+            self.add_front(value)
+        else:
+            node = self._get_node_by_value(after, error_not_found=False)
+            if node is None:
+                self.add_rear(value)
+            else:
+                new_node = self.Node(value)
+                new_node.prev_node = node
+                new_node.next_node = node.next_node
+
+                if node.next_node is None:
+                    self.tail = new_node
+                else:
+                    new_node.next_node = node.next_node
+                node.next_node = new_node
+
+                self.size += 1
+
+
+
     def delete(self, value: T) -> int:
         """
         Deletes the given value.
@@ -156,11 +183,11 @@ class LinkedList[T](IStack[T], IQueue[T], IDeque[T]):
             raise IndexError('Index out of range')
         return next(itertools.islice(self._iter_nodes(), index, None))
 
-    def _get_node_by_value(self, value: T) -> Node:
+    def _get_node_by_value(self, value: T, error_not_found: bool = True) -> Node:
         """Internal method to return the first node with the given value, or raise a ValueError if absent"""
         node_iter = filter(lambda next_node: next_node.value == value, self._iter_nodes())
         node = next(node_iter, None)
-        if node is None:
+        if node is None and error_not_found:
             raise ValueError(f'element {value} not in list')
         return node
 
