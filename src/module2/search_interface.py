@@ -119,7 +119,8 @@ class SearchInterface:
         self._validate_sorted()
         return self.do_search(value, "Binary search", search.binary_search)
 
-    def do_search(self, value: int, description: str, search_op: Callable[[Iterable[int], int], int]) -> Tuple[int, float]:
+    def do_search(self, value: int, description: str, search_op: Callable[[Iterable[int], int], int]) -> Tuple[
+        int, float]:
         start_time = perf_counter()
         try:
             index = search_op(self.a, value)

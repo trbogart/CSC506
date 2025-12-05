@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Iterator
 
+
 class ICollection[T](ABC):
     """
     Abstract base class for collections.
     """
+
     @abstractmethod
     def is_empty(self) -> bool:
         """
@@ -52,6 +54,7 @@ class ListBasedCollection[T](ICollection[T]):
     """
     Base class for collections that are built on a Python list.
     """
+
     def __init__(self):
         self.list: list[T] = []
 
