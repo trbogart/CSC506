@@ -8,7 +8,7 @@ from module4.test_collection import verify_collection
 
 @pytest.fixture(params=[Queue, LinkedList])
 def message_queue(request) -> MessageQueue:
-    # Instantiate the stack implementation and use it build an RPN calculator
+    # Instantiate the queue implementation and use it build a message queue simulator
     return MessageQueue(request.param())
 
 

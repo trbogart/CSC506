@@ -105,6 +105,77 @@ def test_get_rear(deque):
         deque.get_rear()
 
 
+def test_resize_rear(deque):
+    # add to rear enough times to resize if circular buffer
+    expected = []
+    for i in range(20):
+        deque.add_rear(i)
+        expected = [value for value in range(i + 1)]
+        verify_collection(deque, *expected)
+
+
+def test_resize_front(deque):
+    # add to front enough times to resize if circular buffer
+    for i in range(20):
+        deque.add_front(i)
+        expected = [value for value in range(i, -1, -1)]
+        verify_collection(deque, *expected)
+
+
+def test_resize_both_directions(deque):
+    # add to both front and rear, enough times to resize if circular buffer
+    deque.add_front(1)
+    verify_collection(deque, 1)
+    deque.add_rear(2)
+    verify_collection(deque, 1, 2)
+    deque.add_front(3)
+    verify_collection(deque, 3, 1, 2)
+    deque.add_rear(4)
+    verify_collection(deque, 3, 1, 2, 4)
+    deque.add_front(5)
+    verify_collection(deque, 5, 3, 1, 2, 4)
+    deque.add_rear(6)
+    verify_collection(deque, 5, 3, 1, 2, 4, 6)
+    deque.add_front(7)
+    verify_collection(deque, 7, 5, 3, 1, 2, 4, 6)
+    deque.add_rear(8)
+    verify_collection(deque, 7, 5, 3, 1, 2, 4, 6, 8)
+    deque.add_front(9)
+    verify_collection(deque, 9, 7, 5, 3, 1, 2, 4, 6, 8)
+    deque.add_rear(10)
+    verify_collection(deque, 9, 7, 5, 3, 1, 2, 4, 6, 8, 10)
+    deque.add_front(0)
+    verify_collection(deque, 0, 9, 7, 5, 3, 1, 2, 4, 6, 8, 10)
+
+
+def test_add_front_remove_rear_only(deque):
+    deque.add_front(1)
+    assert deque.remove_rear() == 1
+    verify_collection(deque)
+
+
+def test_add_front_remove_rear(deque):
+    deque.add_front(1)
+    for i in range(2, 10):
+        deque.add_front(i)
+        assert deque.remove_rear() == i - 1
+        verify_collection(deque, i)
+
+
+def test_add_rear_remove_front_only(deque):
+    deque.add_rear(1)
+    assert deque.remove_front() == 1
+    verify_collection(deque)
+
+
+def test_add_rear_remove_front(deque):
+    deque.add_rear(1)
+    for i in range(2, 10):
+        deque.add_rear(i)
+        assert deque.remove_front() == i - 1
+        verify_collection(deque, i)
+
+
 def test_clear(deque):
     deque.add_rear(1)
     deque.add_rear(2)

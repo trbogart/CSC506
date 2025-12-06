@@ -2,6 +2,7 @@
 # Each executor has its own work queue, and will work through scheduled jobs.
 # If an executor reaches the end of its queue, it steals work from the end of another executor's queue.
 # Note that this implementation is not thread safe, and only meant to simulate a scheduler.
+# Also, the job is just a string rather than an executable.
 import argparse
 
 from module4.deque import IDeque, Deque
@@ -10,34 +11,34 @@ from module4.linked_list import LinkedList
 
 class Scheduler:
     """
-    Creates a work-stealing scheduler.
+    Creates a simulator for work-stealing scheduler.
     """
 
     def __init__(self):
         self.executors = list[Executor]()
 
-    def start_on_waiting_executor(self, job: str) -> bool:
+    def _start_on_waiting_executor(self, job: str) -> bool:
         """
-        Start job on waiting executor, if any
+        Internal method to start job on an idle executor, if any
         :param job: job to start
         :return: true if the job was started
         """
         for executor in self.executors:
-            if executor.is_waiting():
-                executor.start_job(job, 'scheduled on another executor while this executor was waiting')
+            if executor.is_idle():
+                executor._start_job(job, 'scheduled on another executor while this executor was waiting')
                 return True
         return False
 
-    def steal_work(self) -> tuple[int, str | None]:
+    def _steal_work(self) -> tuple[int, str | None]:
         """
-        Steal work from end of an active executor's queue (if any)
+        Internal method to steal work from the end of an active executor's queue (if any)
         :return: tuple containing executor index and job that was stolen, or -1 and None if no work was stolen
         """
         # steal work from end of executor's queue (if any)
         for executor in self.executors:
             if not executor.work_queue.is_empty():
                 # steal work from executor (this implies that the executor is currently working on something else)
-                assert not executor.is_waiting()
+                assert not executor.is_idle()
                 return executor.index, executor.work_queue.remove_rear()
         return -1, None
 
@@ -55,10 +56,15 @@ class Scheduler:
             raise ValueError(f'Invalid executor #{executor_str}')
 
     def execute(self) -> None:
+        """
+        Command-line test program.
+        """
         while True:
             print('------------------------------------------')
             for executor in self.executors:
-                executor.print()
+                print(f'Executor #{executor.index}:')
+                print(f'  Active job: {executor.active_job}')
+                print(f'  Work queue: {executor.work_queue}')
             cmd = input(
                 'Enter command (s# to schedule job on executor, f# to finish job on executor, or q to quit): ').lower()
             if cmd == 'q':
@@ -73,7 +79,7 @@ class Scheduler:
             elif cmd.startswith('f'):
                 try:
                     executor = self.get_executor(cmd[1:])
-                    if executor.is_waiting():
+                    if executor.is_idle():
                         print(f'Executor #{cmd[1:]} is not active')
                     else:
                         executor.finish_job()
@@ -91,12 +97,7 @@ class Executor:
         self.index = len(scheduler.executors)
         self.work_queue = work_queue
 
-    def print(self) -> None:
-        print(f'Executor #{self.index}:')
-        print(f'  Active job: {self.active_job}')
-        print(f'  Work queue: {self.work_queue}')
-
-    def is_waiting(self) -> bool:
+    def is_idle(self) -> bool:
         """
         Returns true if the executor does not have an active job.
         """
@@ -105,15 +106,18 @@ class Executor:
     def schedule_job(self, job: str) -> bool:
         """
         Schedule the given job.
-        :param job: job
+        Will start immediately on this executor if idle.
+        Otherwise, will start immediately on another idle executor, if any.
+        Will be added to this executor's work queue if there are no idle executors.
+        :param job: job to perform
         :return: true if the work has started, false if it has been scheduled to start later
         """
         print(f'Schedule job {job} on executor #{self.index}')
         if self.active_job is None:
             # start job immediately if not already working on another job
-            self.start_job(job, 'started immediately')
+            self._start_job(job, 'started immediately')
             return True
-        elif self.scheduler.start_on_waiting_executor(job):
+        elif self.scheduler._start_on_waiting_executor(job):
             # started by an idle executor
             return True
         else:
@@ -121,23 +125,34 @@ class Executor:
             self.work_queue.add_rear(job)
             return False
 
-    def start_job(self, job: str, description: str) -> None:
-        assert self.active_job is None
-        print(f'Executor {self.index} starting job {job}: {description}')
-        self.active_job = job
-
     def finish_job(self) -> None:
+        """
+        Finish a job. Will pick up job from work queue.
+        Otherwise, will pick up job from end of another executor's queue.
+        Finally, will go idle if no pending work is available on any executor's queue.
+        :return:
+        """
         assert self.active_job is not None
         print(f'Executor {self.index} finished job {self.active_job}')
         self.active_job = None
         if self.work_queue.is_empty():
-            executor_index, stolen_job = self.scheduler.steal_work()
+            executor_index, stolen_job = self.scheduler._steal_work()
             if executor_index >= 0:
-                self.start_job(stolen_job, f"stolen from end of executor #{executor_index}'s work queue")
+                self._start_job(stolen_job, f"stolen from end of executor #{executor_index}'s work queue")
             else:
                 print(f'Executor {self.index} waiting for work')
         else:
-            self.start_job(self.work_queue.remove_front(), 'next item in work queue')
+            self._start_job(self.work_queue.remove_front(), 'next item in work queue')
+
+    def _start_job(self, job: str, description: str) -> None:
+        """
+        Internal method to start a new job.
+        :param job: job to start
+        :param description: description for command-line program
+        """
+        assert self.active_job is None
+        print(f'Executor {self.index} starting job {job}: {description}')
+        self.active_job = job
 
 
 if __name__ == '__main__':

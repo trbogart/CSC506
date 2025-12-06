@@ -80,12 +80,12 @@ def test_work_stealing_scheduler(scheduler):
 
 
 def verify_executor_waiting(executor):
-    assert executor.is_waiting()
+    assert executor.is_idle()
     assert executor.active_job is None
     verify_collection(executor.work_queue)
 
 
 def verify_executor_active(executor, active_job, *waiting_jobs):
-    assert not executor.is_waiting()
+    assert not executor.is_idle()
     assert executor.active_job == active_job
     verify_collection(executor.work_queue, *waiting_jobs)

@@ -15,6 +15,9 @@ class MessageQueue:
         self.value = ''
 
     def execute(self) -> None:
+        """
+        Command-line test program.
+        """
         while True:
             print(f'Current value "{self.value}" with {len(self.queue)} undelivered messages: {self.queue}')
             cmd = input('Enter command (s to send message, r to receive message, q to quit): ')

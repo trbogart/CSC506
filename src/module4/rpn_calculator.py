@@ -15,6 +15,9 @@ class Calculator:
         self.stack = stack
 
     def execute(self) -> None:
+        """
+        Command-line test program.
+        """
         while True:
             print('Stack:')
             if self.stack.is_empty():
@@ -54,32 +57,35 @@ class Calculator:
             else:
                 try:
                     num = float(cmd)
-                    self.stack.push(num)
+                    self.push_value(num)
                 except ValueError:
                     print('Invalid command')
+
+    def push_value(self, num: float):
+        self.stack.push(num)
 
     def drop(self):
         self.stack.pop()
 
     def divide(self):
-        self.binary_op(lambda x, y: x / y)
+        self._binary_op(lambda x, y: x / y)
 
     def multiply(self):
-        self.binary_op(lambda x, y: x * y)
+        self._binary_op(lambda x, y: x * y)
 
     def subtract(self):
-        self.binary_op(lambda x, y: x - y)
+        self._binary_op(lambda x, y: x - y)
 
     def add(self):
-        self.binary_op(lambda x, y: x + y)
+        self._binary_op(lambda x, y: x + y)
 
     def swap(self):
         value1 = self.stack.pop()
         value2 = self.stack.pop()
-        self.stack.push(value1)
-        self.stack.push(value2)
+        self.push_value(value1)
+        self.push_value(value2)
 
-    def binary_op(self, operation: Callable[[float, float], float]) -> None:
+    def _binary_op(self, operation: Callable[[float, float], float]) -> None:
         """
         Perform a binary operation from the two most recent stack values and add the result to the stack.
         :param operation: operation to perform
@@ -91,7 +97,7 @@ class Calculator:
             value2 = self.stack.pop()
             value1 = self.stack.pop()
             new_value = operation(value1, value2)
-            self.stack.push(new_value)
+            self.push_value(new_value)
 
 
 if __name__ == '__main__':
