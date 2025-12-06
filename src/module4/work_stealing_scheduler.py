@@ -43,9 +43,10 @@ class Scheduler:
 
     def get_executor(self, executor_str: str):
         """
-        Returns the executor with the index corresponding to the given string
-        :param executor_str:
-        :return:
+        Returns the executor with the index corresponding to the given string.
+        :param executor_str: executor string (1 based)
+        :return: The executor with the index corresponding to the given string.
+        :raise ValueError: invalid executor string
         """
         executor_num = int(executor_str)
         try:
