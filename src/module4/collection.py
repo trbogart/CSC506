@@ -49,6 +49,11 @@ class ICollection[T](ABC):
         """Returns a string representation of the collection"""
         pass
 
+    @abstractmethod
+    def reversed(self) -> Iterator[T]:
+        """Iterate over values in reversed order"""
+        pass
+
 
 class ListBasedCollection[T](ICollection[T]):
     """
@@ -72,6 +77,10 @@ class ListBasedCollection[T](ICollection[T]):
 
     def __getitem__(self, index: int) -> T:
         return self.list[index]
+
+    def reversed(self) -> Iterator[T]:
+        for i in range(len(self.list) - 1, -1, -1):
+            yield self.list[i]
 
     def is_empty(self) -> bool:
         return len(self) == 0

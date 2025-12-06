@@ -51,6 +51,7 @@ def test_delete():
     with pytest.raises(ValueError):
         ll.delete(1)
 
+
 def test_insert_after():
     ll = LinkedList()
 
@@ -68,4 +69,3 @@ def test_insert_after():
 
     ll.insert_after(5, 5)
     verify_collection(ll, 2, 1, 3, 4, 5)
-

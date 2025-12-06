@@ -1,5 +1,5 @@
 import itertools
-from typing import Iterable
+from typing import Iterable, Iterator
 
 from module4.deque import IDeque
 from module4.queue import IQueue
@@ -49,6 +49,12 @@ class LinkedList[T](IStack[T], IQueue[T], IDeque[T]):
         self.size = 0
         self.head = None
         self.tail = None
+
+    def reversed(self) -> Iterator[T]:
+        node = self.tail
+        while node is not None:
+            yield node.value
+            node = node.prev_node
 
     # implement IDequeue methods
     def get_front(self) -> T:
@@ -137,12 +143,11 @@ class LinkedList[T](IStack[T], IQueue[T], IDeque[T]):
                 if node.next_node is None:
                     self.tail = new_node
                 else:
-                    new_node.next_node = node.next_node
+                    node.next_node.prev_node = new_node
+
                 node.next_node = new_node
 
                 self.size += 1
-
-
 
     def delete(self, value: T) -> int:
         """

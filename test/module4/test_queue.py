@@ -10,8 +10,10 @@ def queue(request) -> IQueue:
     # Instantiate the implementation and return it
     return request.param()
 
+
 def test_empty(queue):
     verify_collection(queue)
+
 
 def test_enqueue(queue):
     queue.enqueue(1)
@@ -20,6 +22,7 @@ def test_enqueue(queue):
     verify_collection(queue, 1, 3)
     queue.enqueue(2)
     verify_collection(queue, 1, 3, 2)
+
 
 def test_dequeue(queue):
     queue.enqueue(1)
@@ -36,6 +39,7 @@ def test_dequeue(queue):
 
     with pytest.raises(IndexError):
         queue.dequeue()
+
 
 def test_front(queue):
     with pytest.raises(IndexError):
@@ -54,7 +58,6 @@ def test_front(queue):
 
     with pytest.raises(IndexError):
         queue.front()
-
 
 
 def test_clear(queue):

@@ -10,8 +10,10 @@ def stack(request) -> IStack:
     # Instantiate the implementation and return it
     return request.param()
 
+
 def test_empty(stack):
     verify_collection(stack)
+
 
 def test_push(stack):
     stack.push(1)
@@ -20,6 +22,7 @@ def test_push(stack):
     verify_collection(stack, 1, 3)
     stack.push(2)
     verify_collection(stack, 1, 3, 2)
+
 
 def test_pop(stack):
     stack.push(1)
@@ -36,6 +39,7 @@ def test_pop(stack):
 
     with pytest.raises(IndexError):
         stack.pop()
+
 
 def test_peek(stack):
     with pytest.raises(IndexError):
@@ -54,7 +58,6 @@ def test_peek(stack):
 
     with pytest.raises(IndexError):
         stack.peek()
-
 
 
 def test_clear(stack):

@@ -11,3 +11,6 @@ def verify_collection(collection, *expected):
         assert collection[i] == value
         assert value in collection
         assert collection.search(value) == i
+
+    for i, value in enumerate(collection.reversed()):
+        assert value == expected_list[len(expected_list) - i - 1]
