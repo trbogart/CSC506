@@ -6,7 +6,6 @@ from module4.queue import IQueue
 from module4.stack import IStack
 
 
-# Doubly linked list
 class LinkedList[T](IStack[T], IQueue[T], IDeque[T]):
     """
     Doubly linked list (can function as a Stack, Queue, or Deque)
