@@ -26,12 +26,14 @@ def test_add_to_capacity():
     cache[2] = 'b'
     cache[3] = 'c'
     verify_cache(cache, {3: 'c', 2: 'b', 1: 'a'})
+
     # LRU entry drops off
     cache[4] = 'd'
     verify_cache(cache, {4: 'd', 3: 'c', 2: 'b'})
     cache[5] = 'e'
     verify_cache(cache, {5: 'e', 4: 'd', 3: 'c'})
-
+    cache[6] = 'f'
+    verify_cache(cache, {6: 'f', 5: 'e', 4: 'd'})
 
 def test_update():
     cache = Cache[int, str](capacity=3)
