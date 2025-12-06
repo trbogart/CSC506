@@ -14,7 +14,7 @@ class Calculator:
         """
         self.stack = stack
 
-    def execute(self):
+    def execute(self) -> None:
         while True:
             print('Stack:')
             if self.stack.is_empty():
@@ -65,7 +65,7 @@ class Calculator:
         """
         Perform a binary operation from the two most recent stack values and add the result to the stack.
         :param operation: operation to perform
-        :return:
+        :return: new value
         """
         if len(stack) < 2:
             print('Error: must have at least two values')

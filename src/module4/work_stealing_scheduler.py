@@ -42,13 +42,18 @@ class Scheduler:
         return -1, None
 
     def get_executor(self, executor_str: str):
+        """
+        Returns the executor with the index corresponding to the given string
+        :param executor_str:
+        :return:
+        """
         executor_num = int(executor_str)
         try:
             return self.executors[executor_num - 1]
         except IndexError:
             raise ValueError(f'Invalid executor #{executor_str}')
 
-    def execute(self):
+    def execute(self) -> None:
         while True:
             print('------------------------------------------')
             for executor in self.executors:
@@ -85,7 +90,7 @@ class Executor:
         self.index = len(scheduler.executors)
         self.work_queue = work_queue
 
-    def print(self):
+    def print(self) -> None:
         print(f'Executor #{self.index}:')
         print(f'  Active job: {self.active_job}')
         print(f'  Work queue: {self.work_queue}')
@@ -120,7 +125,7 @@ class Executor:
         print(f'Executor {self.index} starting job {job}: {description}')
         self.active_job = job
 
-    def finish_job(self):
+    def finish_job(self) -> None:
         assert self.active_job is not None
         print(f'Executor {self.index} finished job {self.active_job}')
         self.active_job = None
@@ -136,7 +141,7 @@ class Executor:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        prog='work_stealing',
+        prog='work_stealing_scheduler',
         usage='Simple message deque that concatenates message contents',
         add_help=True,  # add -h/--help option
     )
