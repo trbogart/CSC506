@@ -1,4 +1,5 @@
 import argparse
+import io
 
 from module4.linked_list import LinkedList
 from module4.queue import IQueue, Queue
@@ -13,14 +14,17 @@ class MessageQueue:
         :param queue: queue implementation
         """
         self.queue = queue
-        self.value = ''
+        self.buffer = io.StringIO()
+
+    def value(self):
+        return self.buffer.getvalue()
 
     def execute(self) -> None:
         """
         Command-line test program.
         """
         while True:
-            print(f'Current value "{self.value}" with {len(self.queue)} undelivered messages: {self.queue}')
+            print(f'Current value "{self.value()}" with {len(self.queue)} undelivered messages: {self.queue}')
             cmd = input('Enter command (s to send message, r to receive message, q to quit): ')
             if cmd == 'q':
                 break
@@ -37,7 +41,7 @@ class MessageQueue:
 
     def receive_message(self):
         message = self.queue.dequeue()
-        self.value += message
+        self.buffer.write(message)
         print(f'- Appending {message}')
 
     def send_message(self, message: str):

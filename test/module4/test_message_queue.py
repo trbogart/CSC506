@@ -17,32 +17,32 @@ def test_message_queue(message_queue):
 
     message_queue.send_message('a')
     verify_collection(message_queue.queue, 'a')
-    assert message_queue.value == ''
+    assert message_queue.value() == ''
 
     message_queue.send_message('b')
     verify_collection(message_queue.queue, 'a', 'b')
-    assert message_queue.value == ''
+    assert message_queue.value() == ''
 
     message_queue.send_message('c')
     verify_collection(message_queue.queue, 'a', 'b', 'c')
-    assert message_queue.value == ''
+    assert message_queue.value() == ''
 
     message_queue.receive_message()
     verify_collection(message_queue.queue, 'b', 'c')
-    assert message_queue.value == 'a'
+    assert message_queue.value() == 'a'
 
     message_queue.receive_message()
     verify_collection(message_queue.queue, 'c')
-    assert message_queue.value == 'ab'
+    assert message_queue.value() == 'ab'
 
     message_queue.send_message('d')
     verify_collection(message_queue.queue, 'c', 'd')
-    assert message_queue.value == 'ab'
+    assert message_queue.value() == 'ab'
 
     message_queue.receive_message()
     verify_collection(message_queue.queue, 'd')
-    assert message_queue.value == 'abc'
+    assert message_queue.value() == 'abc'
 
     message_queue.receive_message()
     verify_collection(message_queue.queue)
-    assert message_queue.value == 'abcd'
+    assert message_queue.value() == 'abcd'
