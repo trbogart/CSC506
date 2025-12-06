@@ -34,7 +34,7 @@ class LinkedList[T](IStack[T], IQueue[T], IDeque[T]):
         return self._get_node_by_index(index).value
 
     def __repr__(self):
-        return f'[{', '.join(map(lambda x: str(x), iter(self)))}]'
+        return f'[{', '.join(map(lambda x: repr(x), iter(self)))}]'
 
     def is_empty(self) -> bool:
         return self.size == 0

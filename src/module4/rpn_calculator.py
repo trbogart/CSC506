@@ -32,28 +32,25 @@ class Calculator:
             if cmd == 'q':
                 break
             elif cmd == '+':
-                self.binary_op(lambda x, y: x + y)
+                self.add()
             elif cmd == '-':
-                self.binary_op(lambda x, y: x - y)
+                self.subtract()
             elif cmd == '*':
-                self.binary_op(lambda x, y: x * y)
+                self.multiply()
             elif cmd == '/':
-                self.binary_op(lambda x, y: x / y)
+                self.divide()
             elif cmd == 'd':
                 # drop
                 if self.stack.is_empty():
                     print('- no values to drop')
                 else:
-                    self.stack.pop()
+                    self.drop()
             elif cmd == 's':
                 # swap
                 if len(self.stack) < 2:
                     print('Error: must have at least two values')
                 else:
-                    value1 = self.stack.pop()
-                    value2 = self.stack.pop()
-                    self.stack.push(value1)
-                    self.stack.push(value2)
+                    self.swap()
             else:
                 try:
                     num = float(cmd)
@@ -61,19 +58,40 @@ class Calculator:
                 except ValueError:
                     print('Invalid command')
 
+    def drop(self):
+        self.stack.pop()
+
+    def divide(self):
+        self.binary_op(lambda x, y: x / y)
+
+    def multiply(self):
+        self.binary_op(lambda x, y: x * y)
+
+    def subtract(self):
+        self.binary_op(lambda x, y: x - y)
+
+    def add(self):
+        self.binary_op(lambda x, y: x + y)
+
+    def swap(self):
+        value1 = self.stack.pop()
+        value2 = self.stack.pop()
+        self.stack.push(value1)
+        self.stack.push(value2)
+
     def binary_op(self, operation: Callable[[float, float], float]) -> None:
         """
         Perform a binary operation from the two most recent stack values and add the result to the stack.
         :param operation: operation to perform
         :return: new value
         """
-        if len(stack) < 2:
+        if len(self.stack) < 2:
             print('Error: must have at least two values')
         else:
-            value2 = stack.pop()
-            value1 = stack.pop()
+            value2 = self.stack.pop()
+            value1 = self.stack.pop()
             new_value = operation(value1, value2)
-            stack.push(new_value)
+            self.stack.push(new_value)
 
 
 if __name__ == '__main__':

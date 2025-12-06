@@ -22,16 +22,22 @@ class MessageQueue:
                 break
             elif cmd == 's':
                 message = input('- Enter message to send: ')
-                self.queue.enqueue(message)
+                self.send_message(message)
             elif cmd == 'r':
                 if self.queue.is_empty():
                     print('- No messages to receive')
                 else:
-                    message = self.queue.dequeue()
-                    self.value += message
-                    print(f'- Appending {message}')
+                    self.receive_message()
             else:
                 print('- Invalid command')
+
+    def receive_message(self):
+        message = self.queue.dequeue()
+        self.value += message
+        print(f'- Appending {message}')
+
+    def send_message(self, message: str):
+        self.queue.enqueue(message)
 
 
 if __name__ == '__main__':

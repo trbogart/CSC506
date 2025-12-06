@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterable, Iterator
+from typing import Iterator
 
 
 class ICollection[T](ABC):
@@ -22,31 +22,6 @@ class ICollection[T](ABC):
     @abstractmethod
     def clear(self) -> None:
         """Clears the collection"""
-        pass
-
-    @abstractmethod
-    def __iter__(self) -> Iterable[T]:
-        """Iterate over values in collection"""
-        pass
-
-    @abstractmethod
-    def __len__(self) -> int:
-        """Returns the length of the collection"""
-        pass
-
-    @abstractmethod
-    def __contains__(self, value: T) -> bool:
-        """Returns true if the value is in the collection"""
-        pass
-
-    @abstractmethod
-    def __getitem__(self, int: int) -> T:
-        """Returns the value at the given index, or raised IndexError if invalid"""
-        pass
-
-    @abstractmethod
-    def __repr__(self) -> str:
-        """Returns a string representation of the collection"""
         pass
 
     @abstractmethod
