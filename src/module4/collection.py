@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Iterator
 
+# Base class for collections in this module.
 
 class ICollection[T](ABC):
     """

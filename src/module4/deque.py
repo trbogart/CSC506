@@ -6,7 +6,7 @@ from module4.collection import ICollection
 
 class IDeque[T](ICollection[T]):
     """
-    Abstract base class for deque (double-ended queues).
+    Abstract base class for deque (double-ended queue) implementations.
     """
 
     @abstractmethod
@@ -42,7 +42,7 @@ class IDeque[T](ICollection[T]):
 
 class Deque[T](IDeque[T]):
     """
-    Double-ended queue implemented using a circular buffer.
+    Deque implemented using a circular buffer.
     """
 
     # Implement ICollection methods

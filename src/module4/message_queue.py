@@ -1,9 +1,10 @@
-# Simulate a simple message queue that concatenates strings (so ordering of messages matters)
 import argparse
 
 from module4.linked_list import LinkedList
 from module4.queue import IQueue, Queue
 
+# Example program using a Queue (or LinkedList)
+# Simulate a simple message queue that concatenates messages (so ordering of messages matters)
 
 class MessageQueue:
     def __init__(self, queue: IQueue[str]):

@@ -1,14 +1,13 @@
-# Simulates a work-stealing scheduler using a deque (see https://en.wikipedia.org/wiki/Work_stealing).
-# Each executor has its own work queue, and will work through scheduled jobs.
-# If an executor reaches the end of its queue, it steals work from the end of another executor's queue.
-# Note that this implementation is not thread safe, and only meant to simulate a scheduler.
-# Also, the job is just a string rather than an executable.
 import argparse
 
 from module4.deque import IDeque, Deque
 from module4.linked_list import LinkedList
 
-
+# Simulates a work-stealing scheduler using a deque (see https://en.wikipedia.org/wiki/Work_stealing).
+# Each executor has its own work queue, and will work through scheduled jobs.
+# If an executor reaches the end of its queue, it steals work from the end of another executor's queue.
+# Note that this implementation is not thread safe, and only meant to simulate a scheduler.
+# Also, the job is just a string rather than an executable.
 class Scheduler:
     """
     Creates a simulator for work-stealing scheduler.

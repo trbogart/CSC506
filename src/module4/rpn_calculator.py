@@ -1,11 +1,10 @@
-# Simple RPN calculator used to test stack implementations (Stack or LinkedList)
 import argparse
 from typing import Callable
 
 from module4.linked_list import LinkedList
 from module4.stack import Stack, IStack
 
-
+# Implements a simple RPN calculator used to test stack implementations (Stack or LinkedList)
 class Calculator:
     def __init__(self, stack: IStack[float]):
         """
