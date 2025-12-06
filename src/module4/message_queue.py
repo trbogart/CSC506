@@ -45,8 +45,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.linked_list:
         print('Using linked list')
-        queue = LinkedList[float]()
+        queue = LinkedList[str]()
     else:
         print('Using Python list')
-        queue = Queue[float]()
+        queue = Queue[str]()
     MessageQueue(queue).execute()
