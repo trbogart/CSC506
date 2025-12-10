@@ -4,6 +4,7 @@ from typing import Callable
 from module4.linked_list import LinkedList
 from module4.stack import Stack, IStack
 
+
 # Implements a simple RPN calculator used to test stack implementations (Stack or LinkedList)
 class Calculator:
     def __init__(self, stack: IStack[float]):
@@ -29,7 +30,7 @@ class Calculator:
                     else:
                         print(f'- [{pos}] {value:.6f}')
 
-            print('Enter number, +, -, *, /, d to drop, s to swap, or q to quit:')
+            print('Enter number, +, -, *, /, %, c to clear, d to drop, s to swap, or q to quit:')
             cmd = input('> ')
             if cmd == 'q':
                 break
@@ -41,6 +42,10 @@ class Calculator:
                 self.multiply()
             elif cmd == '/':
                 self.divide()
+            elif cmd == '%':
+                self.mod()
+            elif cmd == 'c':
+                self.clear()
             elif cmd == 'd':
                 # drop
                 if self.stack.is_empty():
@@ -63,11 +68,17 @@ class Calculator:
     def push_value(self, num: float):
         self.stack.push(num)
 
+    def clear(self):
+        self.stack.clear()
+
     def drop(self):
         self.stack.pop()
 
     def divide(self):
         self._binary_op(lambda x, y: x / y)
+
+    def mod(self):
+        self._binary_op(lambda x, y: int(x) % int(y))
 
     def multiply(self):
         self._binary_op(lambda x, y: x * y)

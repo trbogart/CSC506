@@ -48,8 +48,11 @@ def test_calculator(calculator):
     calculator.swap()
     verify_collection(calculator.stack, 1, 4.0)
 
-    calculator.drop()
+    calculator.mod()
     verify_collection(calculator.stack, 1)
 
-    calculator.drop()
+    calculator.push_value(2)
+    verify_collection(calculator.stack, 1, 2)
+
+    calculator.clear()
     verify_collection(calculator.stack)
