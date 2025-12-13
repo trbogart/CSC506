@@ -12,7 +12,7 @@ class HashTable[K, V]:
     Hash table using linear probing.
     """
     default_num_buckets = 11
-    default_load_factor = .75
+    default_load_factor = .5
 
     @staticmethod
     def default_hash_function(key: K) -> int:

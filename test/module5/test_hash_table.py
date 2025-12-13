@@ -72,7 +72,7 @@ def test_search_missing():
 def test_resize():
     hashtable = HashTable()
     assert hashtable.max_added == HashTable.default_load_factor * HashTable.default_num_buckets
-    bucket_sizes = {11, 23, 47, 97, 197}
+    bucket_sizes = {11, 23, 47, 97, 197, 397}
 
     last_max_added = hashtable.max_added
     last_num_buckets = len(hashtable.buckets)
