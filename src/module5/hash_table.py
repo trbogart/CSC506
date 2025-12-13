@@ -1,9 +1,8 @@
+import itertools
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Callable
 
 from sympy import nextprime
-
-# TODO hash function
 
 class HashTable[K, V]:
     """
@@ -11,6 +10,19 @@ class HashTable[K, V]:
     """
     default_num_buckets = 11
     default_load_factor = .75
+
+    @staticmethod
+    def default_hash_function(key: K) -> int:
+        """
+        Default hash function. Converts key to string, then uses character folding to build the hash code.
+        :param key: key to hash
+        :return: hash code
+        """
+        hc = 1317
+        for c in str(key):
+            hc = hc * 17 + ord(c)
+        return hc
+
 
     class Bucket(ABC):
         """
@@ -65,7 +77,7 @@ class HashTable[K, V]:
     DeletedBucket = Empty() # bucket for deleted values that do not stop linear probing (but still count towards load factor)
 
     def __init__(self, num_buckets: int = default_num_buckets, load_factor: float = default_load_factor,
-                 hash_function = hash):
+                 hash_function: Callable[[K], int] = default_hash_function):
         if not 0 < load_factor < 1:
             raise ValueError('load_factor must be between 0 and 1, exclusive')
 

@@ -4,6 +4,11 @@ import random
 from module5.hash_table import HashTable
 
 
+def test_hash_function():
+    assert HashTable.default_hash_function('a') == 1317 * 17 + ord('a')
+    assert HashTable.default_hash_function('ab') == (1317 * 17 + ord('a')) * 17 + ord('b')
+    assert HashTable.default_hash_function(12) == (1317 * 17 + ord('1')) * 17 + ord('2')
+
 def test_empty():
     hashtable = HashTable()
     assert len(hashtable) == 0
@@ -34,15 +39,24 @@ def test_insert_update():
 
 
 def test_insert_collision():
-    hashtable = HashTable(num_buckets=5)
+    def hash_function(_):
+        return 1
+    hashtable = HashTable(num_buckets=7, hash_function = hash_function)
 
-    key1 = 1
-    key2 = key1 + len(hashtable.buckets)  # same hashcode
+    key1 = 'a'
+    key2 = 'c'
+    key3 = 'e'
 
-    assert hashtable.insert(key1, 'a') is None
-    assert hashtable.insert(key2, 'b') is None
-    verify_hashtable(hashtable, {key1: 'a', key2: 'b'})
+    # insert 3 keys with the same starting bucket
+    assert hashtable.insert(key1, key1) is None
+    assert hashtable.insert(key2, key2) is None
+    assert hashtable.insert(key3, key3) is None
+    verify_hashtable(hashtable, {key1: key1, key2: key2, key3: key3})
 
+    # assert keys with same bucket are stored sequentially
+    assert hashtable.buckets[1].get_key() == key1
+    assert hashtable.buckets[2].get_key() == key2
+    assert hashtable.buckets[3].get_key() == key3
 
 def test_get_missing():
     hashtable = HashTable(num_buckets=5)
