@@ -61,12 +61,13 @@ class HashTable[K, V]:
         def get_value(self) -> Optional[V]:
             return None
 
-    EmptyBucket = Empty()
-    DeletedBucket = Empty()
+    EmptyBucket = Empty() # bucket for empty values
+    DeletedBucket = Empty() # bucket for deleted values that do not stop linear probing (but still count towards load factor)
 
     def __init__(self, num_buckets: int = default_num_buckets, load_factor: float = default_load_factor,
                  hash_function = hash):
-        assert 0 < load_factor < 1
+        if not 0 < load_factor < 1:
+            raise ValueError('load_factor must be between 0 and 1, exclusive')
 
         self.load_factor = load_factor
         self._init_buckets(num_buckets)
@@ -169,6 +170,8 @@ class HashTable[K, V]:
         self.num_deleted = 0
         self.buckets: list[HashTable.Bucket] = [self.EmptyBucket] * num_buckets
         self.max_added = min(num_buckets * self.load_factor, num_buckets - 1)
+        if self.max_added < 1:
+            self.max_added = 1.0
 
     def _insert_bucket(self, bucket: Bucket) -> None:
         # insert a value for a key that is not already in the hash table and will not cause a resize
