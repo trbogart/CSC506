@@ -69,8 +69,7 @@ def test_push_pop():
 
     assert pq.pop() == ('c', 20)
     assert len(pq) == 0
-    assert repr(pq.min_heap) == '[]'
-
+    assert len(pq.min_heap) == 0
     with pytest.raises(IndexError):
         pq.pop()
     with pytest.raises(IndexError):
