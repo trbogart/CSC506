@@ -15,7 +15,7 @@ def test_empty():
     assert len(hashtable) == 0
     assert hashtable.num_deleted == 0
 
-    assert hashtable.get(1) is None
+    assert hashtable.search(1) is None
     assert hashtable.delete(1) is None
 
 
@@ -61,12 +61,12 @@ def test_insert_collision():
     assert hashtable.buckets[3].get_key() == key3
 
 
-def test_get_missing():
+def test_search_missing():
     hashtable = HashTable(num_buckets=5)
     hashtable.insert(1, 1)
     for i in range(2, 10):
         assert i not in hashtable
-        assert hashtable.get(i) is None
+        assert hashtable.search(i) is None
 
 
 def test_resize():
@@ -182,4 +182,4 @@ def verify_hashtable(hashtable: HashTable, expected: dict):
 
     for key, value in expected.items():
         assert key in hashtable
-        assert hashtable.get(key) == value
+        assert hashtable.search(key) == value

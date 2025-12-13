@@ -1,3 +1,9 @@
+import random
+from time import perf_counter
+
+from matplotlib import pyplot as plt
+
+
 class PriorityQueue[T]:
     """
     Priority queue implemented using a min heap.
@@ -77,3 +83,45 @@ class PriorityQueue[T]:
             else:
                 # leaf node
                 break
+
+
+if __name__ == '__main__':
+    pq = PriorityQueue()
+    push_metrics = []
+    pop_metrics = []
+
+    num_elements = 10_000
+    keys = [i for i in range(num_elements)]
+
+    pq.push(0, 0)
+    pq.pop()
+
+    for value in range(num_elements):
+        priority = random.randint(1, 10_000)
+
+        start_time = perf_counter()
+        pq.push(value, priority)
+        push_metrics.append(perf_counter() - start_time)
+
+    while len(pq) > 0:
+        start_time = perf_counter()
+        pq.pop()
+        pop_metrics.append(perf_counter() - start_time)
+    pop_metrics.reverse()
+
+
+    def plot(description, x, metrics):
+        fig, ax = plt.subplots(figsize=(6, 3.3))
+
+        ax.plot(x, metrics, label=description)
+
+        ax.set_xlabel('Runs')
+        ax.set_ylabel('Time')
+        ax.legend()
+
+
+    x = [i for i in range(num_elements)]
+    plot('Push', x, push_metrics)
+    plot('Pop', x, pop_metrics)
+    plt.tight_layout()
+    plt.show()

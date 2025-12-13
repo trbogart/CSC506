@@ -1,6 +1,9 @@
+import random
 from abc import ABC, abstractmethod
+from time import perf_counter
 from typing import Optional, Callable
 
+import matplotlib.pyplot as plt
 from sympy import nextprime
 
 
@@ -88,7 +91,7 @@ class HashTable[K, V]:
         return self._get_matching_index(key) >= 0
 
     def __getitem__(self, key: K) -> Optional[V]:
-        if self.get(key) is None:
+        if self.search(key) is None:
             raise KeyError(key)
 
     def __setitem__(self, key: K, value: V):
@@ -101,7 +104,7 @@ class HashTable[K, V]:
     def __len__(self):
         return self.size
 
-    def get(self, key: K, default_value: Optional[V] = None) -> Optional[V]:
+    def search(self, key: K, default_value: Optional[V] = None) -> Optional[V]:
         """
         Returns the value for the given key.
         :param key: key to lookup
@@ -196,3 +199,55 @@ class HashTable[K, V]:
                 break
         else:
             raise ValueError('Unable to insert')  # should not happen, already resized
+
+
+if __name__ == '__main__':
+    table = HashTable()
+    insert_metrics = []
+    search_metrics = []
+    delete_metrics = []
+
+    keys = []
+
+    table.insert(0, 0)
+    table.search(0)
+    table.delete(0)
+
+    num_elements = 10_000
+
+    for _ in range(num_elements):
+        key = random.randint(1, 10_000)
+        value = random.random()
+
+        keys.append(key)
+        start_time = perf_counter()
+        table.insert(key, value)
+        insert_metrics.append(perf_counter() - start_time)
+
+        start_time = perf_counter()
+        table.search(key)
+        search_metrics.append(perf_counter() - start_time)
+
+    for key in keys:
+        start_time = perf_counter()
+        table.delete(key)
+        delete_metrics.append(perf_counter() - start_time)
+    delete_metrics.reverse()
+
+
+    def plot(description, x, metrics):
+        fig, ax = plt.subplots(figsize=(6, 3.3))
+
+        ax.plot(x, metrics, label=description)
+
+        ax.set_xlabel('Runs')
+        ax.set_ylabel('Time')
+        ax.legend()
+
+
+    x = [i for i in range(num_elements)]
+    plot('Insert', x, insert_metrics)
+    plot('Search', x, search_metrics)
+    plot('Delete', x, delete_metrics)
+    plt.tight_layout()
+    plt.show()
