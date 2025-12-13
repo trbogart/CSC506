@@ -237,9 +237,7 @@ if __name__ == '__main__':
 
     def plot(description, x, metrics):
         fig, ax = plt.subplots(figsize=(6, 3.3))
-
         ax.plot(x, metrics, label=description)
-
         ax.set_xlabel('Runs')
         ax.set_ylabel('Time')
         ax.legend()
