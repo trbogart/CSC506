@@ -2,10 +2,14 @@ class PriorityQueue[T]:
     """
     Priority queue implemented using a min heap.
     """
-    class Value:
-        def __init__(self, priority: int, value: T):
-            self.priority = priority
+
+    class ValueWithPriority:
+        def __init__(self, value: T, priority: int):
             self.value = value
+            self.priority = priority
+
+        def __repr__(self):
+            return f'{repr(self.value)}: {self.priority}'
 
     def __init__(self):
         self.min_heap = []
@@ -13,24 +17,31 @@ class PriorityQueue[T]:
     def __len__(self) -> int:
         return len(self.min_heap)
 
-    def push(self, priority: int, value: T) -> None:
-        self.min_heap.append(self.Value(priority, value))
+    def push(self, value: T, priority: int) -> None:
+        self.min_heap.append(self.ValueWithPriority(value, priority))
         self._move_up(len(self.min_heap) - 1)
 
-    def pop(self) -> T:
+    def pop(self) -> tuple[T, int]:
         if len(self.min_heap) == 0:
             raise IndexError('Priority queue is empty')
         if len(self.min_heap) == 1:
-            return self.min_heap.pop().value
+            vwp = self.min_heap.pop()
+            return vwp.value, vwp.priority
 
         # swap first and last entries
         last_index = len(self.min_heap) - 1
         self.min_heap[0], self.min_heap[last_index] = self.min_heap[last_index], self.min_heap[0]
 
         # pop last element and move head to correct location
-        value = self.min_heap.pop().value
+        vwp = self.min_heap.pop()
         self._move_down(0)
-        return value
+        return vwp.value, vwp.priority
+
+    def peek(self) -> tuple[T, int]:
+        if len(self.min_heap) == 0:
+            raise IndexError('Priority queue is empty')
+        vwp = self.min_heap[0]
+        return vwp.value, vwp.priority
 
     def _move_up(self, index: int) -> None:
         while index != 0:
