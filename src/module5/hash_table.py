@@ -1,8 +1,8 @@
-import itertools
 from abc import ABC, abstractmethod
 from typing import Optional, Callable
 
 from sympy import nextprime
+
 
 class HashTable[K, V]:
     """
@@ -22,7 +22,6 @@ class HashTable[K, V]:
         for c in str(key):
             hc = hc * 17 + ord(c)
         return hc
-
 
     class Bucket(ABC):
         """
@@ -73,8 +72,8 @@ class HashTable[K, V]:
         def get_value(self) -> Optional[V]:
             return None
 
-    EmptyBucket = Empty() # bucket for empty values
-    DeletedBucket = Empty() # bucket for deleted values that do not stop linear probing (but still count towards load factor)
+    EmptyBucket = Empty()  # bucket for empty values
+    DeletedBucket = Empty()  # bucket for deleted values that do not stop linear probing (but still count towards load factor)
 
     def __init__(self, num_buckets: int = default_num_buckets, load_factor: float = default_load_factor,
                  hash_function: Callable[[K], int] = default_hash_function):
@@ -162,10 +161,10 @@ class HashTable[K, V]:
             bucket = self.buckets[index]
             if bucket.is_empty():
                 if bucket == self.EmptyBucket:
-                    return -1 # finish linear probing
+                    return -1  # finish linear probing
             elif bucket.get_key() == key:
-                return index # found key
-        return -1 # not found
+                return index  # found key
+        return -1  # not found
 
     def _resize(self, num_buckets: int) -> None:
         old_buckets = self.buckets
@@ -196,4 +195,4 @@ class HashTable[K, V]:
                 self.buckets[index] = bucket
                 break
         else:
-            raise ValueError('Unable to insert') # should not happen, already resized
+            raise ValueError('Unable to insert')  # should not happen, already resized

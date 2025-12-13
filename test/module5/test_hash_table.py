@@ -9,6 +9,7 @@ def test_hash_function():
     assert HashTable.default_hash_function('ab') == (1317 * 17 + ord('a')) * 17 + ord('b')
     assert HashTable.default_hash_function(12) == (1317 * 17 + ord('1')) * 17 + ord('2')
 
+
 def test_empty():
     hashtable = HashTable()
     assert len(hashtable) == 0
@@ -41,7 +42,8 @@ def test_insert_update():
 def test_insert_collision():
     def hash_function(_):
         return 1
-    hashtable = HashTable(num_buckets=7, hash_function = hash_function)
+
+    hashtable = HashTable(num_buckets=7, hash_function=hash_function)
 
     key1 = 'a'
     key2 = 'c'
@@ -57,6 +59,7 @@ def test_insert_collision():
     assert hashtable.buckets[1].get_key() == key1
     assert hashtable.buckets[2].get_key() == key2
     assert hashtable.buckets[3].get_key() == key3
+
 
 def test_get_missing():
     hashtable = HashTable(num_buckets=5)
@@ -96,6 +99,7 @@ def test_resize():
             assert len(hashtable.buckets) == last_num_buckets
 
     assert hashtable.num_deleted == 0
+
 
 def test_random():
     random.seed(137)
