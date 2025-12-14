@@ -101,6 +101,7 @@ def test_random():
             max_priority = priority
     assert len(pq) == 0
 
+
 def test_search():
     random.seed(642)
     pq = PriorityQueue()
