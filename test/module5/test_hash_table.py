@@ -4,6 +4,18 @@ import random
 from module5.hash_table import HashTable
 
 
+def test_compare_python_hash():
+    def print_hash(s):
+        print(f'{s}: Python {hash(s)}, my hash {HashTable.default_hash_function(s)}')
+    print_hash('a')
+    print_hash('b')
+    print_hash('aa')
+    print_hash('ab')
+    print_hash(1)
+    print_hash(2)
+    print_hash(11)
+    print_hash(21)
+
 def test_hash_function():
     assert HashTable.default_hash_function('a') == 1317 * 17 + ord('a')
     assert HashTable.default_hash_function('ab') == (1317 * 17 + ord('a')) * 17 + ord('b')
@@ -130,22 +142,35 @@ def test_delete():
     assert hashtable.num_deleted == 1
 
 
-def test_delete_add():
+def test_delete_insert():
+    hashtable = HashTable(num_buckets=5)
+
+    key1 = 1
+    key2 = 2
+
+    assert hashtable.insert(key1, key1 ** 2) is None
+    assert hashtable.delete(key1) == key1 ** 2
+
+    assert hashtable.insert(key2, key2) is None
+    verify_hashtable(hashtable, {key2: key2})
+    assert hashtable.num_deleted == 1
+
+    assert hashtable.delete(key2) == key2
+    verify_hashtable(hashtable, {})
+    assert hashtable.num_deleted == 2
+
+def test_delete_insert_same():
     hashtable = HashTable(num_buckets=5)
 
     key1 = 1
 
     assert hashtable.insert(key1, key1 ** 2) is None
     assert hashtable.delete(key1) == key1 ** 2
+    assert hashtable.num_deleted == 1
 
     assert hashtable.insert(key1, key1) is None
     verify_hashtable(hashtable, {key1: key1})
-    assert hashtable.num_deleted == 1
-
-    assert hashtable.delete(key1) == key1
-    verify_hashtable(hashtable, {})
-    assert hashtable.num_deleted == 2
-
+    assert hashtable.num_deleted == 0
 
 def test_delete_resize():
     hashtable = HashTable()

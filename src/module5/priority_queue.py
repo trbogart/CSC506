@@ -128,8 +128,8 @@ if __name__ == '__main__':
 
 
     x = [i for i in range(num_elements)]
-    plot('Push', x, push_metrics)
-    plot('Pop', x, pop_metrics)
-    plot('Search', x, search_metrics)
+    plot('Priority Queue Push', x, push_metrics)
+    plot('Priority Queue Pop', x, pop_metrics)
+    plot('Priority Queue Search', x, search_metrics)
     plt.tight_layout()
     plt.show()

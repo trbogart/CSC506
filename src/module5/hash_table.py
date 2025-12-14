@@ -135,7 +135,8 @@ class HashTable[K, V]:
             return old_value
         else:
             if self.size + self.num_deleted + 1 >= self.max_added:
-                self._resize(nextprime(2 * len(self.buckets)))
+                new_size = nextprime(2 * (len(self.buckets) - self.num_deleted))
+                self._resize(new_size)
             self._insert_bucket(new_bucket)
             return default_value
 
@@ -194,6 +195,8 @@ class HashTable[K, V]:
             index = (hash_code + i) % len(self.buckets)
             old_bucket = self.buckets[index]
             if old_bucket.is_empty():
+                if old_bucket == self.DeletedBucket:
+                    self.num_deleted -= 1 # replace a deleted bucket
                 self.size += 1
                 self.buckets[index] = bucket
                 break
@@ -244,8 +247,8 @@ if __name__ == '__main__':
 
 
     x = [i for i in range(num_elements)]
-    plot('Insert', x, insert_metrics)
-    plot('Search', x, search_metrics)
-    plot('Delete', x, delete_metrics)
+    plot('Hashtable Insert', x, insert_metrics)
+    plot('Hashtable Search', x, search_metrics)
+    plot('Hashtable Delete', x, delete_metrics)
     plt.tight_layout()
     plt.show()
