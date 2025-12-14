@@ -49,6 +49,10 @@ class PriorityQueue[T]:
         vwp = self.min_heap[0]
         return vwp.value, vwp.priority
 
+    def search(self, value: T) -> bool:
+        return any(vwp.value == value for vwp in self.min_heap)
+
+
     def _move_up(self, index: int) -> None:
         while index != 0:
             parent_index = (index - 1) // 2
@@ -89,6 +93,7 @@ if __name__ == '__main__':
     pq = PriorityQueue()
     push_metrics = []
     pop_metrics = []
+    search_metrics = []
 
     num_elements = 10_000
     keys = [i for i in range(num_elements)]
@@ -102,6 +107,10 @@ if __name__ == '__main__':
         start_time = perf_counter()
         pq.push(value, priority)
         push_metrics.append(perf_counter() - start_time)
+
+        start_time = perf_counter()
+        pq.search(value)
+        search_metrics.append(perf_counter() - start_time)
 
     while len(pq) > 0:
         start_time = perf_counter()
@@ -121,5 +130,6 @@ if __name__ == '__main__':
     x = [i for i in range(num_elements)]
     plot('Push', x, push_metrics)
     plot('Pop', x, pop_metrics)
+    plot('Search', x, search_metrics)
     plt.tight_layout()
     plt.show()

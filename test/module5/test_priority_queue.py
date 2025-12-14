@@ -100,3 +100,17 @@ def test_random():
         if priority > max_priority:
             max_priority = priority
     assert len(pq) == 0
+
+def test_search():
+    random.seed(642)
+    pq = PriorityQueue()
+    values = [i for i in range(100)]
+    random.shuffle(values)
+
+    for value in values:
+        pq.push(value, random.randint(0, 100))
+
+    for value in values:
+        assert pq.search(value)
+
+    assert not pq.search(100)
