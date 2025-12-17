@@ -16,6 +16,8 @@ class PriorityQueueDemo:
 
     def pop(self):
         while len(self.pq) > 0:
+            value, priority = self.pq.peek()
+            print(f'Peek   {value} with priority {priority} from priority queue, size {len(self.pq)}')
             value, priority = self.pq.pop()
             print(f'Popped {value} with priority {priority} from priority queue, size {len(self.pq)}')
 
