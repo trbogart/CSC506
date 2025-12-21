@@ -5,10 +5,7 @@ from module6.binary_search_tree import BinarySearchTree, TraversalOrder
 
 def test_empty():
     bst = BinarySearchTree()
-    assert len(bst) == 0
-    assert bst.get_height() == -1
-    assert bst.search(1) is None
-    assert list(bst.traverse()) == []
+    _verify_empty(bst)
 
 
 def test_insert_one_element():
@@ -75,6 +72,62 @@ def test_insert_duplicate():
     assert bst.search(1) == 1
     assert bst.search(2) == 2
     assert bst.search(3) == 3
+
+def test_clear():
+    bst = BinarySearchTree()
+    bst.insert(2)
+    bst.insert(1)
+    bst.insert(3)
+    bst.clear()
+    _verify_empty(bst)
+
+
+def test_comparison_based():
+    bst = BinarySearchTree()
+    value1 = Wrapper(100)
+    value2 = Wrapper(100)
+    bst.insert(value1)
+    assert len(bst) == 1
+    assert Wrapper(100) in bst
+    assert bst.search(Wrapper(100)) is value1
+
+
+def test_insert_with_replace():
+    bst = BinarySearchTree()
+
+    value1 = Wrapper(100)
+    value2 = Wrapper(100)
+
+    bst.insert(value1, replace=True)
+    assert len(bst) == 1
+
+    bst.insert(value2, replace=True)
+    assert len(bst) == 1
+
+    assert Wrapper(100) in bst
+    assert bst.search(Wrapper(100)) is value2
+
+def test_insert_with_replace_random():
+    random.seed(42)
+    bst = BinarySearchTree()
+    num_elements = 100
+    elements = [i for i in range(num_elements)]
+    random.shuffle(elements)
+    for i, element in enumerate(elements):
+        value = Wrapper(element)
+        bst.insert(value)
+        assert Wrapper(element) in bst
+        assert bst.search(Wrapper(element)) is value
+        assert len(bst) == i+1
+    assert len(bst) == num_elements
+    random.shuffle(elements)
+    for i, element in enumerate(elements):
+        value = Wrapper(element)
+        bst.insert(value, replace=True)
+        assert Wrapper(element) in bst
+        assert bst.search(Wrapper(element)) is value
+        assert len(bst) == num_elements
+
 
 
 def test_insert_linear_right():
@@ -154,9 +207,8 @@ def test_traverse():
 
 def test_min_max():
     bst = _get_test_tree()
-    assert bst.get_min() == 1
-    assert bst.get_max() == 10
-
+    assert bst.get_min_value() == 1
+    assert bst.get_max_value() == 10
 
 def test_delete():
     bst = _get_test_tree()
@@ -383,25 +435,23 @@ def test_delete():
 
     # delete last node
     assert bst.delete(1) == 1
-    assert len(bst) == 0
-    assert bst.get_height() == -1
-    assert list(bst) == []
-    assert bst.root is None
+    _verify_empty(bst)
+
 
 def test_insert_delete_random():
-    random.seed(42)
+    random.seed(23)
     bst = BinarySearchTree()
-    num_elements = 1000
+    num_elements = 100
     values = [i for i in range(num_elements)]
-    for _ in range(10):
+    # repeat multiple times
+    for _ in range(100):
         random.shuffle(values)
         for i, value in enumerate(values):
             bst.insert(value)
             assert len(bst) == i + 1
             assert value in bst
 
-        values.sort()
-        assert list(bst) == values
+        assert list(bst) == [i for i in range(num_elements)] # values are sorted
 
         random.shuffle(values)
         for i, value in enumerate(values):
@@ -420,8 +470,8 @@ class Node:
 
 def _test_tree(bst, size, min, max, expected):
     assert len(bst) == size
-    assert bst.get_min() == min
-    assert bst.get_max() == max
+    assert bst.get_min_value() == min
+    assert bst.get_max_value() == max
     assert bst.get_height() == expected.height
     _test_node(None, bst.root, expected)
 
@@ -460,3 +510,23 @@ def _get_test_tree():
     bst.insert(3)
     bst.insert(9)
     return bst
+
+
+def _verify_empty(bst: BinarySearchTree):
+    assert len(bst) == 0
+    assert bst.get_height() == -1
+    assert bst.search(1) is None
+    assert bst.root is None
+    assert list(bst.traverse()) == []
+
+class Wrapper:
+    def __init__(self, value):
+        self.value = value
+    def __gt__(self, other):
+        return self.value > other.value
+    def __lt__(self, other):
+        return self.value < other.value
+    def __eq__(self, other):
+        return self.value == other.value # not used
+    def __str__(self):
+        return str(self.value)

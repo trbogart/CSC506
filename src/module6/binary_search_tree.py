@@ -96,20 +96,28 @@ class BinarySearchTree:
                 return None
             return self.right.get_min_node()
 
-        def insert_node(self, new_node):
+        def insert_node(self, new_node, replace = False):
             """
             Inserts a node below the current node.
+            :param new_node: node to insert
+            :param replace: true to replace existing node on match
+            :return:
             """
             if new_node.element < self.element:
                 if self.left is None:
-                    self.set_left(new_node)
+                    self.set_left(BinarySearchTree.Node(new_node.element))
+                    return True
                 else:
-                    self.left.insert_node(new_node)
+                    return self.left.insert_node(new_node, replace)
+            elif replace and not new_node.element > self.element:
+                # replace existing node
+                self.element = new_node.element
+                return False # do not increment count
+            elif self.right is None:
+                self.set_right(BinarySearchTree.Node(new_node.element))
+                return True
             else:
-                if self.right is None:
-                    self.set_right(new_node)
-                else:
-                    self.right.insert_node(new_node)
+                return self.right.insert_node(new_node, replace)
 
     def __init__(self):
         self.root = None
@@ -128,19 +136,20 @@ class BinarySearchTree:
         return pretty_tree(self)
 
 
-    def insert(self, element):
+    def insert(self, element, replace = False):
         """
         Inserts an element into the tree.
         :param element: element to insert
+        :param replace: true to replace existing node on match
         """
         if element is None:
             raise ValueError("element cannot be None")
         new_node = self.Node(element)
         if self.root is None:
             self.root = new_node
-        else:
-            self.root.insert_node(new_node)
-        self.size += 1
+            self.size = 1
+        elif self.root.insert_node(new_node, replace):
+            self.size += 1
 
     def delete(self, element):
         """
@@ -236,7 +245,7 @@ class BinarySearchTree:
 
         return traverse_in_order(self.root)
 
-    def get_min(self):
+    def get_min_value(self):
         """
         Returns the minimum element in the tree, or None if empty.
         """
@@ -244,7 +253,7 @@ class BinarySearchTree:
             return None
         return self.root.get_min_node().element
 
-    def get_max(self):
+    def get_max_value(self):
         """
         Returns the maximum value in the tree, or None if empty.
         """
