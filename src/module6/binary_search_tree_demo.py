@@ -12,7 +12,7 @@ if __name__ == '__main__':
         print(bst)
 
 
-    values = [i + 1 for i in range(8)]
+    values = [i + 1 for i in range(10)]
     seed(4321)
     shuffle(values)
 

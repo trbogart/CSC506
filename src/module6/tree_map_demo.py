@@ -12,8 +12,8 @@ if __name__ == '__main__':
         print(tm)
 
 
-    keys = [i + 1 for i in range(7)]
-    seed(431)
+    keys = [i + 1 for i in range(10)]
+    seed(4321)
     shuffle(keys)
 
     print('Basic testing for TreeMap operations.')
