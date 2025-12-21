@@ -1,6 +1,4 @@
 from random import shuffle, seed
-from sys import argv
-from os.path import basename
 
 from module6.tree_map import TreeMap
 
@@ -16,8 +14,9 @@ if __name__ == '__main__':
     seed(431)
     shuffle(keys)
 
-    print(f'Output from {basename(argv[0])}')
-    print('Basic testing for TreeMap operations. Additional testing is done in unit test: test_tree_map.py')
+    print('Basic testing for TreeMap operations.')
+    print('Additional testing (including larger counts) is done in unit test: test_tree_map.py')
+    print()
 
     print(f'Inserting {len(keys)} values in random order')
     for key in keys:
@@ -25,15 +24,15 @@ if __name__ == '__main__':
     print_map()
 
     print('Inserting an existing key updates value')
-    tm[0] = '_0'
-    tm[3] = '_3'
-    tm[5] = '_5'
+    tm[0] = 'u0'
+    tm[3] = 'u3'
+    tm[5] = 'u5'
     print_map()
 
     low = -1
     high = 100
     print(f'Searching for 2: {tm[2]}')
-    print(f'Searching for 4: {tm[4]}')
+    print(f'Searching for 3: {tm[3]}')
 
     print()
     print('Deleting keys in random order')

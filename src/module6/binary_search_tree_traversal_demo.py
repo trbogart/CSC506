@@ -10,10 +10,9 @@ if __name__ == '__main__':
     seed(422)
     shuffle(keys)
 
-    script_file = basename(argv[0])
-
-    print(f'Output from {script_file}')
-    print('Basic testing for BST traversal')
+    print('Basic testing for BST traversal.')
+    print('Additional testing (including larger counts) is done in unit test: test_binary_search_tree.py')
+    print()
 
     print(f'Inserting {len(keys)} values in random order')
     for key in keys:

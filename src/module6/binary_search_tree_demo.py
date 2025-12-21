@@ -1,6 +1,4 @@
 from random import shuffle, seed
-from sys import argv
-from os.path import basename
 
 from module6.binary_search_tree import BinarySearchTree
 
@@ -13,11 +11,12 @@ if __name__ == '__main__':
 
 
     keys = [i for i in range(7)]
-    seed(42)
+    seed(421)
     shuffle(keys)
 
-    print(f'Output from {basename(argv[0])}')
-    print('Basic testing for BST operations. Additional testing is done in unit test: test_binary_search_tree.py')
+    print('Basic testing for BST operations.')
+    print('Additional testing (including larger counts) is done in unit test: test_binary_search_tree.py')
+    print()
 
     print(f'Inserting {len(keys)} values in random order')
     for key in keys:
