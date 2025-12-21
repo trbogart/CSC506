@@ -127,12 +127,6 @@ class BinarySearchTree:
     def __str__(self):
         return pretty_tree(self)
 
-    @staticmethod
-    def _get_height(node):
-        """
-        Gets the height of a node, of 0 if None
-        """
-        return node.height if node is not None else -1
 
     def insert(self, element):
         """
@@ -284,3 +278,14 @@ class BinarySearchTree:
         Returns true if this tree is balanced (height is no more than 50% greater than balanced height).
         """
         return self.get_balance_factor() < 1.5
+
+    def clear(self):
+        self.root = None
+        self.size = 0
+
+    @staticmethod
+    def _get_height(node):
+        """
+        Gets the height of a node, of 0 if None
+        """
+        return node.height if node is not None else -1

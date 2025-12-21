@@ -1,6 +1,6 @@
 import random
 
-from module6.bst import BinarySearchTree, TraversalOrder
+from module6.binary_search_tree import BinarySearchTree, TraversalOrder
 
 
 def test_empty():
@@ -75,20 +75,6 @@ def test_insert_duplicate():
     assert bst.search(1) == 1
     assert bst.search(2) == 2
     assert bst.search(3) == 3
-
-
-def test_insert_rand():
-    random.seed(42)
-    bst = BinarySearchTree()
-    num_elements = 100
-    expected = []
-    for i in range(num_elements):
-        element = random.randint(1, 1000)
-        bst.insert(element)
-        expected.append(element)
-        assert len(bst) == i + 1
-    expected.sort()
-    assert list(bst) == expected
 
 
 def test_insert_linear_right():
@@ -402,6 +388,27 @@ def test_delete():
     assert list(bst) == []
     assert bst.root is None
 
+def test_insert_delete_random():
+    random.seed(42)
+    bst = BinarySearchTree()
+    num_elements = 1000
+    values = [i for i in range(num_elements)]
+    for _ in range(10):
+        random.shuffle(values)
+        for i, value in enumerate(values):
+            bst.insert(value)
+            assert len(bst) == i + 1
+            assert value in bst
+
+        values.sort()
+        assert list(bst) == values
+
+        random.shuffle(values)
+        for i, value in enumerate(values):
+            bst.delete(value)
+            assert value not in bst
+            assert len(bst) == num_elements - 1 - i
+        assert len(bst) == 0
 
 class Node:
     def __init__(self, element, height=0, left=None, right=None):
@@ -416,18 +423,19 @@ def _test_tree(bst, size, min, max, expected):
     assert bst.get_min() == min
     assert bst.get_max() == max
     assert bst.get_height() == expected.height
-    _test_node(bst.root, expected)
+    _test_node(None, bst.root, expected)
 
 
-def _test_node(node, expected):
+def _test_node(parent, node, expected):
     if expected is None:
         assert node is None
     else:
         assert node is not None
+        assert node.parent is parent
         assert node.element == expected.element
         assert node.height == expected.height
-        _test_node(node.left, expected.left)
-        _test_node(node.right, expected.right)
+        _test_node(node, node.left, expected.left)
+        _test_node(node, node.right, expected.right)
 
 
 def _get_test_tree():
