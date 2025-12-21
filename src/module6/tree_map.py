@@ -3,7 +3,7 @@ from module6.binary_search_tree import BinarySearchTree
 
 class TreeMap:
     class Entry:
-        def __init__(self, key, value = None):
+        def __init__(self, key, value=None):
             self.key = key
             self.value = value
 
@@ -40,7 +40,7 @@ class TreeMap:
             raise KeyError(key)
 
     def __setitem__(self, key, value):
-        self.bst.insert(self.Entry(key, value), replace = True)
+        self.bst.insert(self.Entry(key, value), replace=True)
 
     def __str__(self):
         return str(self.bst)
@@ -55,4 +55,3 @@ class TreeMap:
 
     def clear(self):
         self.bst.clear()
-

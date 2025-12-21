@@ -5,11 +5,14 @@ from module6.tree_map import TreeMap
 if __name__ == '__main__':
     tm = TreeMap()
 
+
     def print_map():
-        print(f'Map has {len(tm)} elements, height is {tm.bst.get_height()}, min height (perfectly balanced) is {tm.bst.get_balanced_height()}')
+        print(
+            f'Map has {len(tm)} elements, height is {tm.bst.get_height()}, min height (perfectly balanced) is {tm.bst.get_balanced_height()}')
         print(tm)
 
-    keys = [i+1 for i in range(7)]
+
+    keys = [i + 1 for i in range(7)]
     seed(431)
     shuffle(keys)
 

@@ -5,12 +5,14 @@ from module6.binary_search_tree import BinarySearchTree
 if __name__ == '__main__':
     bst = BinarySearchTree()
 
+
     def print_tree():
-        print(f'BST has {len(bst)} elements, height is {bst.get_height()}, min height (perfectly balanced) is {bst.get_balanced_height()}')
+        print(
+            f'BST has {len(bst)} elements, height is {bst.get_height()}, min height (perfectly balanced) is {bst.get_balanced_height()}')
         print(bst)
 
 
-    values = [i+1 for i in range(7)]
+    values = [i + 1 for i in range(7)]
     seed(4212)
     shuffle(values)
 

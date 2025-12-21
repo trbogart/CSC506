@@ -73,6 +73,7 @@ def test_insert_duplicate():
     assert bst.search(2) == 2
     assert bst.search(3) == 3
 
+
 def test_clear():
     bst = BinarySearchTree()
     bst.insert(2)
@@ -107,6 +108,7 @@ def test_insert_with_replace():
     assert Wrapper(100) in bst
     assert bst.search(Wrapper(100)) is value2
 
+
 def test_insert_with_replace_random():
     random.seed(42)
     bst = BinarySearchTree()
@@ -118,7 +120,7 @@ def test_insert_with_replace_random():
         bst.insert(value)
         assert Wrapper(element) in bst
         assert bst.search(Wrapper(element)) is value
-        assert len(bst) == i+1
+        assert len(bst) == i + 1
     assert len(bst) == num_elements
     random.shuffle(elements)
     for i, element in enumerate(elements):
@@ -127,7 +129,6 @@ def test_insert_with_replace_random():
         assert Wrapper(element) in bst
         assert bst.search(Wrapper(element)) is value
         assert len(bst) == num_elements
-
 
 
 def test_insert_linear_right():
@@ -209,6 +210,7 @@ def test_min_max():
     bst = _get_test_tree()
     assert bst.get_min_value() == 1
     assert bst.get_max_value() == 10
+
 
 def test_delete():
     bst = _get_test_tree()
@@ -451,7 +453,7 @@ def test_insert_delete_random():
             assert len(bst) == i + 1
             assert value in bst
 
-        assert list(bst) == [i for i in range(num_elements)] # values are sorted
+        assert list(bst) == [i for i in range(num_elements)]  # values are sorted
 
         random.shuffle(values)
         for i, value in enumerate(values):
@@ -459,6 +461,7 @@ def test_insert_delete_random():
             assert value not in bst
             assert len(bst) == num_elements - 1 - i
         assert len(bst) == 0
+
 
 class Node:
     def __init__(self, element, height=0, left=None, right=None):
@@ -519,14 +522,19 @@ def _verify_empty(bst: BinarySearchTree):
     assert bst.root is None
     assert list(bst.traverse()) == []
 
+
 class Wrapper:
     def __init__(self, value):
         self.value = value
+
     def __gt__(self, other):
         return self.value > other.value
+
     def __lt__(self, other):
         return self.value < other.value
+
     def __eq__(self, other):
-        return self.value == other.value # not used
+        return self.value == other.value  # not used
+
     def __str__(self):
         return str(self.value)

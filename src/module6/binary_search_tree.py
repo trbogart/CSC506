@@ -96,7 +96,7 @@ class BinarySearchTree:
                 return None
             return self.right.get_min_node()
 
-        def insert_node(self, new_node, replace = False):
+        def insert_node(self, new_node, replace=False):
             """
             Inserts a node below the current node.
             :param new_node: node to insert
@@ -112,7 +112,7 @@ class BinarySearchTree:
             elif replace and not new_node.element > self.element:
                 # replace existing node
                 self.element = new_node.element
-                return False # do not increment count
+                return False  # do not increment count
             elif self.right is None:
                 self.set_right(BinarySearchTree.Node(new_node.element))
                 return True
@@ -135,8 +135,7 @@ class BinarySearchTree:
     def __str__(self):
         return pretty_tree(self)
 
-
-    def insert(self, element, replace = False):
+    def insert(self, element, replace=False):
         """
         Inserts an element into the tree.
         :param element: element to insert

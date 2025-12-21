@@ -4,9 +4,11 @@ import pytest
 
 from module6.tree_map import TreeMap
 
+
 def test_empty():
     tree_map = TreeMap()
     _validate_map(tree_map, {})
+
 
 def test_insert():
     tree_map = TreeMap()
@@ -19,11 +21,13 @@ def test_insert():
     tree_map[3] = 'b'
     _validate_map(tree_map, {1: 'b', 3: 'b', 5: 'a'})
 
+
 def test_update():
     tree_map = TreeMap()
     tree_map[100] = 'a'
     tree_map[100] = 'b'
     _validate_map(tree_map, {100: 'b'})
+
 
 def test_delete():
     tree_map = TreeMap()
@@ -41,6 +45,7 @@ def test_delete():
 
     with pytest.raises(KeyError):
         del tree_map[0]
+
 
 def test_get():
     tree_map = TreeMap()
@@ -60,6 +65,7 @@ def test_get():
         _ = tree_map[4]
     with pytest.raises(KeyError):
         _ = tree_map[6]
+
 
 def test_random():
     random.seed(32342)
@@ -98,6 +104,7 @@ def test_random():
     # empty
     _validate_map(tree_map, {})
 
+
 def test_clear():
     tree_map = TreeMap()
     tree_map[0] = 0
@@ -105,6 +112,7 @@ def test_clear():
     tree_map[2] = 0
     tree_map.clear()
     _validate_map(tree_map, {})
+
 
 def _validate_map(tree_map, expected):
     assert len(tree_map) == len(expected)
