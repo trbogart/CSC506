@@ -10,29 +10,41 @@ if __name__ == '__main__':
         print(bst)
 
 
-    keys = [i for i in range(7)]
-    seed(421)
-    shuffle(keys)
+    values = [i+1 for i in range(7)]
+    seed(4212)
+    shuffle(values)
 
     print('Basic testing for BST operations.')
     print('Additional testing (including larger counts) is done in unit test: test_binary_search_tree.py')
     print()
 
-    print(f'Inserting {len(keys)} values in random order')
-    for key in keys:
-        bst.insert(key)
     print_tree()
 
-
-
-    low = -1
-    high = 100
-    print(f'Searching for key ({keys[0]}): {bst.search(keys[0])}')
-    print(f'Searching for low missing key ({low}): {bst.search(low)}')
-    print(f'Searching for high missing key ({high}): {bst.search(high)}')
-    print('Deleting keys in random order')
-    shuffle(keys)
-    for key in keys:
-        print(f'Deleting {key}')
-        bst.delete(key)
+    print(f'Inserting {len(values)} values in random order')
+    for value in values:
+        print(f'Inserting {value}')
+        bst.insert(value)
         print_tree()
+
+    duplicate_value = 6
+    print(f'Inserting duplicate {duplicate_value}')
+    bst.insert(duplicate_value)
+    print_tree()
+
+    low = 0
+    high = 100
+    print(f'Searching for value ({values[0]}): {bst.search(values[0])}')
+    print(f'Searching for low missing value ({low}): {bst.search(low)}')
+    print(f'Searching for high missing value ({high}): {bst.search(high)}')
+    print()
+    print(f'Min value: {bst.get_min_value()}')
+    print(f'Max value: {bst.get_max_value()}')
+    print()
+    print('Deleting in random order')
+    shuffle(values)
+    for value in values:
+        print(f'Deleting {value}')
+        bst.delete(value)
+        print_tree()
+    bst.delete(duplicate_value)
+    print_tree()

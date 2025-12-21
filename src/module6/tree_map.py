@@ -42,6 +42,9 @@ class TreeMap:
     def __setitem__(self, key, value):
         self.bst.insert(self.Entry(key, value), replace = True)
 
+    def __str__(self):
+        return str(self.bst)
+
     def items(self):
         for entry in self.bst:
             yield entry.key, entry.value

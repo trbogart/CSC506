@@ -6,7 +6,7 @@ from module6.binary_search_tree import BinarySearchTree, TraversalOrder
 if __name__ == '__main__':
     bst = BinarySearchTree()
 
-    keys = [i for i in range(6)]
+    keys = [i+1 for i in range(7)]
     seed(422)
     shuffle(keys)
 

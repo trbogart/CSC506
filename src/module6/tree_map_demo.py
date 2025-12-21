@@ -7,27 +7,31 @@ if __name__ == '__main__':
 
     def print_map():
         print(f'Map has {len(tm)} elements, height is {tm.bst.get_height()}, min height (perfectly balanced) is {tm.bst.get_balanced_height()}')
-        print(tm.bst)
+        print(tm)
 
-
-    keys = [i for i in range(7)]
+    keys = [i+1 for i in range(7)]
     seed(431)
     shuffle(keys)
 
     print('Basic testing for TreeMap operations.')
     print('Additional testing (including larger counts) is done in unit test: test_tree_map.py')
     print()
+    print_map()
 
     print(f'Inserting {len(keys)} values in random order')
     for key in keys:
-        tm[key] = str(key) * 2
-    print_map()
+        value = f'o{key}'
+        print(f'Inserting key {key} with value {value}')
+        tm[key] = value
+        print_map()
 
-    print('Inserting an existing key updates value')
-    tm[0] = 'u0'
-    tm[3] = 'u3'
-    tm[5] = 'u5'
-    print_map()
+    print('Updating existing keys with new values')
+    updated_keys = [1, 3, 5]
+    for key in updated_keys:
+        value = f'u{key}'
+        print(f'Updating key {key} from {tm[key]} to {value}')
+        tm[key] = value
+        print_map()
 
     low = -1
     high = 100

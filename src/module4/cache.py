@@ -39,7 +39,7 @@ class Cache[K, V]:
             if len(self.node_map) > self.capacity:
                 lru_node = self.tail
                 self._remove_node(lru_node)
-                del self.node_map[lru_node.key]
+                del self.node_map[lru_node.value]
 
     def __contains__(self, key: K) -> bool:
         return key in self.node_map
@@ -54,7 +54,7 @@ class Cache[K, V]:
     def keys(self) -> Iterable[K]:
         node = self.head
         while node is not None:
-            yield node.key
+            yield node.value
             node = node.next_node
 
     def values(self) -> Iterable[V]:
@@ -66,7 +66,7 @@ class Cache[K, V]:
     def items(self) -> Iterable[Tuple[K, V]]:
         node = self.head
         while node is not None:
-            yield node.key, node.value
+            yield node.value, node.value
             node = node.next_node
 
     class Node:
