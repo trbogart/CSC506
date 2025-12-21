@@ -12,12 +12,12 @@ if __name__ == '__main__':
         print(bst)
 
 
-    values = [i + 1 for i in range(7)]
-    seed(4212)
+    values = [i + 1 for i in range(8)]
+    seed(4321)
     shuffle(values)
 
     print('Basic testing for BST operations.')
-    print('Additional testing (including larger counts) is done in unit test: test_binary_search_tree.py')
+    print('Additional testing (including larger counts and more edge cases) is done in unit test: test_binary_search_tree.py')
     print()
 
     print_tree()

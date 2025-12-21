@@ -10,7 +10,6 @@ if __name__ == '__main__':
     shuffle(keys)
 
     print('Basic testing for BST traversal.')
-    print('Additional testing (including larger counts) is done in unit test: test_binary_search_tree.py')
     print()
 
     print(f'Inserting {len(keys)} values in random order')

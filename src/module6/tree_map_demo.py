@@ -17,7 +17,7 @@ if __name__ == '__main__':
     shuffle(keys)
 
     print('Basic testing for TreeMap operations.')
-    print('Additional testing (including larger counts) is done in unit test: test_tree_map.py')
+    print('Additional testing (including larger counts and more edge cases) is done in unit test: test_tree_map.py')
     print()
     print_map()
 
