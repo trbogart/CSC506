@@ -8,7 +8,7 @@ class TreeMap:
             self.value = value
 
         def __str__(self):
-            return f'{self.key}: {self.value}'
+            return f'{self.key}:{self.value}'
 
         def __gt__(self, other):
             return self.key > other.key

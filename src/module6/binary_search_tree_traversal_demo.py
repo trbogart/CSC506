@@ -1,5 +1,6 @@
 from random import shuffle, seed
-
+from sys import argv
+from os.path import basename
 from module6.binary_search_tree import BinarySearchTree, TraversalOrder
 
 if __name__ == '__main__':
@@ -9,7 +10,12 @@ if __name__ == '__main__':
     seed(422)
     shuffle(keys)
 
-    print(f'Adding {len(keys)} values in random order')
+    script_file = basename(argv[0])
+
+    print(f'Output from {script_file}')
+    print('Basic testing for BST traversal')
+
+    print(f'Inserting {len(keys)} values in random order')
     for key in keys:
         bst.insert(key)
     print(f'Tree has {len(bst)} values, height {bst.get_height()}')
