@@ -1,6 +1,7 @@
 from typing import Optional, Iterator, Tuple
 
 from module7.graph import Graph
+from module7.graph_demo import GraphDemo
 
 
 class GraphAdjacencyMatrix[K, V](Graph):
@@ -77,3 +78,7 @@ class GraphAdjacencyMatrix[K, V](Graph):
 
     def _get_base_index(self, source_vertex: Graph.Vertex) -> int:
         return source_vertex.index * len(self.vertices)
+
+
+if __name__ == '__main__':
+    GraphDemo('adjacency matrix', GraphAdjacencyMatrix())

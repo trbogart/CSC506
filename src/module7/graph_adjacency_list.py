@@ -1,6 +1,7 @@
 from typing import Optional, Iterator, Tuple
 
 from module7.graph import Graph
+from module7.graph_demo import GraphDemo
 
 
 class GraphAdjacencyList[K, V](Graph):
@@ -53,3 +54,7 @@ class GraphAdjacencyList[K, V](Graph):
         Returns true because edge order is preserved (used for testing).
         """
         return True
+
+
+if __name__ == '__main__':
+    GraphDemo('adjacency list', GraphAdjacencyList())

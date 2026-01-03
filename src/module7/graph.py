@@ -18,9 +18,6 @@ class Graph[K, V](ABC):
             self.index = index
             self.value = value
 
-        def __str__(self):
-            return f'Vertex(key: {self.key}, index: {self.index}, value: {self.value})'
-
         def __repr__(self):
             return f'Vertex(key: {repr(self.key)}, index: {self.index}, value: {repr(self.value)})'
 
