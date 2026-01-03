@@ -249,32 +249,32 @@ def test_shortest_path(graph):
             vertex = path[i]
         return distance
 
-    def validate_shortest_path(start, end, expected_distance, *expected_path):
+    def validate(start, end, expected_distance, *expected_path):
         path = graph.shortest_path(start, end)
         assert path == list(expected_path)
         if expected_distance is not None:
             assert get_distance(path) == expected_distance
 
-    validate_shortest_path(vertex1, vertex2, 2, vertex1, vertex2)
-    validate_shortest_path(vertex1, vertex3, 3, vertex1, vertex2, vertex3)
-    validate_shortest_path(vertex1, vertex4, 3, vertex1, vertex2, vertex4)
-    validate_shortest_path(vertex1, vertex5, 1, vertex1, vertex5)
-    validate_shortest_path(vertex2, vertex1, None)
-    validate_shortest_path(vertex2, vertex3, 1, vertex2, vertex3)
-    validate_shortest_path(vertex2, vertex4, 1, vertex2, vertex4)
-    validate_shortest_path(vertex2, vertex5, 2, vertex2, vertex4, vertex5)
-    validate_shortest_path(vertex3, vertex1, None)
-    validate_shortest_path(vertex3, vertex2, 6, vertex3, vertex4, vertex2)
-    validate_shortest_path(vertex3, vertex4, 1, vertex3, vertex4)
-    validate_shortest_path(vertex3, vertex5, 2, vertex3, vertex4, vertex5)
-    validate_shortest_path(vertex4, vertex1, None)
-    validate_shortest_path(vertex4, vertex2, 5, vertex4, vertex2)
-    validate_shortest_path(vertex4, vertex3, 6, vertex4, vertex2, vertex3)
-    validate_shortest_path(vertex4, vertex5, 1, vertex4, vertex5)
-    validate_shortest_path(vertex5, vertex1, None)
-    validate_shortest_path(vertex5, vertex2, 10, vertex5, vertex4, vertex2)
-    validate_shortest_path(vertex5, vertex3, 11, vertex5, vertex4, vertex2, vertex3)
-    validate_shortest_path(vertex5, vertex4, 5, vertex5, vertex4)
+    validate(vertex1, vertex2, 2, vertex1, vertex2)
+    validate(vertex1, vertex3, 3, vertex1, vertex2, vertex3)
+    validate(vertex1, vertex4, 3, vertex1, vertex2, vertex4)
+    validate(vertex1, vertex5, 1, vertex1, vertex5)
+    validate(vertex2, vertex1, None)
+    validate(vertex2, vertex3, 1, vertex2, vertex3)
+    validate(vertex2, vertex4, 1, vertex2, vertex4)
+    validate(vertex2, vertex5, 2, vertex2, vertex4, vertex5)
+    validate(vertex3, vertex1, None)
+    validate(vertex3, vertex2, 6, vertex3, vertex4, vertex2)
+    validate(vertex3, vertex4, 1, vertex3, vertex4)
+    validate(vertex3, vertex5, 2, vertex3, vertex4, vertex5)
+    validate(vertex4, vertex1, None)
+    validate(vertex4, vertex2, 5, vertex4, vertex2)
+    validate(vertex4, vertex3, 6, vertex4, vertex2, vertex3)
+    validate(vertex4, vertex5, 1, vertex4, vertex5)
+    validate(vertex5, vertex1, None)
+    validate(vertex5, vertex2, 10, vertex5, vertex4, vertex2)
+    validate(vertex5, vertex3, 11, vertex5, vertex4, vertex2, vertex3)
+    validate(vertex5, vertex4, 5, vertex5, vertex4)
 
 
 def test_edge_order(graph):
