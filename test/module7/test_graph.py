@@ -250,15 +250,68 @@ def test_shortest_path(graph):
     validate_shortest_path(vertex5, vertex4, 5, vertex5, vertex4)
 
 
+def test_edge_order(graph):
+    vertex1 = graph.add_vertex('v1')
+    vertex2 = graph.add_vertex('v2')
+    vertex3 = graph.add_vertex('v3')
+
+    graph.add_edge(vertex1, vertex3, 2)
+    graph.add_edge(vertex1, vertex2)
+
+    if type(graph) == GraphAdjacencyList:
+        # edges in order added
+        assert list(graph.get_edges_from_vertex(vertex1)) == [(vertex3, 2), (vertex2, 1)]
+    else:
+        # edges in vertex order
+        assert list(graph.get_edges_from_vertex(vertex1)) == [(vertex2, 1), (vertex3, 2)]
+
+
+def test_depth_first_traversal_order(graph):
+    vertex1 = graph.add_vertex('v1')
+    vertex2 = graph.add_vertex('v2')
+    vertex3 = graph.add_vertex('v3')
+
+    graph.add_edge(vertex1, vertex3, 2)
+    graph.add_edge(vertex1, vertex2)
+
+    if type(graph) == GraphAdjacencyList:
+        # edges in order added
+        assert list(graph.traverse_depth_first(vertex1)) == [vertex3, vertex2, vertex1]
+    else:
+        # edges in vertex order
+        assert list(graph.traverse_depth_first(vertex1)) == [vertex2, vertex3, vertex1]
+
+
+def test_breadth_first_traversal_order(graph):
+    vertex1 = graph.add_vertex('v1')
+    vertex2 = graph.add_vertex('v2')
+    vertex3 = graph.add_vertex('v3')
+
+    graph.add_edge(vertex1, vertex3, 2)
+    graph.add_edge(vertex1, vertex2)
+
+    if type(graph) == GraphAdjacencyList:
+        # edges in order added
+        assert list(graph.traverse_breadth_first(vertex1)) == [vertex1, vertex3, vertex2]
+    else:
+        # edges in vertex order
+        assert list(graph.traverse_breadth_first(vertex1)) == [vertex1, vertex2, vertex3]
+
+
 def test_repr(graph):
     vertex1 = graph.add_vertex('v1')
     vertex2 = graph.add_vertex('v2')
     vertex3 = graph.add_vertex('v3')
     graph.add_vertex('v4')
 
-    graph.add_edge(vertex1, vertex2)
     graph.add_edge(vertex1, vertex3, 2)
+    graph.add_edge(vertex1, vertex2)
     graph.add_edge(vertex2, vertex3, 3)
     graph.add_edge(vertex3, vertex1, 2)
 
-    assert repr(graph) == "{'v1': {'v2': 1, 'v3': 2}, 'v2': {'v3': 3}, 'v3': {'v1': 2}, 'v4': {}}"
+    if type(graph) is GraphAdjacencyList:
+        # edges are displayed in order they were added (only matters for v1 edges)
+        assert repr(graph) == "{'v1': {'v3': 2, 'v2': 1}, 'v2': {'v3': 3}, 'v3': {'v1': 2}, 'v4': {}}"
+    else:
+        # edges are displayed in order target vertex was added
+        assert repr(graph) == "{'v1': {'v2': 1, 'v3': 2}, 'v2': {'v3': 3}, 'v3': {'v1': 2}, 'v4': {}}"
