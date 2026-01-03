@@ -1,0 +1,44 @@
+C:\Users\trbog\anaconda3\envs\CSC506\python.exe C:\Users\trbog\Dropbox\code\CSC506\src\module7\graph_adjacency_list.py
+Demo for GraphAdjacencyList
+See also unit tests: test_graph.py
+
+Graph with edge weights: {'v1': {'v2': 2, 'v3': 4, 'v5': 1}, 'v2': {'v3': 1, 'v4': 1}, 'v3': {'v4': 1, 'v5': 4}, 'v4': {'v5': 1, 'v2': 5}, 'v5': {'v4': 3}}
+
+Depth-first traversal
+- Vertex: v5
+- Vertex: v4
+- Vertex: v3
+- Vertex: v2
+- Vertex: v1
+
+Breadth-first traversal
+- Vertex: v1
+- Vertex: v2
+- Vertex: v3
+- Vertex: v5
+- Vertex: v4
+
+Shortest path between v1 and v3 (use indirect path instead of direct path v1->v3 with distance 4)
+- v1 -> v2 (2)
+- v2 -> v3 (1)
+Total distance: 3
+
+Shortest path between v2 and v4 (use direct path instead of longer indirect path)
+- v2 -> v4 (1)
+Total distance: 1
+
+Shortest path between v3 and v1
+- No path
+
+Shortest path between v4 and v3 (no direct path)
+- v4 -> v2 (5)
+- v2 -> v3 (1)
+Total distance: 6
+
+Shortest path between v5 and v3 (longest path)
+- v5 -> v4 (3)
+- v4 -> v2 (5)
+- v2 -> v3 (1)
+Total distance: 9
+
+Process finished with exit code 0

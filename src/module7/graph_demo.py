@@ -37,11 +37,11 @@ class GraphDemo:
         graph.add_edge(v2, v4)
         graph.add_edge(v3, v4)
         graph.add_edge(v3, v5, 4)
-        graph.add_edge(v4, v2, 5)
         graph.add_edge(v4, v5)
+        graph.add_edge(v4, v2, 5)
         graph.add_edge(v5, v4, 3)
 
-        print(f'Graph: {graph}')
+        print(f'Graph with edge weights: {graph}')
         print()
         print('Depth-first traversal')
         for vertex in graph.traverse_depth_first(v1):
@@ -52,11 +52,11 @@ class GraphDemo:
         for vertex in graph.traverse_breadth_first(v1):
             print(f'- Vertex: {vertex.key}')
 
-        print_shortest_path(graph, v1, v3, '(v1->v3 is longer)')
-        print_shortest_path(graph, v2, v4)
+        print_shortest_path(graph, v1, v3, '(use indirect path instead of direct path v1->v3 with distance 4)')
+        print_shortest_path(graph, v2, v4, '(use direct path instead of longer indirect path)')
         print_shortest_path(graph, v3, v1)  # no path
-        print_shortest_path(graph, v4, v3)
-        print_shortest_path(graph, v5, v3)
+        print_shortest_path(graph, v4, v3, '(no direct path)')
+        print_shortest_path(graph, v5, v3, '(longest path)')
 
 
 def print_shortest_path(graph, start_vertex, end_vertex, suffix=''):
