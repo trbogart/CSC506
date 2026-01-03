@@ -1,3 +1,5 @@
+import itertools
+from array import array
 from typing import Optional, Iterator, Tuple
 
 from module7.graph import Graph
@@ -16,27 +18,26 @@ class GraphAdjacencyMatrix[K, V](Graph):
 
         # adjacency matrix uses weight or None if no path
         # 1 dimensional, use get_edge_index() to get index
-        # empty until first edge is added
-        self.adjacency_matrix = list[Optional[float]]()
+        # None until first edge is added
+        self.adjacency_matrix = None
 
     def add_vertex(self, key: K, data: V = None) -> Optional[V]:
         # verify that vertices are added before edges (so matrix can be allocated with proper size)
-        if len(self.adjacency_matrix) > 0:
+        if self.adjacency_matrix is not None:
             raise ValueError('Must add all vertices before any edges are added')
         return super().add_vertex(key, data)
 
-    def add_edge(self, source_vertex: Graph.Vertex, dest_vertex: Graph.Vertex, weight: float = 1) -> None:
+    def add_edge(self, source_vertex: Graph.Vertex, dest_vertex: Graph.Vertex, weight: float = 1.0) -> None:
         """
         Adds a new directed edge to the graph.
         :param source_vertex: source vertex
         :param dest_vertex: destination vertex
         :param weight: weight of the edge (1 by default)
         """
-        if len(self.adjacency_matrix) == 0:
+        if self.adjacency_matrix is None:
             # initialize matrix if this is the first edge added
-            # Note: it would be more efficient to use NumPy or the array module
-            # and use float('inf') as the missing value instead of None.
-            self.adjacency_matrix = [None] * (len(self.vertices) ** 2)
+            # Note: use array module for better efficiency, at the cost of needing to convert 'inf' to None.
+            self.adjacency_matrix = array('f', itertools.repeat(float('inf'), len(self.vertices) ** 2))
         # set edge weight
         # convert 2d square index to 1d index using _get_edge_index
         self.adjacency_matrix[self._get_edge_index(source_vertex, dest_vertex)] = weight
@@ -48,9 +49,10 @@ class GraphAdjacencyMatrix[K, V](Graph):
         :param dest_vertex: destination vertex
         :return: weight of the edge, or None if there is no edge
         """
-        if len(self.adjacency_matrix) > 0:
+        if self.adjacency_matrix is not None:
             # convert 2d square index to 1d index using _get_edge_index
-            return self.adjacency_matrix[self._get_edge_index(source_vertex, dest_vertex)]
+            weight = self.adjacency_matrix[self._get_edge_index(source_vertex, dest_vertex)]
+            return weight if weight != float('inf') else None
         else:
             # special case for no edges added
             return None
@@ -62,11 +64,11 @@ class GraphAdjacencyMatrix[K, V](Graph):
          :param source_vertex: source vertex
          :return: an iterator, which may be empty, over all destination vertices and weights from this vertex
          """
-        if len(self.adjacency_matrix) > 0:
+        if self.adjacency_matrix is not None:
             base_index = self._get_base_index(source_vertex)
             for dest_vertex in self.vertices.values():
                 weight = self.adjacency_matrix[base_index + dest_vertex.index]
-                if weight is not None:
+                if weight != float('inf'):
                     yield dest_vertex, weight
 
     def edges_ordered(self) -> bool:

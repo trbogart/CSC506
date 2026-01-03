@@ -60,7 +60,7 @@ class Graph[K, V](ABC):
             return self.vertices[key]
         return None
 
-    def add_edge_undirected(self, vertex1: Vertex, vertex2: Vertex, weight: float = 1) -> None:
+    def add_edge_undirected(self, vertex1: Vertex, vertex2: Vertex, weight: float = 1.0) -> None:
         """
         Adds a new undirected edge to the graph.
         :param vertex1: first vertex
@@ -79,7 +79,7 @@ class Graph[K, V](ABC):
         pass
 
     @abstractmethod
-    def add_edge(self, source_vertex: Vertex, dest_vertex: Vertex, weight: float = 1) -> None:
+    def add_edge(self, source_vertex: Vertex, dest_vertex: Vertex, weight: float = 1.0) -> None:
         """
         Adds a new directed edge to the graph.
         :param source_vertex: source vertex

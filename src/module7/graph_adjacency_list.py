@@ -30,7 +30,7 @@ class GraphAdjacencyList[K, V](Graph):
         """
         return self.edges_by_source[source_vertex.key].get(dest_vertex.key, None)
 
-    def add_edge(self, source_vertex: Graph.Vertex, dest_vertex: Graph.Vertex, weight: float = 1) -> None:
+    def add_edge(self, source_vertex: Graph.Vertex, dest_vertex: Graph.Vertex, weight: float = 1.0) -> None:
         """
         Adds a new directed edge to the graph.
         :param source_vertex: source vertex

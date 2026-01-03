@@ -287,16 +287,16 @@ def test_shortest_path(graph):
     vertex4 = graph.add_vertex(4)
     vertex5 = graph.add_vertex(5)
 
-    distance12 = 2
-    distance13 = 4
-    distance15 = 1
-    distance23 = 1
-    distance24 = 1
-    distance34 = 1
-    distance35 = 4
-    distance42 = 5
-    distance45 = 1
-    distance54 = 3
+    distance12 = 2.0
+    distance13 = 4.0
+    distance15 = 1.0
+    distance23 = 1.0
+    distance24 = 1.0
+    distance34 = 1.0
+    distance35 = 4.0
+    distance42 = 5.0
+    distance45 = 1.0
+    distance54 = 3.0
 
     graph.add_edge(vertex1, vertex2, distance12)
     graph.add_edge(vertex1, vertex3, distance13)
@@ -412,17 +412,17 @@ def test_repr(graph):
     vertex3 = graph.add_vertex('v3')
     graph.add_vertex('v4')
 
-    graph.add_edge(vertex1, vertex3, 2)
+    graph.add_edge(vertex1, vertex3, 2.0)
     graph.add_edge(vertex1, vertex2)
-    graph.add_edge(vertex2, vertex3, 3)
-    graph.add_edge(vertex3, vertex1, 2)
+    graph.add_edge(vertex2, vertex3, 3.0)
+    graph.add_edge(vertex3, vertex1, 2.0)
 
     if graph.edges_ordered():
         # edges are displayed in order they were added (only matters for v1 edges)
-        assert repr(graph) == "{'v1': {'v3': 2, 'v2': 1}, 'v2': {'v3': 3}, 'v3': {'v1': 2}, 'v4': {}}"
+        assert repr(graph) == "{'v1': {'v3': 2.0, 'v2': 1.0}, 'v2': {'v3': 3.0}, 'v3': {'v1': 2.0}, 'v4': {}}"
     else:
         # edges are displayed in order target vertex was added
-        assert repr(graph) == "{'v1': {'v2': 1, 'v3': 2}, 'v2': {'v3': 3}, 'v3': {'v1': 2}, 'v4': {}}"
+        assert repr(graph) == "{'v1': {'v2': 1.0, 'v3': 2.0}, 'v2': {'v3': 3.0}, 'v3': {'v1': 2.0}, 'v4': {}}"
 
 
 def _validate_shortest_path(graph, start, end, expected_distance, *expected_path):
