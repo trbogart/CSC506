@@ -213,8 +213,6 @@ def test_shortest_path(graph):
     graph.add_edge(vertex5, vertex4, 5)
 
     def get_distance(path):
-        if len(path) == 0:
-            return None
         distance = 0.0
         vertex = path[0]
         for i in range(1, len(path)):
@@ -227,8 +225,8 @@ def test_shortest_path(graph):
     def validate_shortest_path(start, end, expected_distance, *expected_path):
         path = graph.shortest_path(start, end)
         assert path == list(expected_path)
-        distance = get_distance(path)
-        assert distance == expected_distance
+        if expected_distance is not None:
+            assert get_distance(path) == expected_distance
 
     validate_shortest_path(vertex1, vertex2, 2.0, vertex1, vertex2)
     validate_shortest_path(vertex1, vertex3, 3.0, vertex1, vertex2, vertex3)

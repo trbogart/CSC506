@@ -206,7 +206,7 @@ class GraphAdjacencyList[K, V](Graph):
         return vertex
 
     def get_edge_weight(self, from_vertex: Graph.Vertex, to_vertex: Graph.Vertex) -> Optional[float]:
-        return self.edges_by_source.get(from_vertex.key, {}).get(to_vertex.key, None)
+        return self.edges_by_source[from_vertex.key].get(to_vertex.key, None)
 
     def add_edge(self, from_vertex: Graph.Vertex, to_vertex: Graph.Vertex, weight: float = 1.0) -> None:
         self.edges_by_source[from_vertex.key][to_vertex.key] = weight
@@ -223,6 +223,10 @@ class GraphAdjacencyMatrix[K, V](Graph):
 
     def __init__(self):
         super().__init__()
+
+        # adjacency matrix uses weight or None if no path
+        # 1 dimensional, use get_edge_index() to get index
+        # empty until first edge is added
         self.matrix = list[Optional[float]]()
 
     def add_vertex(self, key: K, data: V = None) -> Optional[V]:
