@@ -1,6 +1,8 @@
 import pytest
 
-from module7.graph import Graph, GraphAdjacencyList, GraphAdjacencyMatrix
+from module7.graph import Graph
+from module7.graph_adjacency_list import GraphAdjacencyList
+from module7.graph_adjacency_matrix import GraphAdjacencyMatrix
 
 
 @pytest.fixture(params=[GraphAdjacencyList, GraphAdjacencyMatrix])
@@ -12,8 +14,7 @@ def graph(request) -> Graph:
 def test_empty(graph):
     assert len(graph.vertices) == 0
     assert list(graph.traverse_depth_first()) == []
-
-    assert '' not in graph
+    assert graph.get_vertex(0) is None
 
 
 def test_add_vertex(graph):
@@ -26,10 +27,10 @@ def test_add_vertex(graph):
     assert list(graph.get_edges_from_vertex(vertex2)) == []
     assert list(graph.get_edges_from_vertex(vertex3)) == []
 
-    assert 1 in graph
-    assert 2 in graph
-    assert 3 in graph
-    assert 0 not in graph
+    assert graph.get_vertex(1) == vertex1
+    assert graph.get_vertex(2) == vertex2
+    assert graph.get_vertex(3) == vertex3
+    assert graph.get_vertex(0) is None
 
 
 def test_add_vertex_duplicate_key(graph):
