@@ -44,7 +44,7 @@ class Graph[K, V](ABC):
         Adds a new vertex to the graph.
         :param key: key to add
         :param data: data to add
-        :return: the vertex
+        :return: the vertex that was added
         :raises KeyError: if vertex with given key already exists
         """
         if key in self.vertices.keys():
@@ -115,6 +115,7 @@ class Graph[K, V](ABC):
             for vertex in self.vertices.values():
                 yield from self._traverse_depth_first(vertex, visited)
         else:
+            # iterate given vertex only
             yield from self._traverse_depth_first(root_vertex, visited)
 
     def _traverse_depth_first(self, current_vertex: Vertex, visited: set[Vertex]) -> Iterator[Vertex]:

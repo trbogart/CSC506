@@ -172,6 +172,19 @@ def test_depth_first_traversal(graph):
     assert vertices.index(vertex3) > vertices.index(vertex5)
 
 
+def test_depth_first_leaf(graph):
+    vertex1 = graph.add_vertex(1)
+    vertex2 = graph.add_vertex(2)
+    vertex3 = graph.add_vertex(3)
+
+    graph.add_edge(vertex1, vertex2)
+    graph.add_edge(vertex1, vertex3)
+    graph.add_edge(vertex2, vertex3)
+
+    vertices = list(graph.traverse_depth_first(vertex3))
+    assert vertices == [vertex3]
+
+
 def test_breadth_first_traversal(graph):
     vertex1 = graph.add_vertex(1)
     vertex2 = graph.add_vertex(2)
@@ -193,6 +206,19 @@ def test_breadth_first_traversal(graph):
     assert vertices.index(vertex2) < vertices.index(vertex3)
     assert vertices.index(vertex2) < vertices.index(vertex4)
     assert vertices.index(vertex3) < vertices.index(vertex5)
+
+
+def test_breadth_first_leaf(graph):
+    vertex1 = graph.add_vertex(1)
+    vertex2 = graph.add_vertex(2)
+    vertex3 = graph.add_vertex(3)
+
+    graph.add_edge(vertex1, vertex2)
+    graph.add_edge(vertex1, vertex3)
+    graph.add_edge(vertex2, vertex3)
+
+    vertices = list(graph.traverse_breadth_first(vertex3))
+    assert vertices == [vertex3]
 
 
 def test_shortest_path(graph):
