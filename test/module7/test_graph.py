@@ -249,6 +249,7 @@ def test_shortest_path(graph):
     validate_shortest_path(vertex5, vertex3, 11, vertex5, vertex4, vertex2, vertex3)
     validate_shortest_path(vertex5, vertex4, 5, vertex5, vertex4)
 
+
 def test_repr(graph):
     vertex1 = graph.add_vertex('v1')
     vertex2 = graph.add_vertex('v2')

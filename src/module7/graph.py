@@ -3,7 +3,6 @@ from collections import deque
 from typing import Optional, Iterator, Tuple
 
 
-
 class Graph[K, V](ABC):
     """
     Abstract base class for graph implementations.
