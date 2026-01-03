@@ -5,6 +5,7 @@ from module7.graph_adjacency_list import GraphAdjacencyList
 from module7.graph_adjacency_matrix import GraphAdjacencyMatrix
 
 
+# All tests are run for both graph implementations.
 @pytest.fixture(params=[GraphAdjacencyList, GraphAdjacencyMatrix])
 def graph(request) -> Graph:
     # Instantiate the graph implementation
@@ -12,12 +13,19 @@ def graph(request) -> Graph:
 
 
 def test_empty(graph):
+    """
+    Tests basic operations when graph is empty
+    """
     assert len(graph.vertices) == 0
     assert list(graph.traverse_depth_first()) == []
     assert graph.get_vertex(0) is None
 
 
 def test_add_vertex(graph):
+    """
+    Tests that vertices can be added and retrieved with get_vertex().
+    Also tests get_edges_from_vertex() returns empty.
+    """
     vertex1 = graph.add_vertex(1, 'a')
     vertex2 = graph.add_vertex(2, 'b')
     vertex3 = graph.add_vertex(3, 'c')
@@ -34,12 +42,21 @@ def test_add_vertex(graph):
 
 
 def test_add_vertex_duplicate_key(graph):
+    """
+    Verify that vertex with duplicate key cannot be added.
+    """
     graph.add_vertex(1, 'a')
     with pytest.raises(KeyError):
         graph.add_vertex(1, 'b')
 
 
 def test_add_edge(graph):
+    """
+    Verify that edge can be added with add_vertex using the default weight (1).
+    Also verifies that get_edge_weight and get_edges_from_vertex work with the new edges.
+    :param graph:
+    :return:
+    """
     vertex1 = graph.add_vertex(1, 'a')
     vertex2 = graph.add_vertex(2, 'b')
     vertex3 = graph.add_vertex(3, 'c')
@@ -63,6 +80,9 @@ def test_add_edge(graph):
 
 
 def test_add_edge_with_weight(graph):
+    """
+    Verifies that edges can be added with add_vertex using a given weight.
+    """
     vertex1 = graph.add_vertex(1, 'a')
     vertex2 = graph.add_vertex(2, 'b')
     vertex3 = graph.add_vertex(3, 'c')
@@ -85,6 +105,9 @@ def test_add_edge_with_weight(graph):
 
 
 def test_add_edge_undirected(graph):
+    """
+    Verifies that add_edge_undirected adds an edge with default weight in both directions.
+    """
     vertex1 = graph.add_vertex(1, 'a')
     vertex2 = graph.add_vertex(2, 'b')
     vertex3 = graph.add_vertex(3, 'c')
@@ -106,6 +129,9 @@ def test_add_edge_undirected(graph):
 
 
 def test_add_edge_undirected_with_weight(graph):
+    """
+    Verifies that add_edge_undirected adds an edge with given weight in both directions.
+    """
     vertex1 = graph.add_vertex(1, 'a')
     vertex2 = graph.add_vertex(2, 'b')
     vertex3 = graph.add_vertex(3, 'c')
@@ -127,6 +153,9 @@ def test_add_edge_undirected_with_weight(graph):
 
 
 def test_depth_first_traversal_all(graph):
+    """
+    Tests traverse_depth_first when called without a vertex, which traversed all vertices, depth-first.
+    """
     vertex1 = graph.add_vertex(1)
     vertex2 = graph.add_vertex(2)
     vertex3 = graph.add_vertex(3)
@@ -150,12 +179,15 @@ def test_depth_first_traversal_all(graph):
 
 
 def test_depth_first_traversal(graph):
+    """
+    Tests traverse_depth_first when called with a vertex, which traversed that vertex, depth-first.
+    """
     vertex1 = graph.add_vertex(1)
     vertex2 = graph.add_vertex(2)
     vertex3 = graph.add_vertex(3)
     vertex4 = graph.add_vertex(4)
     vertex5 = graph.add_vertex(5)
-    graph.add_vertex(6)  # orphan
+    graph.add_vertex(6)  # disconnected
 
     graph.add_edge(vertex1, vertex2)
     graph.add_edge(vertex1, vertex3)
@@ -165,6 +197,7 @@ def test_depth_first_traversal(graph):
 
     vertices = list(graph.traverse_depth_first(vertex1))
     assert set(vertices) == {vertex1, vertex2, vertex3, vertex4, vertex5}
+    # destination nodes called before source nodes
     assert vertices.index(vertex1) > vertices.index(vertex2)
     assert vertices.index(vertex1) > vertices.index(vertex3)
     assert vertices.index(vertex2) > vertices.index(vertex3)
@@ -173,6 +206,9 @@ def test_depth_first_traversal(graph):
 
 
 def test_depth_first_leaf(graph):
+    """
+    Verifies traverse_depth_first just returns the given vertex if it has no outbound edges.
+    """
     vertex1 = graph.add_vertex(1)
     vertex2 = graph.add_vertex(2)
     vertex3 = graph.add_vertex(3)
@@ -186,12 +222,15 @@ def test_depth_first_leaf(graph):
 
 
 def test_breadth_first_traversal(graph):
+    """
+    Verifies traverse_breadth_first does breadth-first traversal.
+    """
     vertex1 = graph.add_vertex(1)
     vertex2 = graph.add_vertex(2)
     vertex3 = graph.add_vertex(3)
     vertex4 = graph.add_vertex(4)
     vertex5 = graph.add_vertex(5)
-    graph.add_vertex(6)  # orphan
+    graph.add_vertex(6)  # disconnected
 
     graph.add_edge(vertex1, vertex2)
     graph.add_edge(vertex1, vertex3)
@@ -201,6 +240,7 @@ def test_breadth_first_traversal(graph):
 
     vertices = list(graph.traverse_breadth_first(vertex1))
     assert set(vertices) == {vertex1, vertex2, vertex3, vertex4, vertex5}
+    # source nodes called before destination nodes
     assert vertices.index(vertex1) < vertices.index(vertex2)
     assert vertices.index(vertex1) < vertices.index(vertex3)
     assert vertices.index(vertex2) < vertices.index(vertex3)
@@ -209,6 +249,9 @@ def test_breadth_first_traversal(graph):
 
 
 def test_breadth_first_leaf(graph):
+    """
+    Verifies traverse_breadth_first just returns the given vertex if it has no outbound edges.
+    """
     vertex1 = graph.add_vertex(1)
     vertex2 = graph.add_vertex(2)
     vertex3 = graph.add_vertex(3)
@@ -222,6 +265,22 @@ def test_breadth_first_leaf(graph):
 
 
 def test_shortest_path(graph):
+    """
+    Tests shorter_path algorithm.
+    :param graph: graph implementation (GraphAdjacencyList or GraphAdjacencyList)
+    """
+
+    # setup graph
+    #             |v2|<-------5--------|v4|
+    #             |  |                 |  |
+    # |v1|---2--->|  |--------1------->|  |<---3---|v5|----+
+    # |  |        |  |                 |  |        |  |    |
+    # |  |        |  |---1-->|v3|--1-->|  |----1-->|  |<-1-+
+    # |  |                   |  |                  |  |
+    # |  |---------4-------->|  |---------4------->|  |
+    # |  |                                         |  |
+    # |  |---------------------1------------------>|  |
+
     vertex1 = graph.add_vertex(1)
     vertex2 = graph.add_vertex(2)
     vertex3 = graph.add_vertex(3)
@@ -250,55 +309,44 @@ def test_shortest_path(graph):
     graph.add_edge(vertex4, vertex5, distance45)
     graph.add_edge(vertex5, vertex4, distance54)
 
-    #             |v2|<-------5--------|v4|
-    #             |  |                 |  |
-    # |v1|---2--->|  |--------1------->|  |<---3---|v5|
-    # |  |        |  |                 |  |        |  |
-    # |  |        |  |---1-->|v3|--1-->|  |----1-->|  |
-    # |  |                   |  |                  |  |
-    # |  |---------4-------->|  |---------4------->|  |
-    # |  |                                         |  |
-    # |  |---------------------1------------------>|  |
+    # validate all possible combinations
+    _validate_shortest_path(graph, vertex1, vertex1, None)
+    _validate_shortest_path(graph, vertex1, vertex2, distance12, vertex1, vertex2)
+    _validate_shortest_path(graph, vertex1, vertex3, distance12 + distance23, vertex1, vertex2, vertex3)
+    _validate_shortest_path(graph, vertex1, vertex4, distance12 + distance24, vertex1, vertex2, vertex4)
+    _validate_shortest_path(graph, vertex1, vertex5, distance15, vertex1, vertex5)
 
-    def get_distance(path):
-        distance = 0
-        vertex = path[0]
-        for i in range(1, len(path)):
-            weight = graph.get_edge_weight(vertex, path[i])
-            assert weight is not None
-            distance += weight
-            vertex = path[i]
-        return distance
+    _validate_shortest_path(graph, vertex2, vertex1, None)
+    _validate_shortest_path(graph, vertex2, vertex2, None)
+    _validate_shortest_path(graph, vertex2, vertex3, distance23, vertex2, vertex3)
+    _validate_shortest_path(graph, vertex2, vertex4, distance24, vertex2, vertex4)
+    _validate_shortest_path(graph, vertex2, vertex5, distance24 + distance45, vertex2, vertex4, vertex5)
 
-    def validate(start, end, expected_distance, *expected_path):
-        path = graph.shortest_path(start, end)
-        assert path == list(expected_path)
-        if expected_distance is not None:
-            assert get_distance(path) == expected_distance
+    _validate_shortest_path(graph, vertex3, vertex1, None)
+    _validate_shortest_path(graph, vertex3, vertex2, distance34 + distance42, vertex3, vertex4, vertex2)
+    _validate_shortest_path(graph, vertex3, vertex3, None)
+    _validate_shortest_path(graph, vertex3, vertex4, distance34, vertex3, vertex4)
+    _validate_shortest_path(graph, vertex3, vertex5, distance34 + distance45, vertex3, vertex4, vertex5)
 
-    validate(vertex1, vertex2, distance12, vertex1, vertex2)
-    validate(vertex1, vertex3, distance12 + distance23, vertex1, vertex2, vertex3)
-    validate(vertex1, vertex4, distance12 + distance24, vertex1, vertex2, vertex4)
-    validate(vertex1, vertex5, distance15, vertex1, vertex5)
-    validate(vertex2, vertex1, None)
-    validate(vertex2, vertex3, distance23, vertex2, vertex3)
-    validate(vertex2, vertex4, distance24, vertex2, vertex4)
-    validate(vertex2, vertex5, distance24 + distance45, vertex2, vertex4, vertex5)
-    validate(vertex3, vertex1, None)
-    validate(vertex3, vertex2, distance34 + distance42, vertex3, vertex4, vertex2)
-    validate(vertex3, vertex4, distance34, vertex3, vertex4)
-    validate(vertex3, vertex5, distance34 + distance45, vertex3, vertex4, vertex5)
-    validate(vertex4, vertex1, None)
-    validate(vertex4, vertex2, distance42, vertex4, vertex2)
-    validate(vertex4, vertex3, distance42 + distance23, vertex4, vertex2, vertex3)
-    validate(vertex4, vertex5, distance45, vertex4, vertex5)
-    validate(vertex5, vertex1, None)
-    validate(vertex5, vertex2, distance54 + distance42, vertex5, vertex4, vertex2)
-    validate(vertex5, vertex3, distance54 + distance42 + distance23, vertex5, vertex4, vertex2, vertex3)
-    validate(vertex5, vertex4, distance54, vertex5, vertex4)
+    _validate_shortest_path(graph, vertex4, vertex1, None)
+    _validate_shortest_path(graph, vertex4, vertex2, distance42, vertex4, vertex2)
+    _validate_shortest_path(graph, vertex4, vertex3, distance42 + distance23, vertex4, vertex2, vertex3)
+    _validate_shortest_path(graph, vertex4, vertex4, None)
+    _validate_shortest_path(graph, vertex4, vertex5, distance45, vertex4, vertex5)
+
+    _validate_shortest_path(graph, vertex5, vertex1, None)
+    _validate_shortest_path(graph, vertex5, vertex2, distance54 + distance42, vertex5, vertex4, vertex2)
+    _validate_shortest_path(graph, vertex5, vertex3, distance54 + distance42 + distance23, vertex5, vertex4, vertex2,
+                            vertex3)
+    _validate_shortest_path(graph, vertex5, vertex4, distance54, vertex5, vertex4)
+    _validate_shortest_path(graph, vertex5, vertex5, None)
 
 
 def test_edge_order(graph):
+    """
+    Verify that get_edges_from_vertex returns edges in expected order based on graph implementation type.
+    :param graph: graph implementation (GraphAdjacencyList or GraphAdjacencyList)
+    """
     vertex1 = graph.add_vertex('v1')
     vertex2 = graph.add_vertex('v2')
     vertex3 = graph.add_vertex('v3')
@@ -315,6 +363,10 @@ def test_edge_order(graph):
 
 
 def test_depth_first_traversal_order(graph):
+    """
+    Verify that traverse_depth_first returns vertices in expected order based on graph implementation type.
+    :param graph: graph implementation (GraphAdjacencyList or GraphAdjacencyList)
+    """
     vertex1 = graph.add_vertex('v1')
     vertex2 = graph.add_vertex('v2')
     vertex3 = graph.add_vertex('v3')
@@ -331,6 +383,10 @@ def test_depth_first_traversal_order(graph):
 
 
 def test_breadth_first_traversal_order(graph):
+    """
+    Verify that traverse_breadth_first returns vertices in expected order based on graph implementation type.
+    :param graph: graph implementation (GraphAdjacencyList or GraphAdjacencyList)
+    """
     vertex1 = graph.add_vertex('v1')
     vertex2 = graph.add_vertex('v2')
     vertex3 = graph.add_vertex('v3')
@@ -347,6 +403,10 @@ def test_breadth_first_traversal_order(graph):
 
 
 def test_repr(graph):
+    """
+    Tests the string representation of the graph.
+    :param graph: graph implementation (GraphAdjacencyList or GraphAdjacencyList)
+    """
     vertex1 = graph.add_vertex('v1')
     vertex2 = graph.add_vertex('v2')
     vertex3 = graph.add_vertex('v3')
@@ -363,3 +423,18 @@ def test_repr(graph):
     else:
         # edges are displayed in order target vertex was added
         assert repr(graph) == "{'v1': {'v2': 1, 'v3': 2}, 'v2': {'v3': 3}, 'v3': {'v1': 2}, 'v4': {}}"
+
+
+def _validate_shortest_path(graph, start, end, expected_distance, *expected_path):
+    path = graph.shortest_path(start, end)
+    assert path == list(expected_path)
+
+    if expected_distance is not None:
+        distance = 0
+        vertex = path[0]
+        for i in range(1, len(path)):
+            weight = graph.get_edge_weight(vertex, path[i])
+            assert weight is not None
+            distance += weight
+            vertex = path[i]
+        assert distance == expected_distance

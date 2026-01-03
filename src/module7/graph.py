@@ -158,6 +158,7 @@ class Graph[K, V](ABC):
     def shortest_path(self, start_vertex: Vertex, end_vertex: Vertex) -> list[Vertex]:
         """
         Returns the shortest path between two vertices, or an empty list if there is no path.
+        Will not work if there are negative weight cycles.
         :param start_vertex: start vertex
         :param end_vertex: end vertex
         :return: list containing the shortest path from start vertex to end vertex, or empty if none
