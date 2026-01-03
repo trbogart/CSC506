@@ -3,6 +3,7 @@ from collections import deque
 from typing import Optional, Iterator, Tuple
 
 
+
 class Graph[K, V](ABC):
     """
     Abstract base class for graph implementations.
@@ -33,6 +34,18 @@ class Graph[K, V](ABC):
         """
         return key in self.vertices
 
+    def __repr__(self):
+        def get_edges_string(vertex):
+            for target_vertex, weight in self.get_edges_from_vertex(vertex):
+                yield f'{repr(target_vertex.key)}: {weight}'
+
+        def get_vertex_string(vertex):
+            return f'{repr(vertex.key)}: {{{', '.join(get_edges_string(vertex))}}}'
+
+        vertices = ', '.join([get_vertex_string(vertex) for vertex in self.vertices.values()])
+
+        return f'{{{vertices}}}'
+
     def add_vertex(self, key: K, data: V = None) -> Vertex:
         """
         Adds a new vertex to the graph.
@@ -41,7 +54,7 @@ class Graph[K, V](ABC):
         :return: the vertex
         :raises KeyError: if vertex with given key already exists
         """
-        if key in self.vertices:
+        if key in self.vertices.keys():
             raise KeyError(f'Vertex with key {key} already found in graph')
         vertex = self.Vertex(key, len(self.vertices), data)
         self.vertices[key] = vertex
@@ -57,24 +70,24 @@ class Graph[K, V](ABC):
             return self.vertices[key]
         return None
 
-    def add_edge_undirected(self, vertex1: Vertex, vertex2: Vertex, weight: float = 1.0) -> None:
+    def add_edge_undirected(self, vertex1: Vertex, vertex2: Vertex, weight: float = 1) -> None:
         """
         Adds a new undirected edge to the graph. Can use either vertex objects or keys.
         :param vertex1: first vertex
         :param vertex2: second vertex
-        :param weight: weight of the edge (1.0 by default)
+        :param weight: weight of the edge (1 by default)
         """
         # verify that both keys exist
         self.add_edge(vertex1, vertex2, weight)
         self.add_edge(vertex2, vertex1, weight)
 
     @abstractmethod
-    def add_edge(self, from_vertex: Vertex, to_vertex: Vertex, weight: float = 1.0) -> None:
+    def add_edge(self, from_vertex: Vertex, to_vertex: Vertex, weight: float = 1) -> None:
         """
         Adds a new directed edge to the graph. Can use either vertex objects or keys.
         :param from_vertex: key of the source vertex
         :param to_vertex: key of the destination vertex
-        :param weight: weight of the edge (1.0 by default)
+        :param weight: weight of the edge (1 by default)
         :raises KeyError: if vertices with given keys have not been added
         """
         pass
@@ -208,7 +221,7 @@ class GraphAdjacencyList[K, V](Graph):
     def get_edge_weight(self, from_vertex: Graph.Vertex, to_vertex: Graph.Vertex) -> Optional[float]:
         return self.edges_by_source[from_vertex.key].get(to_vertex.key, None)
 
-    def add_edge(self, from_vertex: Graph.Vertex, to_vertex: Graph.Vertex, weight: float = 1.0) -> None:
+    def add_edge(self, from_vertex: Graph.Vertex, to_vertex: Graph.Vertex, weight: float = 1) -> None:
         self.edges_by_source[from_vertex.key][to_vertex.key] = weight
 
     def get_edges_from_vertex(self, from_vertex: Graph.Vertex) -> Iterator[Tuple[Graph.Vertex, float]]:
@@ -234,7 +247,7 @@ class GraphAdjacencyMatrix[K, V](Graph):
             raise ValueError('Must add all vertices before any edges are added')
         return super().add_vertex(key, data)
 
-    def add_edge(self, from_vertex: Graph.Vertex, to_vertex: Graph.Vertex, weight: float = 1.0) -> None:
+    def add_edge(self, from_vertex: Graph.Vertex, to_vertex: Graph.Vertex, weight: float = 1) -> None:
         if len(self.matrix) == 0:
             self.matrix = [None] * (len(self.vertices) ** 2)
         self.matrix[self.get_edge_index(from_vertex, to_vertex)] = weight
