@@ -51,10 +51,11 @@ class GraphAdjacencyList[K, V](Graph):
 
     def edges_ordered(self) -> bool:
         """
-        Returns true because edge order is preserved (used for testing).
+        Returns true because edge order is preserved.
+        Used for testing.
         """
         return True
 
 
 if __name__ == '__main__':
-    GraphDemo('adjacency list', GraphAdjacencyList())
+    GraphDemo(GraphAdjacencyList())

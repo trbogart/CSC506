@@ -2,8 +2,13 @@ from module7.graph import Graph
 
 
 class GraphDemo:
-    def __init__(self, description: str, graph: Graph):
-        print(f'Demo for {description} graph')
+    """
+    Class to demonstrate basic functionality of a Graph.
+    Used in main method of each graph implementation.
+    """
+
+    def __init__(self, graph: Graph):
+        print(f'Demo for {type(graph).__name__}')
         print(f'See also unit tests: test_graph.py')
         print()
         self.graph = self

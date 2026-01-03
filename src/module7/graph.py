@@ -73,7 +73,8 @@ class Graph[K, V](ABC):
     @abstractmethod
     def edges_ordered(self) -> bool:
         """
-        Returns true if edges are ordered (used for testing).
+        Returns true if edges are ordered.
+        Used for testing.
         """
         pass
 

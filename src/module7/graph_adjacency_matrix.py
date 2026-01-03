@@ -69,7 +69,8 @@ class GraphAdjacencyMatrix[K, V](Graph):
 
     def edges_ordered(self) -> bool:
         """
-        Returns false because edge order is not preserved (used for testing).
+        Returns false because edge order is not preserved.
+        Used for testing.
         """
         return False
 
@@ -81,4 +82,4 @@ class GraphAdjacencyMatrix[K, V](Graph):
 
 
 if __name__ == '__main__':
-    GraphDemo('adjacency matrix', GraphAdjacencyMatrix())
+    GraphDemo(GraphAdjacencyMatrix())
