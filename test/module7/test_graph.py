@@ -192,3 +192,61 @@ def test_breadth_first_traversal(graph):
     assert vertices.index(vertex2) < vertices.index(vertex3)
     assert vertices.index(vertex2) < vertices.index(vertex4)
     assert vertices.index(vertex3) < vertices.index(vertex5)
+
+
+def test_shortest_path(graph):
+    vertex1 = graph.add_vertex(1)
+    vertex2 = graph.add_vertex(2)
+    vertex3 = graph.add_vertex(3)
+    vertex4 = graph.add_vertex(4)
+    vertex5 = graph.add_vertex(5)
+
+    graph.add_edge(vertex1, vertex2, 2)
+    graph.add_edge(vertex1, vertex3, 4)
+    graph.add_edge(vertex1, vertex5)
+    graph.add_edge(vertex2, vertex3)
+    graph.add_edge(vertex2, vertex4)
+    graph.add_edge(vertex3, vertex4)
+    graph.add_edge(vertex3, vertex5, 4)
+    graph.add_edge(vertex4, vertex2, 5)
+    graph.add_edge(vertex4, vertex5)
+    graph.add_edge(vertex5, vertex4, 5)
+
+    def get_distance(path):
+        if len(path) == 0:
+            return None
+        distance = 0.0
+        vertex = path[0]
+        for i in range(1, len(path)):
+            weight = graph.get_edge_weight(vertex, path[i])
+            assert weight is not None
+            distance += weight
+            vertex = path[i]
+        return distance
+
+    def validate_shortest_path(start, end, expected_distance, *expected_path):
+        path = graph.shortest_path(start, end)
+        assert path == list(expected_path)
+        distance = get_distance(path)
+        assert distance == expected_distance
+
+    validate_shortest_path(vertex1, vertex2, 2.0, vertex1, vertex2)
+    validate_shortest_path(vertex1, vertex3, 3.0, vertex1, vertex2, vertex3)
+    validate_shortest_path(vertex1, vertex4, 3.0, vertex1, vertex2, vertex4)
+    validate_shortest_path(vertex1, vertex5, 1.0, vertex1, vertex5)
+    validate_shortest_path(vertex2, vertex1, None)
+    validate_shortest_path(vertex2, vertex3, 1.0, vertex2, vertex3)
+    validate_shortest_path(vertex2, vertex4, 1.0, vertex2, vertex4)
+    validate_shortest_path(vertex2, vertex5, 2.0, vertex2, vertex4, vertex5)
+    validate_shortest_path(vertex3, vertex1, None)
+    validate_shortest_path(vertex3, vertex2, 6.0, vertex3, vertex4, vertex2)
+    validate_shortest_path(vertex3, vertex4, 1.0, vertex3, vertex4)
+    validate_shortest_path(vertex3, vertex5, 2.0, vertex3, vertex4, vertex5)
+    validate_shortest_path(vertex4, vertex1, None)
+    validate_shortest_path(vertex4, vertex2, 5.0, vertex4, vertex2)
+    validate_shortest_path(vertex4, vertex3, 6.0, vertex4, vertex2, vertex3)
+    validate_shortest_path(vertex4, vertex5, 1.0, vertex4, vertex5)
+    validate_shortest_path(vertex5, vertex1, None)
+    validate_shortest_path(vertex5, vertex2, 10.0, vertex5, vertex4, vertex2)
+    validate_shortest_path(vertex5, vertex3, 11.0, vertex5, vertex4, vertex2, vertex3)
+    validate_shortest_path(vertex5, vertex4, 5.0, vertex5, vertex4)

@@ -19,7 +19,10 @@ class Graph[K, V](ABC):
             self.value = value
 
         def __str__(self):
-            return f'Vertex[{self.key} #{self.index}: {self.value}]'
+            return f'Vertex(key: {self.key}, index: {self.index}, value: {self.value})'
+
+        def __repr__(self):
+            return f'Vertex(key: {repr(self.key)}, index: {self.index}, value: {repr(self.value)})'
 
     def __init__(self):
         self.vertices = dict[K, Graph.Vertex]()  # key -> data
@@ -139,6 +142,53 @@ class Graph[K, V](ABC):
                 if to_vertex not in discovered:
                     discovered.add(to_vertex)
                     queue.append(to_vertex)
+
+    def shortest_path(self, start_vertex: Vertex, end_vertex: Vertex) -> list[Vertex]:
+        """
+        Returns the shortest path between two vertices, or an empty list if there is no path.
+        :param start_vertex: start vertex
+        :param end_vertex: end vertex
+        :return: list containing the shortest path from start vertex to end vertex, or empty if none
+        """
+        # Dijkstra's algorithm
+        unvisited = list[Graph.Vertex]()
+        for current_vertex in self.vertices.values():
+            unvisited.append(current_vertex)
+
+        distances = [float('inf')] * len(self.vertices)
+        pred_vertices: list[Optional[Graph.Vertex]] = [None] * len(self.vertices)
+
+        distances[start_vertex.index] = 0.0
+
+        while len(unvisited) > 0:
+            # visit vertex with minimum distance from start_vertex
+            smallest_index = 0
+
+            for i in range(1, len(unvisited)):
+                if distances[unvisited[i].index] < distances[unvisited[smallest_index].index]:
+                    smallest_index = i
+            current_vertex = unvisited.pop(smallest_index)
+
+            for adj_vertex, edge_weight in self.get_edges_from_vertex(current_vertex):
+                alternative_path_distance = distances[current_vertex.index] + edge_weight
+
+                if alternative_path_distance < distances[adj_vertex.index]:
+                    distances[adj_vertex.index] = alternative_path_distance
+                    pred_vertices[adj_vertex.index] = current_vertex
+
+        # now work backwards to find the shortest path
+        path = []
+        if pred_vertices[end_vertex.index] is None:
+            # no path
+            return path
+
+        current_vertex = end_vertex
+        while current_vertex is not start_vertex:
+            path.append(current_vertex)
+            current_vertex = pred_vertices[current_vertex.index]
+        path.append(start_vertex)
+        path.reverse()
+        return path
 
 
 class GraphAdjacencyList[K, V](Graph):
