@@ -250,6 +250,16 @@ def test_shortest_path(graph):
     graph.add_edge(vertex4, vertex5, distance45)
     graph.add_edge(vertex5, vertex4, distance54)
 
+    #             |v2|<-------5--------|v4|
+    #             |  |                 |  |
+    # |v1|---2--->|  |--------1------->|  |<---3---|v5|
+    # |  |        |  |                 |  |        |  |
+    # |  |        |  |---1-->|v3|--1-->|  |----1-->|  |
+    # |  |                   |  |                  |  |
+    # |  |---------4-------->|  |---------4------->|  |
+    # |  |                                         |  |
+    # |  |---------------------1------------------>|  |
+
     def get_distance(path):
         distance = 0
         vertex = path[0]
