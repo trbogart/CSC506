@@ -16,10 +16,11 @@ class GraphAdjacencyMatrix[K, V](Graph):
         # adjacency matrix uses weight or None if no path
         # 1 dimensional, use get_edge_index() to get index
         # empty until first edge is added
-        self.matrix = list[Optional[float]]()
+        self.edge_weight_matrix = list[Optional[float]]()
 
     def add_vertex(self, key: K, data: V = None) -> Optional[V]:
-        if len(self.matrix) > 0:
+        # verify that vertices are added before edges (so matrix can be allocated with proper size)
+        if len(self.edge_weight_matrix) > 0:
             raise ValueError('Must add all vertices before any edges are added')
         return super().add_vertex(key, data)
 
@@ -30,9 +31,12 @@ class GraphAdjacencyMatrix[K, V](Graph):
         :param dest_vertex: destination vertex
         :param weight: weight of the edge (1 by default)
         """
-        if len(self.matrix) == 0:
-            self.matrix = [None] * (len(self.vertices) ** 2)
-        self.matrix[self._get_edge_index(source_vertex, dest_vertex)] = weight
+        if len(self.edge_weight_matrix) == 0:
+            # initialize matrix if this is the first edge added
+            self.edge_weight_matrix = [None] * (len(self.vertices) ** 2)
+        # set edge weight
+        # convert 2d square index to 1d index using _get_edge_index
+        self.edge_weight_matrix[self._get_edge_index(source_vertex, dest_vertex)] = weight
 
     def get_edge_weight(self, source_vertex: Graph.Vertex, dest_vertex: Graph.Vertex) -> Optional[float]:
         """
@@ -41,8 +45,9 @@ class GraphAdjacencyMatrix[K, V](Graph):
         :param dest_vertex: destination vertex
         :return: weight of the edge, or None if there is no edge
         """
-        if len(self.matrix) > 0:
-            return self.matrix[self._get_edge_index(source_vertex, dest_vertex)]
+        if len(self.edge_weight_matrix) > 0:
+            # convert 2d square index to 1d index using _get_edge_index
+            return self.edge_weight_matrix[self._get_edge_index(source_vertex, dest_vertex)]
         else:
             # special case for no edges added
             return None
@@ -54,11 +59,21 @@ class GraphAdjacencyMatrix[K, V](Graph):
          :param source_vertex: source vertex
          :return: an iterator, which may be empty, over all destination vertices and weights from this vertex
          """
-        if len(self.matrix) > 0:
-            for vertex in self.vertices.values():
-                weight = self.get_edge_weight(source_vertex, vertex)
+        if len(self.edge_weight_matrix) > 0:
+            base_index = self._get_base_index(source_vertex)
+            for dest_vertex in self.vertices.values():
+                weight = self.edge_weight_matrix[base_index + dest_vertex.index]
                 if weight is not None:
-                    yield vertex, weight
+                    yield dest_vertex, weight
+
+    def edges_ordered(self) -> bool:
+        """
+        Returns false because edge order is not preserved (used for testing).
+        """
+        return False
 
     def _get_edge_index(self, source_vertex: Graph.Vertex, dest_vertex: Graph.Vertex) -> int:
-        return source_vertex.index * len(self.vertices) + dest_vertex.index
+        return self._get_base_index(source_vertex) + dest_vertex.index
+
+    def _get_base_index(self, source_vertex: Graph.Vertex) -> int:
+        return source_vertex.index * len(self.vertices)

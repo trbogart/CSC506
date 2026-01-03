@@ -47,3 +47,9 @@ class GraphAdjacencyList[K, V](Graph):
          """
         for key, weight in self.edges_by_source.get(source_vertex.key, {}).items():
             yield self.get_vertex(key), weight
+
+    def edges_ordered(self) -> bool:
+        """
+        Returns true because edge order is preserved (used for testing).
+        """
+        return True

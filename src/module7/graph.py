@@ -74,6 +74,13 @@ class Graph[K, V](ABC):
         self.add_edge(vertex2, vertex1, weight)
 
     @abstractmethod
+    def edges_ordered(self) -> bool:
+        """
+        Returns true if edges are ordered (used for testing).
+        """
+        pass
+
+    @abstractmethod
     def add_edge(self, source_vertex: Vertex, dest_vertex: Vertex, weight: float = 1) -> None:
         """
         Adds a new directed edge to the graph.

@@ -7,7 +7,7 @@ from module7.graph_adjacency_matrix import GraphAdjacencyMatrix
 
 @pytest.fixture(params=[GraphAdjacencyList, GraphAdjacencyMatrix])
 def graph(request) -> Graph:
-    # Instantiate the queue implementation and use it build a message queue simulator
+    # Instantiate the graph implementation
     return request.param()
 
 
@@ -306,7 +306,7 @@ def test_edge_order(graph):
     graph.add_edge(vertex1, vertex3, 2)
     graph.add_edge(vertex1, vertex2)
 
-    if type(graph) == GraphAdjacencyList:
+    if graph.edges_ordered():
         # edges in order added
         assert list(graph.get_edges_from_vertex(vertex1)) == [(vertex3, 2), (vertex2, 1)]
     else:
@@ -322,7 +322,7 @@ def test_depth_first_traversal_order(graph):
     graph.add_edge(vertex1, vertex3, 2)
     graph.add_edge(vertex1, vertex2)
 
-    if type(graph) == GraphAdjacencyList:
+    if graph.edges_ordered():
         # edges in order added
         assert list(graph.traverse_depth_first(vertex1)) == [vertex3, vertex2, vertex1]
     else:
@@ -338,7 +338,7 @@ def test_breadth_first_traversal_order(graph):
     graph.add_edge(vertex1, vertex3, 2)
     graph.add_edge(vertex1, vertex2)
 
-    if type(graph) == GraphAdjacencyList:
+    if graph.edges_ordered():
         # edges in order added
         assert list(graph.traverse_breadth_first(vertex1)) == [vertex1, vertex3, vertex2]
     else:
@@ -357,7 +357,7 @@ def test_repr(graph):
     graph.add_edge(vertex2, vertex3, 3)
     graph.add_edge(vertex3, vertex1, 2)
 
-    if type(graph) is GraphAdjacencyList:
+    if graph.edges_ordered():
         # edges are displayed in order they were added (only matters for v1 edges)
         assert repr(graph) == "{'v1': {'v3': 2, 'v2': 1}, 'v2': {'v3': 3}, 'v3': {'v1': 2}, 'v4': {}}"
     else:
