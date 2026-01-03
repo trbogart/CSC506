@@ -2,7 +2,7 @@ C:\Users\trbog\anaconda3\envs\CSC506\python.exe C:\Users\trbog\Dropbox\code\CSC5
 Demo for GraphAdjacencyMatrix
 See also unit tests: test_graph.py
 
-Graph with edge weights: {'v1': {'v2': 2, 'v3': 4, 'v5': 1}, 'v2': {'v3': 1, 'v4': 1}, 'v3': {'v4': 1, 'v5': 4}, 'v4': {'v2': 5, 'v5': 1}, 'v5': {'v4': 3}}
+Graph with edge weights: {'v1': {'v2': 2.0, 'v3': 4.0, 'v5': 1.0}, 'v2': {'v3': 1.0, 'v4': 1.0}, 'v3': {'v4': 1.0, 'v5': 4.0}, 'v4': {'v2': 5.0, 'v5': 1.0}, 'v5': {'v4': 3.0}}
 
 Depth-first traversal
 - Vertex: v5
@@ -19,26 +19,26 @@ Breadth-first traversal
 - Vertex: v4
 
 Shortest path between v1 and v3 (use indirect path instead of direct path v1->v3 with distance 4)
-- v1 -> v2 (2)
-- v2 -> v3 (1)
-Total distance: 3
+- v1 -> v2 (2.0)
+- v2 -> v3 (1.0)
+Total distance: 3.0
 
 Shortest path between v2 and v4 (use direct path instead of longer indirect path)
-- v2 -> v4 (1)
-Total distance: 1
+- v2 -> v4 (1.0)
+Total distance: 1.0
 
 Shortest path between v3 and v1
 - No path
 
 Shortest path between v4 and v3 (no direct path)
-- v4 -> v2 (5)
-- v2 -> v3 (1)
-Total distance: 6
+- v4 -> v2 (5.0)
+- v2 -> v3 (1.0)
+Total distance: 6.0
 
 Shortest path between v5 and v3 (longest path)
-- v5 -> v4 (3)
-- v4 -> v2 (5)
-- v2 -> v3 (1)
-Total distance: 9
+- v5 -> v4 (3.0)
+- v4 -> v2 (5.0)
+- v2 -> v3 (1.0)
+Total distance: 9.0
 
 Process finished with exit code 0
