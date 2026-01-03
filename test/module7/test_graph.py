@@ -228,16 +228,27 @@ def test_shortest_path(graph):
     vertex4 = graph.add_vertex(4)
     vertex5 = graph.add_vertex(5)
 
-    graph.add_edge(vertex1, vertex2, 2)
-    graph.add_edge(vertex1, vertex3, 4)
-    graph.add_edge(vertex1, vertex5)
-    graph.add_edge(vertex2, vertex3)
-    graph.add_edge(vertex2, vertex4)
-    graph.add_edge(vertex3, vertex4)
-    graph.add_edge(vertex3, vertex5, 4)
-    graph.add_edge(vertex4, vertex2, 5)
-    graph.add_edge(vertex4, vertex5)
-    graph.add_edge(vertex5, vertex4, 5)
+    distance12 = 2
+    distance13 = 4
+    distance15 = 1
+    distance23 = 1
+    distance24 = 1
+    distance34 = 1
+    distance35 = 4
+    distance42 = 5
+    distance45 = 1
+    distance54 = 3
+
+    graph.add_edge(vertex1, vertex2, distance12)
+    graph.add_edge(vertex1, vertex3, distance13)
+    graph.add_edge(vertex1, vertex5, distance15)
+    graph.add_edge(vertex2, vertex3, distance23)
+    graph.add_edge(vertex2, vertex4, distance24)
+    graph.add_edge(vertex3, vertex4, distance34)
+    graph.add_edge(vertex3, vertex5, distance35)
+    graph.add_edge(vertex4, vertex2, distance42)
+    graph.add_edge(vertex4, vertex5, distance45)
+    graph.add_edge(vertex5, vertex4, distance54)
 
     def get_distance(path):
         distance = 0
@@ -255,26 +266,26 @@ def test_shortest_path(graph):
         if expected_distance is not None:
             assert get_distance(path) == expected_distance
 
-    validate(vertex1, vertex2, 2, vertex1, vertex2)
-    validate(vertex1, vertex3, 3, vertex1, vertex2, vertex3)
-    validate(vertex1, vertex4, 3, vertex1, vertex2, vertex4)
-    validate(vertex1, vertex5, 1, vertex1, vertex5)
+    validate(vertex1, vertex2, distance12, vertex1, vertex2)
+    validate(vertex1, vertex3, distance12 + distance23, vertex1, vertex2, vertex3)
+    validate(vertex1, vertex4, distance12 + distance24, vertex1, vertex2, vertex4)
+    validate(vertex1, vertex5, distance15, vertex1, vertex5)
     validate(vertex2, vertex1, None)
-    validate(vertex2, vertex3, 1, vertex2, vertex3)
-    validate(vertex2, vertex4, 1, vertex2, vertex4)
-    validate(vertex2, vertex5, 2, vertex2, vertex4, vertex5)
+    validate(vertex2, vertex3, distance23, vertex2, vertex3)
+    validate(vertex2, vertex4, distance24, vertex2, vertex4)
+    validate(vertex2, vertex5, distance24 + distance45, vertex2, vertex4, vertex5)
     validate(vertex3, vertex1, None)
-    validate(vertex3, vertex2, 6, vertex3, vertex4, vertex2)
-    validate(vertex3, vertex4, 1, vertex3, vertex4)
-    validate(vertex3, vertex5, 2, vertex3, vertex4, vertex5)
+    validate(vertex3, vertex2, distance34 + distance42, vertex3, vertex4, vertex2)
+    validate(vertex3, vertex4, distance34, vertex3, vertex4)
+    validate(vertex3, vertex5, distance34 + distance45, vertex3, vertex4, vertex5)
     validate(vertex4, vertex1, None)
-    validate(vertex4, vertex2, 5, vertex4, vertex2)
-    validate(vertex4, vertex3, 6, vertex4, vertex2, vertex3)
-    validate(vertex4, vertex5, 1, vertex4, vertex5)
+    validate(vertex4, vertex2, distance42, vertex4, vertex2)
+    validate(vertex4, vertex3, distance42 + distance23, vertex4, vertex2, vertex3)
+    validate(vertex4, vertex5, distance45, vertex4, vertex5)
     validate(vertex5, vertex1, None)
-    validate(vertex5, vertex2, 10, vertex5, vertex4, vertex2)
-    validate(vertex5, vertex3, 11, vertex5, vertex4, vertex2, vertex3)
-    validate(vertex5, vertex4, 5, vertex5, vertex4)
+    validate(vertex5, vertex2, distance54 + distance42, vertex5, vertex4, vertex2)
+    validate(vertex5, vertex3, distance54 + distance42 + distance23, vertex5, vertex4, vertex2, vertex3)
+    validate(vertex5, vertex4, distance54, vertex5, vertex4)
 
 
 def test_edge_order(graph):
