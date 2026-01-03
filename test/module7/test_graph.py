@@ -154,7 +154,7 @@ def test_depth_first_traversal(graph):
     vertex3 = graph.add_vertex(3)
     vertex4 = graph.add_vertex(4)
     vertex5 = graph.add_vertex(5)
-    _ = graph.add_vertex(6)  # ignored
+    graph.add_vertex(6)  # orphan
 
     graph.add_edge(vertex1, vertex2)
     graph.add_edge(vertex1, vertex3)
@@ -177,7 +177,7 @@ def test_breadth_first_traversal(graph):
     vertex3 = graph.add_vertex(3)
     vertex4 = graph.add_vertex(4)
     vertex5 = graph.add_vertex(5)
-    _ = graph.add_vertex(6)  # ignored
+    graph.add_vertex(6)  # orphan
 
     graph.add_edge(vertex1, vertex2)
     graph.add_edge(vertex1, vertex3)
