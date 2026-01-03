@@ -34,6 +34,8 @@ class GraphAdjacencyMatrix[K, V](Graph):
         """
         if len(self.adjacency_matrix) == 0:
             # initialize matrix if this is the first edge added
+            # Note: it would be more efficient to use NumPy or the array module
+            # and use float('inf') as the missing value instead of None.
             self.adjacency_matrix = [None] * (len(self.vertices) ** 2)
         # set edge weight
         # convert 2d square index to 1d index using _get_edge_index
