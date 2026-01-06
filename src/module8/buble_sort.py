@@ -43,7 +43,7 @@ def bubble_sort_demo(length, filename) -> None:
     data = [i + 1 for i in range(length)]
     shuffle(data)
 
-    # I used ChatGPT and StockOverflow for help with visualization, but ended up changing a lot
+    # I used ChatGPT for help with visualization, but ended up changing a lot
     fig, ax = plt.subplots()
     ax.set_title(f'Bubble Sort')
     bars = ax.bar(range(len(data)), data, color='blue')
@@ -79,20 +79,7 @@ def bubble_sort_demo(length, filename) -> None:
     frames = len(steps) + 1
     ani = FuncAnimation(fig, update, frames=frames, interval=100, blit=False)
 
-    # PillowWriter with no loop, from
-    # https://stackoverflow.com/questions/64529921/the-saved-animated-plot-keeps-looping-although-matplotlib-funcanimation-repe
-
-    # Source - https://stackoverflow.com/a
-    # Posted by Shaped Sundew, modified by community. See post 'Timeline' for change history
-    # Retrieved 2026-01-05, License - CC BY-SA 4.0
-
-    class PillowWriterNG(PillowWriter):
-        def finish(self):
-            self._frames[0].save(
-                self.outfile, save_all=True, append_images=self._frames[1:],
-                duration=int(1000 / self.fps), loop=None)
-
-    ani.save(filename, writer=PillowWriterNG(fps=20))
+    ani.save(filename, writer=PillowWriter(fps=20))
     plt.close(fig)
 
 
