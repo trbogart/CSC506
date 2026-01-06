@@ -61,7 +61,7 @@ class GraphDemo:
 
 def print_shortest_path(graph, start_vertex, end_vertex, suffix=''):
     print()
-    print(f'Shortest path between {start_vertex.key} and {end_vertex.key} {suffix}')
+    print(f'Shortest path between {start_vertex.value} and {end_vertex.value} {suffix}')
     shortest_path = graph.shortest_path(start_vertex, end_vertex)
     if len(shortest_path) == 0:
         print('- No path')
@@ -70,7 +70,7 @@ def print_shortest_path(graph, start_vertex, end_vertex, suffix=''):
         prev_vertex = shortest_path[0]
         for next_vertex in shortest_path[1:]:
             distance = graph.get_edge_weight(prev_vertex, next_vertex)
-            print(f'- {prev_vertex.key} -> {next_vertex.key} ({distance})')
+            print(f'- {prev_vertex.value} -> {next_vertex.value} ({distance})')
             prev_vertex = next_vertex
             total_distance += distance
         print(f'Total distance: {total_distance}')

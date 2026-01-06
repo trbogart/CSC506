@@ -7,6 +7,9 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 
 @dataclass
 class Step:
+    """
+    Step object for bubble sort step callback.
+    """
     idx1: int
     idx2: int
     data1: int

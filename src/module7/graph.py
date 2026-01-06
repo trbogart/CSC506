@@ -30,7 +30,7 @@ class Graph[K, V](ABC):
                 yield f'{repr(target_vertex.key)}: {weight}'
 
         def get_vertex_string(vertex):
-            return f'{repr(vertex.key)}: {{{', '.join(get_edges_string(vertex))}}}'
+            return f'{repr(vertex.value)}: {{{', '.join(get_edges_string(vertex))}}}'
 
         vertices = ', '.join([get_vertex_string(vertex) for vertex in self.vertices.values()])
 

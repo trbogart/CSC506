@@ -11,13 +11,13 @@ class TreeMap:
             return f'{self.key}:{self.value}'
 
         def __gt__(self, other):
-            return self.key > other.key
+            return self.key > other.value
 
         def __lt__(self, other):
-            return self.key < other.key
+            return self.key < other.value
 
         def __eq__(self, other):
-            return self.key == other.key
+            return self.key == other.value
 
     def __init__(self):
         self.bst = BinarySearchTree()
@@ -47,11 +47,11 @@ class TreeMap:
 
     def items(self):
         for entry in self.bst:
-            yield entry.key, entry.value
+            yield entry.value, entry.value
 
     def keys(self):
         for entry in self.bst:
-            yield entry.key
+            yield entry.value
 
     def clear(self):
         self.bst.clear()

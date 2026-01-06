@@ -29,6 +29,7 @@ def test_clear():
     s.add(3)
     s.clear()
     _verify(s)
+    assert len(s.buckets) == s.start_num_buckets
 
 
 def test_insert_resize():
@@ -77,11 +78,11 @@ def test_insert_chain():
 
     bucket = s.buckets[idx1]
     assert bucket is not None
-    assert bucket.key == value3
+    assert bucket.value == value3
     assert bucket.next_bucket is not None
-    assert bucket.next_bucket.key == value2
+    assert bucket.next_bucket.value == value2
     assert bucket.next_bucket.next_bucket is not None
-    assert bucket.next_bucket.next_bucket.key == value1
+    assert bucket.next_bucket.next_bucket.value == value1
     assert bucket.next_bucket.next_bucket.next_bucket is None
 
 
