@@ -1,13 +1,25 @@
+from dataclasses import dataclass
 from random import shuffle
 
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
 
 
-def bubble_sort(data):
+@dataclass
+class Step:
+    idx1: int
+    idx2: int
+    data1: int
+    data2: int
+    swapped: bool
+    min_sorted: int
+
+
+def bubble_sort(data, step_callback=None):
     """
     Perform a bubble sort on the data.
     :param data: The data list to be sorted
+    :param step_callback: Optional callback that takes a Step argument
     :return: None
     """
     n = len(data)
@@ -19,7 +31,9 @@ def bubble_sort(data):
             if swapped:
                 any_swapped = True
                 data[j], data[j + 1] = data[j + 1], data[j]
-            yield j, data[j], j + 1, data[j + 1], swapped, i + 1
+            if step_callback is not None:
+                step_callback(
+                    Step(idx1=j, data1=data[j], idx2=j + 1, data2=data[j + 1], swapped=swapped, min_sorted=i + 1))
         if not any_swapped:
             break
 
@@ -34,28 +48,29 @@ def bubble_sort_demo(length, filename) -> None:
     ax.set_title(f'Bubble Sort')
     bars = ax.bar(range(len(data)), data, color='blue')
 
-    steps = list(bubble_sort(data))
+    steps = []
+    bubble_sort(data, steps.append)
 
     refresh = set()
 
     def update(frame):
         if frame > 0:
-            idx1, data1, idx2, data2, swapped, min_sorted = steps[frame - 1]
-            updated = (idx1, idx2)
+            step = steps[frame - 1]
+            updated = (step.idx1, step.idx2)
             refresh.update(updated)
-            update_color = 'red' if swapped else 'yellow'
+            update_color = 'red' if step.swapped else 'yellow'
             for idx in refresh:
                 bar = bars[idx]
-                if idx == idx1:
-                    bar.set_height(data1)
+                if idx == step.idx1:
+                    bar.set_height(step.data1)
                     bar.set_color(update_color)
-                elif idx == idx2:
-                    bar.set_height(data2)
+                elif idx == step.idx2:
+                    bar.set_height(step.data2)
                     bar.set_color(update_color)
                 else:
                     bar.set_color('blue')
-            if min_sorted < length:
-                bars[min_sorted].set_color('green')
+            if step.min_sorted < length:
+                bars[step.min_sorted].set_color('green')
             refresh.clear()
             refresh.update(updated)
         return bars
