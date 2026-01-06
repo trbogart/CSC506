@@ -1,12 +1,12 @@
-# Sorting implementations
 from random import shuffle
 
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
 
+
 def bubble_sort(data):
     """
-    Perform a bubble insertion sort on the data.
+    Perform a bubble sort on the data.
     :param data: The data list to be sorted
     :return: None
     """
@@ -19,19 +19,20 @@ def bubble_sort(data):
             if swapped:
                 any_swapped = True
                 data[j], data[j + 1] = data[j + 1], data[j]
-            yield j, data[j], j + 1, data[j+1], swapped, i+1
+            yield j, data[j], j + 1, data[j + 1], swapped, i + 1
         if not any_swapped:
             break
 
+
 def bubble_sort_demo(length, filename) -> None:
     print(f'Saving bubblesort demo for length {length} to {filename}')
-    data = [i+1 for i in range(length)]
+    data = [i + 1 for i in range(length)]
     shuffle(data)
 
     # I used ChatGPT and StockOverflow for help with visualization, but ended up changing a lot
     fig, ax = plt.subplots()
     ax.set_title(f'Bubble Sort')
-    bars = ax.bar(range(len(data)), data, color = 'blue')
+    bars = ax.bar(range(len(data)), data, color='blue')
 
     steps = list(bubble_sort(data))
 
@@ -39,7 +40,7 @@ def bubble_sort_demo(length, filename) -> None:
 
     def update(frame):
         if frame > 0:
-            idx1, data1, idx2, data2, swapped, min_sorted = steps[frame-1]
+            idx1, data1, idx2, data2, swapped, min_sorted = steps[frame - 1]
             updated = (idx1, idx2)
             refresh.update(updated)
             update_color = 'red' if swapped else 'yellow'
@@ -63,7 +64,7 @@ def bubble_sort_demo(length, filename) -> None:
     frames = len(steps) + 1
     ani = FuncAnimation(fig, update, frames=frames, interval=100, blit=False)
 
-    # PilloWriter with no loop, from
+    # PillowWriter with no loop, from
     # https://stackoverflow.com/questions/64529921/the-saved-animated-plot-keeps-looping-although-matplotlib-funcanimation-repe
 
     # Source - https://stackoverflow.com/a
@@ -78,6 +79,7 @@ def bubble_sort_demo(length, filename) -> None:
 
     ani.save(filename, writer=PillowWriterNG(fps=20))
     plt.close(fig)
+
 
 if __name__ == "__main__":
     bubble_sort_demo(20, 'bubble_sort.gif')
