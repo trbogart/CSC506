@@ -2,17 +2,12 @@ from abc import ABC, abstractmethod
 from typing import Iterable
 
 
-# Base class for collections in this module.
+# Abstract base class for collections.
 
-class ICollection[T](ABC):
+class Collection[T](ABC):
     """
     Abstract base class for collections.
     """
-
-    @abstractmethod
-    def clear(self) -> None:
-        """Clears the collection"""
-        pass
 
     @abstractmethod
     def __iter__(self) -> Iterable[T]:
@@ -32,4 +27,29 @@ class ICollection[T](ABC):
     @abstractmethod
     def __repr__(self) -> str:
         """Returns a string representation of the collection"""
+        pass
+
+    @abstractmethod
+    def clear(self) -> None:
+        """
+        Removes all items.
+        """
+        pass
+
+    @abstractmethod
+    def add(self, value: T) -> bool:
+        """
+        Adds a value.
+        :param value: value to add
+        :return: true if value was added
+        """
+        pass
+
+    @abstractmethod
+    def remove(self, value: T) -> bool:
+        """
+        Removes a value.
+        :param value: value to remove
+        :return: true if value was removed
+        """
         pass

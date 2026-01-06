@@ -2,10 +2,10 @@ from typing import Optional, Iterator
 
 from sympy import nextprime
 
-from module8.collection import ICollection
+from module8.collection import Collection
 
 
-class Set[T](ICollection[T]):
+class Set[T](Collection[T]):
     """
     Set implemented with a chained hash table.
     """
@@ -41,9 +41,17 @@ class Set[T](ICollection[T]):
         return f'[{', '.join(map(lambda x: repr(x), iter(self)))}]'
 
     def clear(self) -> None:
+        """
+        Removes all items.
+        """
         self._init_buckets(self.start_num_buckets)
 
     def add(self, value: T) -> bool:
+        """
+        Adds a value.
+        :param value: value to add
+        :return: true if value was added
+        """
         index = self._get_index(value)
         bucket = self.buckets[index]
         if bucket is not None and value in bucket:
@@ -55,6 +63,11 @@ class Set[T](ICollection[T]):
         return True
 
     def remove(self, value: T) -> bool:
+        """
+        Removes a value.
+        :param value: value to remove
+        :return: true if value was removed
+        """
         index = self._get_index(value)
         bucket = self.buckets[index]
         if bucket is None:
@@ -75,6 +88,11 @@ class Set[T](ICollection[T]):
         return False
 
     def union(self, other):
+        """
+        Returns the union of two sets.
+        :param other: Another set
+        :return: new set containing all values in either set
+        """
         s = Set()
         for key in self:
             s.add(key)
@@ -83,6 +101,11 @@ class Set[T](ICollection[T]):
         return s
 
     def intersection(self, other):
+        """
+        Returns the intersection of two sets.
+        :param other: Another set
+        :return: new set containing all values that are in both sets
+        """
         s = Set()
         for key in other:
             if key in self:
@@ -90,6 +113,11 @@ class Set[T](ICollection[T]):
         return s
 
     def difference(self, other):
+        """
+        Returns the difference of this set and another set.
+        :param other: Another set
+        :return: new set containing all values that are this set and not the other set
+        """
         s = Set()
         for key in self:
             if key not in other:
@@ -97,6 +125,11 @@ class Set[T](ICollection[T]):
         return s
 
     def symmetric_difference(self, other):
+        """
+        Returns the symmetric difference of two sets.
+        :param other: Another set
+        :return: new set containing all values that are in one set but not both sets
+        """
         s = Set()
         for key in self:
             if key not in other:

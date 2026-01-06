@@ -9,7 +9,7 @@ def test_empty():
     assert 1 not in s
 
 
-def test_insert():
+def test_add():
     s = Set()
     assert s.add(1)
     _verify(s, 1)
@@ -32,7 +32,7 @@ def test_clear():
     assert len(s.buckets) == s.start_num_buckets
 
 
-def test_insert_resize():
+def test_add_resize():
     s = Set()
     expected = set()
     for i in range(200):
@@ -58,7 +58,7 @@ def test_remove():
     assert not s.remove(3)
 
 
-def test_insert_chain():
+def test_add_chain():
     # insert multiple entries into same bucket
     s = Set()
     value1 = 1
