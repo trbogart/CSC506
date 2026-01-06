@@ -1,5 +1,6 @@
 import math
 from enum import Enum
+from typing import Iterator
 
 from module8.collection import Collection
 
@@ -24,10 +25,7 @@ class BinarySearchTree[T](Collection[T]):
             self.right = None
             self.height = 0
 
-        def __str__(self):
-            return str(self.element)
-
-        def __repr__(self):
+        def __repr__(self) -> str:
             return repr(self.element)
 
         def set_left(self, new_node):
@@ -123,13 +121,13 @@ class BinarySearchTree[T](Collection[T]):
         self.root = None
         self.size = 0
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.size
 
-    def __contains__(self, key):
-        return self.search(key) is not None
+    def __contains__(self, value: T) -> bool:
+        return self.search(value) is not None
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[T]:
         return self.traverse()
 
     def __repr__(self) -> str:

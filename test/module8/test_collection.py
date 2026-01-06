@@ -4,13 +4,15 @@ import pytest
 
 from module8.collection import Collection
 from module8.hash_table import HashTable
+from module8.linked_list import LinkedList
 from module8.set import Set
 from module8.tree import BinarySearchTree
 
 
-@pytest.fixture(params=[Set, HashTable, BinarySearchTree])
+@pytest.fixture(params=[Set, HashTable, BinarySearchTree, LinkedList])
 def collection(request) -> Collection:
     return request.param()
+
 
 def test_empty(collection):
     _verify(collection)
@@ -47,6 +49,7 @@ def test_remove(collection):
     assert collection.remove(3)
     _verify(collection)
     assert not collection.remove(3)
+
 
 def test_random(collection):
     random.seed(1732)
@@ -86,4 +89,3 @@ def _verify_list(s, expected):
 
 def _verify(s, *expected):
     _verify_list(s, list(expected))
-

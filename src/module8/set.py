@@ -24,7 +24,7 @@ class Set[T](Collection[T]):
         self.old_bucket_sizes = []
         self._init_buckets(self.start_num_buckets)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.size
 
     def __contains__(self, value: T) -> bool:

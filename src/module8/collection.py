@@ -2,17 +2,10 @@ from abc import ABC, abstractmethod
 from typing import Iterable
 
 
-# Abstract base class for collections.
-
-class Collection[T](ABC):
+class Collection[T](ABC, Iterable[T]):
     """
     Abstract base class for collections.
     """
-
-    @abstractmethod
-    def __iter__(self) -> Iterable[T]:
-        """Iterate over values in collection"""
-        pass
 
     @abstractmethod
     def __len__(self) -> int:
