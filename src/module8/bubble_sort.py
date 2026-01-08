@@ -42,6 +42,11 @@ def bubble_sort(data, step_callback=None):
 
 
 def bubble_sort_demo(length, filename) -> None:
+    """
+    Save a bubble sort animation.
+    :param length: number of elements to sort
+    :param filename: name of animation gif file
+    """
     print(f'Saving bubblesort demo for length {length} to {filename}')
     data = [i + 1 for i in range(length)]
     shuffle(data)
