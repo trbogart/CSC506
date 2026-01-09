@@ -5,7 +5,7 @@ from typing import Optional, Iterator, Tuple
 from module8.graph import Graph
 
 
-class GraphAdjacencyMatrix[K, V](Graph):
+class GraphAdjacencyMatrix[K, V](Graph[K, V]):
     """
     Graph implemented with an adjacency matrix.
     All vertices must be added before any edge is added.

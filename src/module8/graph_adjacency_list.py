@@ -3,7 +3,7 @@ from typing import Optional, Iterator, Tuple
 from module8.graph import Graph
 
 
-class GraphAdjacencyList[K, V](Graph):
+class GraphAdjacencyList[K, V](Graph[K, V]):
     """
     Graph implemented with an adjacency list.
     Most of the logic is implemented in the Graph abstract base class.

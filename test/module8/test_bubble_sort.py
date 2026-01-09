@@ -1,6 +1,6 @@
 from random import seed, shuffle
 
-from module8.buble_sort import bubble_sort, Step
+from module8.bubble_sort import bubble_sort, Step
 
 
 def test_bubble_sort():

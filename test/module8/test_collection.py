@@ -5,11 +5,13 @@ import pytest
 from module8.collection import Collection
 from module8.hash_table import HashTable
 from module8.linked_list import LinkedList
+from module8.queue import Queue
 from module8.set import Set
+from module8.stack import Stack
 from module8.tree import BinarySearchTree
 
 
-@pytest.fixture(params=[Set, HashTable, BinarySearchTree, LinkedList])
+@pytest.fixture(params=[Set, HashTable, BinarySearchTree, LinkedList, Stack, Queue])
 def collection(request) -> Collection:
     return request.param()
 

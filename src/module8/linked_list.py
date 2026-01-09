@@ -1,12 +1,11 @@
 import itertools
-import sys
 from typing import Iterator, Optional
 
-from module8.collection import Collection
+from module8.collection import OrderedCollection
 
 
 # Doubly linked list.
-class LinkedList[T](Collection[T]):
+class LinkedList[T](OrderedCollection[T]):
     """Doubly linked list"""
 
     def __init__(self):
@@ -161,10 +160,6 @@ class LinkedList[T](Collection[T]):
             node.next_node.prev_node = node.prev_node
         self.size -= 1
         return node.value
-
-    def get_estimated_space(self):
-        """Helper method to get the estimated space consumed by this list"""
-        return sys.getsizeof(self) + sum(map(lambda node: node.get_estimated_space(), self._iter_nodes()))
 
     class Node:
         """Internal data structure representing a linked list node"""
