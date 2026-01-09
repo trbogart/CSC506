@@ -10,14 +10,14 @@ class TraversalOrder(Enum):
     POST_ORDER = 2
 
 
-class BinarySearchTree:
+class BinarySearchTree[T]:
     """
     Binary search tree.
     Elements must support the > and < operations.
     """
 
     class Node:
-        def __init__(self, element):
+        def __init__(self, element: T):
             self.element = element
             self.parent = None
             self.left = None
@@ -135,7 +135,7 @@ class BinarySearchTree:
     def __str__(self):
         return pretty_tree(self)
 
-    def add(self, element, replace=False):
+    def add(self, element: T, replace=False):
         """
         Inserts an element into the tree.
         :param element: element to insert
