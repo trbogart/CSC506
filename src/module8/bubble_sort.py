@@ -87,7 +87,7 @@ def bubble_sort_demo(length, filename) -> None:
     frames = len(steps) + 1
     ani = FuncAnimation(fig, update, frames=frames, interval=100, blit=False)
 
-    ani.save(filename, writer=PillowWriter(fps=20))
+    ani.save(filename, writer=PillowWriter(fps=5))
     plt.close(fig)
 
 

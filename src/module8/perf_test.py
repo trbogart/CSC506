@@ -14,7 +14,8 @@ from module8.graph_adjacency_list import GraphAdjacencyList
 from module8.hash_table import HashTable
 from module8.linked_list import LinkedList
 from module8.queue import Queue
-from module8.sort import insertion_sort
+from module8.quickselect import quickselect
+from module8.sort import insertion_sort, merge_sort
 from module8.stack import Stack
 from module8.tree import BinarySearchTree
 
@@ -260,10 +261,22 @@ def perf_test():
 
     sort_tests = [
         PerfTestSort('Insertion Sort (Sorted)', insertion_sort, shuffled=False),
+        PerfTestSort('Bubble Sort (Sorted)', bubble_sort, shuffled=False),
+        PerfTestSort('Merge Sort (Sorted)', merge_sort, shuffled=False),
         PerfTestSort('Insertion Sort (Shuffled)', insertion_sort, shuffled=True),
         PerfTestSort('Bubble Sort (Shuffled)', bubble_sort, shuffled=True),
+        PerfTestSort('Merge Sort (Shuffled)', merge_sort, shuffled=True),
     ]
-    execute_tests('Sort Algorithms', sort_tests, sizes)
+    execute_tests('Sort Algorithms', sort_tests, sizes, log_y=True, log_x=True)
+
+    def quickselect_perf(data):
+        quickselect(data, 10)
+
+    quickselect_tests = [
+        PerfTestSort('Quickselect (Sorted)', quickselect_perf, shuffled=False),
+        PerfTestSort('Quickselect (Shuffled)', quickselect_perf, shuffled=True),
+    ]
+    execute_tests('Quickselect', quickselect_tests, sizes)
 
     shortest_path_tests = [
         PerfTestShortestPath('Adjacency List', GraphAdjacencyList()),
