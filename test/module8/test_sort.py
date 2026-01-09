@@ -27,6 +27,26 @@ def test_insertion_sort_reverse_sorted():
     _verify_sort(sort.insertion_sort, 100, reverse_sorted=True)
 
 
+def test_merge_sort_empty():
+    _verify_sort(sort.merge_sort, 0)
+
+
+def test_merge_sort_singleton():
+    _verify_sort(sort.merge_sort, 1)
+
+
+def test_merge_sort_shuffled():
+    _verify_sort(sort.merge_sort, 100)
+
+
+def test_merge_sort_already_sorted():
+    _verify_sort(sort.merge_sort, 100, already_sorted=True)
+
+
+def test_merge_sort_reverse_sorted():
+    _verify_sort(sort.merge_sort, 100, reverse_sorted=True)
+
+
 def _verify_sort(sort_algorithm, n, already_sorted=False, reverse_sorted=False):
     if already_sorted or n <= 1:
         data = dg.generate_sorted(n)

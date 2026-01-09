@@ -82,3 +82,10 @@ class OrderedCollection[T](Collection[T], ABC):
         :raises IndexError: if the list is empty
         """
         pass
+
+    @abstractmethod
+    def remove_next(self) -> T:
+        """
+        Removes the next element, which may be from the end or beginning of the list based on collection type.
+        :return: element that was removed
+        """

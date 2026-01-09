@@ -54,11 +54,12 @@ class LinkedList[T](OrderedCollection[T]):
         self.size += 1
 
     def add(self, value: T) -> bool:
+        """Add element to end of list and returns true."""
         self.add_last(value)
         return True
 
     def add_last(self, value: T):
-        """Add element to end of list"""
+        """Add element to end of list."""
         node = self.Node(value, prev_node=self.tail)
         if self.tail is not None:
             self.tail.next_node = node
@@ -77,6 +78,10 @@ class LinkedList[T](OrderedCollection[T]):
         """Remove and return last element, or raise IndexError if empty"""
         self._validate_non_empty()
         return self._remove_node(self.tail)
+
+    def remove_next(self) -> T:
+        """Remove and return last element, or raise IndexError if empty"""
+        return self.remove_last()
 
     def remove(self, value: T) -> bool:
         """Remove given element. Returns true if removed, or false if not in list."""

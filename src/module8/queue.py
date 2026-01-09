@@ -53,7 +53,12 @@ class Queue[T](OrderedCollection[T]):
         return self.list.remove_first()
 
     def add(self, value: T) -> bool:
-        return self.list.add(value)
+        """Add element to end of list and returns true."""
+        return self.list.add_last(value)
 
     def remove(self, value: T) -> bool:
         return self.list.remove(value)
+
+    def remove_next(self) -> T:
+        """Remove and return first element, or raise IndexError if empty"""
+        return self.list.remove_first()

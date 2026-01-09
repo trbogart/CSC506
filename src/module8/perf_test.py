@@ -7,14 +7,14 @@ from typing import Callable
 import numpy as np
 from matplotlib import pyplot as plt
 
-from module8.graph_adjacency_list import GraphAdjacencyList
 from module8.bubble_sort import bubble_sort
 from module8.collection import Collection, OrderedCollection
 from module8.graph import Graph
+from module8.graph_adjacency_list import GraphAdjacencyList
 from module8.hash_table import HashTable
-from module8.insertion_sort import insertion_sort
 from module8.linked_list import LinkedList
 from module8.queue import Queue
+from module8.sort import insertion_sort
 from module8.stack import Stack
 from module8.tree import BinarySearchTree
 
@@ -108,6 +108,7 @@ class PerfTestCollectionContains(PerfTest):
     """
     Test performance for checking if an element is in a collection.
     """
+
     def __init__(self, operation: str, collection: Collection[int]):
         PerfTest.__init__(self, operation)
         self.collection = collection
@@ -126,10 +127,12 @@ class PerfTestCollectionContains(PerfTest):
         # lookup random value in hashtable
         _ = randint(1, len(self.collection)) in self.collection
 
+
 class PerfTestRemoveLast(PerfTest):
     """
     Test performance for removing the last item in an ordered collection.
     """
+
     def __init__(self, collection_type: str, collection: OrderedCollection[int]):
         PerfTest.__init__(self, f'Remove Last from {collection_type}')
         self.collection = collection
@@ -143,10 +146,12 @@ class PerfTestRemoveLast(PerfTest):
     def run(self):
         self.collection.remove_last()
 
+
 class PerfTestRemoveFirst(PerfTest):
     """
     Test performance for removing the first item in an ordered collection.
     """
+
     def __init__(self, collection_type: str, collection: OrderedCollection[int]):
         PerfTest.__init__(self, f'Remove First from {collection_type}')
         self.collection = collection
@@ -159,6 +164,7 @@ class PerfTestRemoveFirst(PerfTest):
 
     def run(self):
         self.collection.remove_first()
+
 
 class PerfTestSort(PerfTest):
     def __init__(self, operation: str, sort_op: Callable[[list[int]], None], shuffled: bool):
@@ -176,6 +182,7 @@ class PerfTestSort(PerfTest):
     def run(self):
         self.sort_op(self.data)
 
+
 class PerfTestShortestPath(PerfTest):
     def __init__(self, name: str, graph: Graph):
         PerfTest.__init__(self, name)
@@ -184,7 +191,7 @@ class PerfTestShortestPath(PerfTest):
 
     def init_run(self, size: int):
         while size > len(self.graph.vertices):
-            new_vertex = self.graph.add_vertex(f'v{len(self.graph.vertices)+1}')
+            new_vertex = self.graph.add_vertex(f'v{len(self.graph.vertices) + 1}')
 
             for vertex in self.vertices:
                 # 10% chance of any 2 vertices being connected (no cycles)
@@ -198,7 +205,8 @@ class PerfTestShortestPath(PerfTest):
         self.graph.shortest_path(self.vertices[0], self.vertices[-1])
 
 
-def execute_tests(title: str, tests: list[PerfTest], sizes: list[int], log_x: bool = False, log_y: bool = False, num_runs: int = PerfTest.default_num_runs):
+def execute_tests(title: str, tests: list[PerfTest], sizes: list[int], log_x: bool = False, log_y: bool = False,
+                  num_runs: int = PerfTest.default_num_runs):
     results = []
     for test in tests:
         print(f'Executing {title} - {test.operation}...')
@@ -233,14 +241,14 @@ def execute_tests(title: str, tests: list[PerfTest], sizes: list[int], log_x: bo
     plt.show()
 
 
-if __name__ == '__main__':
+def perf_test():
     sizes = [2 ** i for i in range(5, 12)]  # [32, 64, 128, 256, 512, 1024, 2048]
     search_tests = [
         PerfTestCollectionContains('Hash Table', HashTable()),
         PerfTestCollectionContains('Binary Search Tree', BinarySearchTree()),
         PerfTestCollectionContains('Linked List', LinkedList()),
     ]
-    execute_tests('Collection Lookup', search_tests, sizes, num_runs = 200, log_y=True)
+    execute_tests('Collection Lookup', search_tests, sizes, num_runs=200, log_y=True)
 
     remove_first_last_tests = [
         PerfTestRemoveLast("Stack", Stack()),
@@ -248,7 +256,7 @@ if __name__ == '__main__':
         PerfTestRemoveFirst("Stack", Stack()),
         PerfTestRemoveFirst("Queue", Queue()),
     ]
-    execute_tests('Remove First/Last', remove_first_last_tests, sizes, num_runs = 200)
+    execute_tests('Remove First/Last', remove_first_last_tests, sizes, num_runs=200)
 
     sort_tests = [
         PerfTestSort('Insertion Sort (Sorted)', insertion_sort, shuffled=False),
@@ -262,3 +270,7 @@ if __name__ == '__main__':
     ]
 
     execute_tests('Shortest Path', shortest_path_tests, sizes)
+
+
+if __name__ == '__main__':
+    perf_test()

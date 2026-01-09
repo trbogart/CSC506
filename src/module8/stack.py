@@ -32,6 +32,7 @@ class Stack[T](OrderedCollection[T]):
         return self.list.pop(0)
 
     def add(self, value: T) -> bool:
+        """Add element to end of list and returns true."""
         self.add_last(value)
         return True
 
@@ -41,6 +42,10 @@ class Stack[T](OrderedCollection[T]):
             return True
         except ValueError:
             return False
+
+    def remove_next(self) -> T:
+        """Remove and return last element, or raise IndexError if empty"""
+        return self.list.pop()
 
     def push(self, value):
         """Adds an element to the stack"""
