@@ -72,7 +72,7 @@ class ConsoleInterface:
                     print('q: Quit')
                     print('m: Print this menu')
                     print('st: Use stack (array list)')
-                    print('q: Use queue (linked list)')
+                    print('queue: Use queue (linked list)')
                     print('set: Use hash set')
                     print('tree: Use binary search tree')
                     print('add: Add element')
@@ -97,7 +97,7 @@ class ConsoleInterface:
                     print_menu = True
                 elif cmd == 'st':
                     self.use_stack()
-                elif cmd == 'q':
+                elif cmd == 'queue':
                     self.use_queue()
                 elif cmd == 'set':
                     self.use_set()
@@ -169,7 +169,7 @@ class ConsoleInterface:
                         for value in values:
                             other_set.add(int(value))
                         result = self.collection.intersection(other_set)
-                        print(f'Result: {', '.join(result)}')
+                        print(f'Result: {result}')
                     else:
                         print('Intersection only supported for sets')
                 elif cmd == 'union':
@@ -178,9 +178,9 @@ class ConsoleInterface:
                         other_set = Set()
                         for value in values:
                             other_set.add(int(value))
-                        print()
+
                         result = self.collection.union(other_set)
-                        print(f'Result: {', '.join(result)}')
+                        print(f'Result: {result}')
                     else:
                         print('Union only supported for sets')
                 elif cmd == 'diff':
@@ -190,7 +190,7 @@ class ConsoleInterface:
                         for value in values:
                             other_set.add(int(value))
                         result = self.collection.difference(other_set)
-                        print(f'Result: {', '.join(result)}')
+                        print(f'Result: {result}')
                     else:
                         print('Difference only supported for sets')
                 elif cmd == 'sd':
@@ -200,7 +200,7 @@ class ConsoleInterface:
                         for value in values:
                             other_set.add(int(value))
                         result = self.collection.symmetric_difference(other_set)
-                        print(f'Result: {', '.join(result)}')
+                        print(f'Result: {result}')
                     else:
                         print('Symmetric difference only supported for sets')
                 else:
