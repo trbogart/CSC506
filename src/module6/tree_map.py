@@ -35,7 +35,7 @@ class TreeMap:
         return entry.value
 
     def __delitem__(self, key):
-        entry = self.bst.delete(self.Entry(key))
+        entry = self.bst.remove(self.Entry(key))
         if entry is None:
             raise KeyError(key)
 

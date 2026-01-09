@@ -104,14 +104,14 @@ class ConsoleInterface:
                 elif cmd == 'tree':
                     self.use_tree()
                 elif cmd == 'add':
-                    value = input('Enter value: ')
+                    value = int(input('Enter value: '))
                     self.collection.add(value)
                 elif cmd == 'rem':
                     if isinstance(self.collection, OrderedCollection):
                         value = self.collection.remove_next()
                         print(f'Removed {value}')
                     else:
-                        value = input('Value to remove: ')
+                        value = int(input('Value to remove: '))
                         if self.collection.remove(value):
                             print(f'Removed {value}')
                         else:
@@ -167,7 +167,7 @@ class ConsoleInterface:
                         values = input(f'Enter values to take intersection on: ').split()
                         other_set = Set()
                         for value in values:
-                            other_set.add(value)
+                            other_set.add(int(value))
                         result = self.collection.intersection(other_set)
                         print(f'Result: {', '.join(result)}')
                     else:
@@ -177,8 +177,7 @@ class ConsoleInterface:
                         values = input(f'Enter values to take union on: ').split()
                         other_set = Set()
                         for value in values:
-                            other_set.add(value)
-                        print(f'??? other_set: {other_set}')
+                            other_set.add(int(value))
                         print()
                         result = self.collection.union(other_set)
                         print(f'Result: {', '.join(result)}')
@@ -189,7 +188,7 @@ class ConsoleInterface:
                         values = input(f'Enter values to take difference on: ').split()
                         other_set = Set()
                         for value in values:
-                            other_set.add(value)
+                            other_set.add(int(value))
                         result = self.collection.difference(other_set)
                         print(f'Result: {', '.join(result)}')
                     else:
@@ -199,7 +198,7 @@ class ConsoleInterface:
                         values = input(f'Enter values to take symmetric difference on: ').split()
                         other_set = Set()
                         for value in values:
-                            other_set.add(value)
+                            other_set.add(int(value))
                         result = self.collection.symmetric_difference(other_set)
                         print(f'Result: {', '.join(result)}')
                     else:

@@ -2,6 +2,7 @@ import math
 from enum import Enum
 
 from module6.TreePrint import pretty_tree
+from module8.collection import Collection
 
 
 class TraversalOrder(Enum):
@@ -10,7 +11,7 @@ class TraversalOrder(Enum):
     POST_ORDER = 2
 
 
-class BinarySearchTree[T]:
+class BinarySearchTree[T](Collection[T]):
     """
     Binary search tree.
     Elements must support the > and < operations.
@@ -150,7 +151,7 @@ class BinarySearchTree[T]:
         elif self.root.insert_node(new_node, replace):
             self.size += 1
 
-    def delete(self, element):
+    def remove(self, element):
         """
         Deletes a matching element from the tree. Returns the matching element if it exists, or None otherwise.
         """
@@ -219,6 +220,9 @@ class BinarySearchTree[T]:
             else:
                 return node.element  # match
         return None
+
+    def __repr__(self) -> str:
+        return f'[{', '.join(repr(element) for element in self)}]'
 
     def traverse(self, order: TraversalOrder = TraversalOrder.IN_ORDER):
         """

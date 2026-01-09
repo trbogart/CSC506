@@ -46,7 +46,7 @@ if __name__ == '__main__':
     shuffle(values)
     for value in values:
         print(f'Deleting {value}')
-        bst.delete(value)
+        bst.remove(value)
         print_tree()
-    bst.delete(duplicate_value)
+    bst.remove(duplicate_value)
     print_tree()

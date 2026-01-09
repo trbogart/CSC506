@@ -246,7 +246,7 @@ def test_delete():
                                                    left=Node(9)))
                              ))
     # delete leaf
-    assert bst.delete(9) == 9
+    assert bst.remove(9) == 9
     #     ______6__
     #    /         \
     #   2____       8__
@@ -278,7 +278,7 @@ def test_delete():
                              ))
 
     # delete node with left child only
-    assert bst.delete(4) == 4
+    assert bst.remove(4) == 4
     #     ______6__
     #    /         \
     #   2____       8__
@@ -306,7 +306,7 @@ def test_delete():
                              ))
 
     # delete node with 2 children
-    assert bst.delete(2) == 2
+    assert bst.remove(2) == 2
     #     ______6__
     #    /         \
     #   3____       8__
@@ -331,7 +331,7 @@ def test_delete():
                              ))
 
     # delete root with 2 children
-    assert bst.delete(6) == 6
+    assert bst.remove(6) == 6
     #     5__
     #    /   \
     #   3     8
@@ -353,7 +353,7 @@ def test_delete():
                                         right=Node(10))
                              ))
 
-    assert bst.delete(7) == 7
+    assert bst.remove(7) == 7
     #     5__
     #    /   \
     #   3     8
@@ -375,7 +375,7 @@ def test_delete():
                              ))
 
     # delete node with right child
-    assert bst.delete(10) == 10
+    assert bst.remove(10) == 10
     #     5__
     #    /   \
     #   3     8
@@ -394,7 +394,7 @@ def test_delete():
                              right=Node(8)
                              ))
 
-    assert bst.delete(8) == 8
+    assert bst.remove(8) == 8
     #     5
     #    /
     #   3
@@ -412,7 +412,7 @@ def test_delete():
                                        )))
 
     # delete root with left child
-    assert bst.delete(5) == 5
+    assert bst.remove(5) == 5
     #  3
     # /
     # 1
@@ -425,7 +425,7 @@ def test_delete():
                              left=Node(1)
                              ))
     # delete root with left child
-    assert bst.delete(3) == 3
+    assert bst.remove(3) == 3
     # 1
     assert type(bst.root) == BinarySearchTree.Node
     assert len(bst) == 1
@@ -436,7 +436,7 @@ def test_delete():
     _test_tree(bst, min=1, max=1, size=1, expected=Node(1))
 
     # delete last node
-    assert bst.delete(1) == 1
+    assert bst.remove(1) == 1
     _verify_empty(bst)
 
 
@@ -457,7 +457,7 @@ def test_insert_delete_random():
 
         random.shuffle(values)
         for i, value in enumerate(values):
-            bst.delete(value)
+            bst.remove(value)
             assert value not in bst
             assert len(bst) == num_elements - 1 - i
         assert len(bst) == 0
