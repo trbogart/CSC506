@@ -1,7 +1,6 @@
 import random
 from time import perf_counter
 
-from module6.binary_search_tree import BinarySearchTree
 from module8.bubble_sort import bubble_sort
 from module8.collection import OrderedCollection
 from module8.perf_test import perf_test
@@ -10,6 +9,7 @@ from module8.quickselect import quickselect
 from module8.set import Set
 from module8.sort import insertion_sort, merge_sort
 from module8.stack import Stack
+from module8.tree import BinarySearchTree
 
 
 class ConsoleInterface:

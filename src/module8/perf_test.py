@@ -8,15 +8,13 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from module8.bubble_sort import bubble_sort
-from module8.collection import Collection, OrderedCollection
+from module8.collection import Collection
 from module8.graph import Graph
 from module8.graph_adjacency_list import GraphAdjacencyList
 from module8.hash_table import HashTable
 from module8.linked_list import LinkedList
-from module8.queue import Queue
 from module8.quickselect import quickselect
 from module8.sort import insertion_sort, merge_sort
-from module8.stack import Stack
 from module8.tree import BinarySearchTree
 
 
@@ -129,44 +127,6 @@ class PerfTestCollectionContains(PerfTest):
         _ = randint(1, len(self.collection)) in self.collection
 
 
-class PerfTestRemoveLast(PerfTest):
-    """
-    Test performance for removing the last item in an ordered collection.
-    """
-
-    def __init__(self, collection_type: str, collection: OrderedCollection[int]):
-        PerfTest.__init__(self, f'Remove Last from {collection_type}')
-        self.collection = collection
-
-    def init_run(self, size: int):
-        if size != len(self.collection):
-            self.collection.clear()
-            for i in range(size):
-                self.collection.add(i)
-
-    def run(self):
-        self.collection.remove_last()
-
-
-class PerfTestRemoveFirst(PerfTest):
-    """
-    Test performance for removing the first item in an ordered collection.
-    """
-
-    def __init__(self, collection_type: str, collection: OrderedCollection[int]):
-        PerfTest.__init__(self, f'Remove First from {collection_type}')
-        self.collection = collection
-
-    def init_run(self, size: int):
-        if size != len(self.collection):
-            self.collection.clear()
-            for i in range(size):
-                self.collection.add(i)
-
-    def run(self):
-        self.collection.remove_first()
-
-
 class PerfTestSort(PerfTest):
     def __init__(self, operation: str, sort_op: Callable[[list[int]], None], shuffled: bool):
         PerfTest.__init__(self, operation)
@@ -250,14 +210,6 @@ def perf_test():
         PerfTestCollectionContains('Linked List', LinkedList()),
     ]
     execute_tests('Collection Lookup', search_tests, sizes, num_runs=200, log_y=True)
-
-    remove_first_last_tests = [
-        PerfTestRemoveLast("Stack", Stack()),
-        PerfTestRemoveLast("Queue", Queue()),
-        PerfTestRemoveFirst("Stack", Stack()),
-        PerfTestRemoveFirst("Queue", Queue()),
-    ]
-    execute_tests('Remove First/Last', remove_first_last_tests, sizes, num_runs=200)
 
     sort_tests = [
         PerfTestSort('Insertion Sort (Sorted)', insertion_sort, shuffled=False),
