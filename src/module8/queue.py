@@ -54,7 +54,8 @@ class Queue[T](OrderedCollection[T]):
 
     def add(self, value: T) -> bool:
         """Add element to end of list and returns true."""
-        return self.list.add_last(value)
+        self.list.add_last(value)
+        return True
 
     def remove(self, value: T) -> bool:
         return self.list.remove(value)
